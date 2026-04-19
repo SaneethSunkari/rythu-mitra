@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# Keep heavy ML/training dependencies out of Railway's free-tier web build.
+# Install this file only when working on the disease model locally or in Colab.
+numpy
+pillow
+torch
+torchvision

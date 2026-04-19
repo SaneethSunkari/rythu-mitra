@@ -34,6 +34,12 @@ Run the text engine smoke test:
 python3 scripts/test_engine.py
 ```
 
+## Dependencies
+
+- `requirements.txt` is the slim Railway/runtime set for the live WhatsApp service.
+- `requirements-ml.txt` adds the heavy disease-model stack for local training or Colab work.
+- This split keeps Railway free-tier builds below the 4 GB image cap.
+
 ## Railway deploy
 
 1. Push this repo to GitHub.
