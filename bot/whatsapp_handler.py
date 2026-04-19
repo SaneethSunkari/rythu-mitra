@@ -152,7 +152,29 @@ async def whatsapp_webhook(request: Request, background_tasks: BackgroundTasks) 
 
 
 def _process_farmer_text(from_number: str, message_text: str) -> str:
-    conversation = profile_manager.handle_message(from_number, message_text)
+    normalized = " ".join(message_text.lower().split())
+    reset_requested = any(
+        phrase in normalized
+        for phrase in ("reset", "restart", "new profile", "change profile", "start over")
+    )
+    if reset_requested:
+        profile_manager.reset_profile(from_number)
+        return (
+            "Sare naanna, old profile clear chesanu. "
+            "Malli fresh ga start cheddam. Mundu mee mandal cheppandi."
+        )
+
+    existing_profile = profile_manager.get_profile(from_number)
+    force_overwrite = (
+        existing_profile.profile_complete
+        and profile_manager.message_contains_profile_signal(message_text)
+    )
+
+    conversation = profile_manager.handle_message(
+        from_number,
+        message_text,
+        force_overwrite=force_overwrite,
+    )
     profile = conversation["profile"]
 
     if not profile.profile_complete:
@@ -172,6 +194,23 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
         _log_recommendation(engine_farmer, result)
         return generate_telugu_response(result)
 
+    if force_overwrite:
+        engine_farmer = EngineFarmerProfile(
+            mandal=profile.mandal,
+            acres=profile.acres,
+            soil_zone=profile.soil_type,
+            water_source=profile.water_source,
+            loan_burden_rs=profile.loan_burden_rs,
+            last_crops=profile.last_three_crops,
+            farmer_id=profile.phone_number,
+        )
+        result = recommend(engine_farmer)
+        _log_recommendation(engine_farmer, result)
+        return (
+            "Mee profile update chesanu naanna. Kotha details batti malli analyse chesanu.\n\n"
+            f"{generate_telugu_response(result)}"
+        )
+
     intent = classify_intent(message_text)
 
     if intent == "weather_question":
@@ -185,6 +224,14 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
             "Photo diagnosis module ippudu connect chesthunnanu. "
             "Clear leaf/photo pampandi ani taruvatha direct check chesthanu. "
             "Urgent aithe Nizamabad KVK: 08462-226360."
+        )
+
+    if intent == "unknown":
+        return (
+            "Mee profile already na daggara undi naanna. "
+            "Kotha analysis kavali ante kotha details cheppandi "
+            "(udaharana: 5 acres, black cotton, borewell, loan 1 lakh) "
+            "lekapothe 'weather', 'scheme', 'disease', lekapothe 'crop recommend' ani cheppandi."
         )
 
     engine_farmer = EngineFarmerProfile(

@@ -364,7 +364,13 @@ class FarmerProfileManager:
                 "warning": f"Supabase request failed: {exc.reason}.",
             }
 
-    def handle_message(self, phone_number: str, message_text: str) -> dict[str, Any]:
+    def handle_message(
+        self,
+        phone_number: str,
+        message_text: str,
+        *,
+        force_overwrite: bool = False,
+    ) -> dict[str, Any]:
         profile = self.get_profile(phone_number)
         was_complete = profile.profile_complete
         text = message_text.strip()
@@ -379,7 +385,7 @@ class FarmerProfileManager:
                 "just_completed": False,
             }
 
-        self._fill_from_message(profile, text)
+        self._fill_from_message(profile, text, force_overwrite=force_overwrite)
         profile.profile_stage = self._next_stage(profile)
         profile.profile_complete = profile.profile_stage == "complete"
         reply = self._build_reply(profile)
@@ -391,6 +397,33 @@ class FarmerProfileManager:
             "save_result": save_result,
             "just_completed": (not was_complete) and profile.profile_complete,
         }
+
+    def reset_profile(self, phone_number: str) -> dict[str, Any]:
+        profile = FarmerProfile(phone_number=phone_number)
+        save_result = self.save_profile(profile)
+        return {
+            "profile": profile,
+            "save_result": save_result,
+        }
+
+    def message_contains_profile_signal(self, message_text: str) -> bool:
+        normalized = _normalize_text(message_text)
+        profile_words = {
+            "change", "update", "new profile", "restart", "reset", "again",
+            "mandal", "acre", "acres", "soil", "water", "borewell", "canal",
+            "rainfed", "mixed", "loan", "appu", "crop", "crops",
+        }
+        if any(word in normalized for word in profile_words):
+            return True
+
+        return any((
+            self._extract_mandal(normalized),
+            self._extract_acres(normalized) is not None,
+            self._extract_soil(normalized),
+            self._extract_water(normalized),
+            bool(self._extract_crops(normalized)),
+            self._extract_loan_amount(normalized) is not None,
+        ))
 
     def next_question(self, profile: FarmerProfile) -> str:
         stage = self._next_stage(profile)
@@ -435,18 +468,22 @@ class FarmerProfileManager:
             )
         return self.next_question(profile)
 
-    def _fill_from_message(self, profile: FarmerProfile, text: str) -> None:
+    def _fill_from_message(
+        self,
+        profile: FarmerProfile,
+        text: str,
+        *,
+        force_overwrite: bool = False,
+    ) -> None:
         normalized = _normalize_text(text)
 
-        if not profile.mandal:
-            mandal = self._extract_mandal(normalized)
-            if mandal:
-                profile.mandal = mandal
+        mandal = self._extract_mandal(normalized)
+        if mandal and (force_overwrite or not profile.mandal):
+            profile.mandal = mandal
 
-        if profile.acres is None:
-            acres = self._extract_acres(normalized)
-            if acres is not None:
-                profile.acres = acres
+        acres = self._extract_acres(normalized)
+        if acres is not None and (force_overwrite or profile.acres is None):
+            profile.acres = acres
 
         soil = self._extract_soil(normalized)
         if soil:

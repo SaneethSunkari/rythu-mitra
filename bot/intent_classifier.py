@@ -10,9 +10,14 @@ INTENTS = (
     "loan_help",
     "scheme_match",
     "weather_question",
+    "unknown",
 )
 
 INTENT_KEYWORDS = {
+    "crop_recommendation": [
+        "crop", "recommend", "suggest", "analysis", "analyse", "price range",
+        "emi veyali", "emi vesali", "best crop", "which crop",
+    ],
     "disease_detection": [
         "disease", "tegulu", "machha", "spot", "rot", "worm", "pest", "photo", "image",
     ],
@@ -36,4 +41,4 @@ def classify_intent(message_text: str) -> str:
     for intent, keywords in INTENT_KEYWORDS.items():
         if any(keyword in normalized for keyword in keywords):
             return intent
-    return "crop_recommendation"
+    return "unknown"
