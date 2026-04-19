@@ -9,22 +9,34 @@
 [![Railway](https://img.shields.io/badge/Railway-Deployed-0B0D0E?logo=railway&logoColor=white)](Procfile)
 [![Status](https://img.shields.io/badge/Status-Core%20Engine%20Working-success)](scripts/test_engine.py)
 
-Rythu Mitra is not meant to feel like a dashboard, a chatbot, or a generic agri app. It is designed to feel like a knowledgeable son helping his father make safer farming decisions over WhatsApp voice notes.
+Rythu Mitra is a district-specific farming copilot built around one constraint: it should feel like a knowledgeable son helping his father over WhatsApp, not like software asking a farmer to learn software.
 
+Built from a real family problem in Annaram village, the project combines Telugu voice UX, conservative crop recommendation logic, district market safeguards, and live messaging infrastructure.
 ## TL;DR
 
 - **Input:** WhatsApp text or Telugu voice notes
 - **Core output:** crop recommendation with district-aware safety checks
 - **Region:** Nizamabad district, Telangana
 - **Interfaces:** Twilio WhatsApp, FastAPI, Sarvam STT/TTS, Supabase, Railway
-- **Current strength:** a working 5-filter recommendation engine plus deployable WhatsApp voice flow
+- **Current strength:** a working 5-filter recommendation engine, deployable WhatsApp voice flow, and runnable React dashboard
 - **Key differentiator:** the bot tracks district planting pressure so it does not create a new oversupply rat race
+
+## Quick Links
+
+- [Engine test](scripts/test_engine.py)
+- [WhatsApp webhook](bot/whatsapp_handler.py)
+- [Dashboard app](dashboard/src/App.jsx)
+- [District data](data/nizamabad_district.py)
+
+## Dashboard Preview
+
+![Rythu Mitra Dashboard](docs/dashboard-preview.svg)
 
 ## Architecture Preview
 
 ![Rythu Mitra Architecture](docs/architecture.svg)
 
-## CORE
+## If You Are A Recruiter Or Hiring Manager
 
 This is the fastest way to evaluate the project.
 
@@ -57,7 +69,7 @@ This is the fastest path to understanding the codebase.
 - **Run these first**
   `python3 scripts/test_engine.py` and `python3 scripts/test_whatsapp_voice.py`
 - **Know the current boundaries**
-  Crop recommendations, weather ingest, progressive farmer profiling, and WhatsApp routing are real. Disease diagnosis, proactive alerts, and dashboard work are still partial.
+  Crop recommendations, weather ingest, progressive farmer profiling, WhatsApp routing, and the dashboard are real. Disease diagnosis and proactive alerts are still partial.
 - **Know the external dependencies**
   Supabase, Twilio, and Sarvam are required for the full live flow. `data.gov.in` is optional today because the project already supports historical and fallback price paths.
 - **Know where the bot starts**
@@ -98,6 +110,21 @@ Rejected: paddy, turmeric
 Reason: district supply pressure
 ```
 
+## Run The Dashboard
+
+```bash
+python3 scripts/export_dashboard_data.py
+cd dashboard
+npm install
+npm run dev
+```
+
+Then open:
+
+```text
+http://localhost:4173
+```
+
 ## Why This Project Is Different
 
 Most agriculture assistants stop at “best crop for your soil.”  
@@ -136,6 +163,8 @@ That is the heart of this project.
   Historical + fallback mandi price pipeline, with live `data.gov.in` support ready when an API key is available
 - **WhatsApp bot**
   FastAPI webhook, progressive farmer profiling, intent routing, Sarvam STT/TTS integration, Twilio-compatible responses
+- **Dashboard**
+  A runnable React command view for district opportunity, mandi prices, weather context, and bot walkthroughs
 - **Deployment path**
   Railway-ready runtime config and live webhook routes
 
@@ -144,7 +173,7 @@ That is the heart of this project.
 - Disease model training and inference files
 - Proactive monitoring and drying alerts
 - Season calendar automation
-- React dashboard skeleton
+- Future dashboard polish, richer visuals, and production data refresh
 
 ## Current Project Status
 
@@ -155,13 +184,14 @@ That is the heart of this project.
 - Price pipeline works with historical and fallback data even without `data.gov.in`
 - WhatsApp text flow works
 - WhatsApp voice flow is implemented end-to-end in code
+- Dashboard builds successfully and uses exported backend data
 
 ### Still evolving
 
 - Live `data.gov.in` mandi pulls require an API key
 - Disease diagnosis is scaffolded but not fully integrated into the bot
 - Dharani survey-number to soil lookup is not wired yet
-- Dashboard is not yet a finished product
+- The dashboard is functional, but it is still a local frontend app rather than a production-integrated surface
 
 ## Example Recommendation
 
@@ -249,11 +279,21 @@ rythu-mitra/
 │   ├── price_history.json     # Additional bundled history
 │   ├── schemes.py             # Scheme helpers
 │   └── recommendation_log.json# Per-season recommendation history
+├── dashboard/
+│   ├── package.json           # Vite React dashboard app
+│   ├── index.html
+│   ├── src/App.jsx
+│   ├── src/data/dashboardData.json
+│   ├── src/components/DistrictMap.jsx
+│   ├── src/components/MandiPrices.jsx
+│   ├── src/components/BotDemo.jsx
+│   └── src/styles.css
 ├── disease/
 │   ├── train.py               # Training scaffold
 │   ├── model.py               # Model scaffold
 │   └── inference.py           # Inference scaffold
 ├── docs/
+│   ├── dashboard-preview.svg
 │   ├── architecture.svg
 │   ├── architecture.png
 │   ├── logic.pdf
@@ -268,6 +308,7 @@ rythu-mitra/
 │   ├── create_farmer_profiles_table.sql
 │   ├── create_mandi_prices_table.sql
 │   ├── create_weather_forecast_tables.sql
+│   ├── export_dashboard_data.py
 │   ├── seed_supabase.py
 │   ├── test_engine.py
 │   └── test_whatsapp_voice.py
@@ -391,6 +432,15 @@ python3 scripts/test_whatsapp_voice.py
 
 The voice smoke test exercises the WhatsApp flow end-to-end inside the app using generated audio and requires a working Sarvam key in `.env`.
 
+### Run the dashboard locally
+
+```bash
+python3 scripts/export_dashboard_data.py
+cd dashboard
+npm install
+npm run dev
+```
+
 ## Supabase Setup
 
 If you want Supabase tables created manually, run these in the Supabase SQL editor:
@@ -460,6 +510,8 @@ This repo separates deployment dependencies from ML training dependencies on pur
 
 That split is important because free-tier Railway builds can fail if PyTorch is included in the web image.
 
+The dashboard is currently a separate Vite app and is not yet bundled into the FastAPI deployment.
+
 ## Safety, Trust, and Product Principles
 
 This project is opinionated about agricultural decision support.
@@ -483,7 +535,7 @@ That is why the code emphasizes:
 - Twilio sandbox and account-level daily limits can interrupt live testing
 - Disease detection is scaffolded but not yet fully wired into the WhatsApp flow
 - Soil can be collected manually today, but Dharani survey-number lookup is not integrated yet
-- Dashboard work is not finished
+- The dashboard is functional, but it is still a local frontend app rather than a production-integrated surface
 
 ## Roadmap
 
@@ -491,7 +543,7 @@ That is why the code emphasizes:
 - Add proactive disease alerts based on weather + crop stage
 - Add drying-weather alerts for harvest/post-harvest use
 - Complete season calendar automation
-- Build the React dashboard for district map, live prices, and bot demo
+- Add production data refresh and FastAPI/static integration for the dashboard
 - Replace all remaining legacy reference baselines with fresher season data where available
 
 ## Why This Belongs In A Portfolio
