@@ -1,0 +1,728 @@
+[
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nizamabad",
+    "mandi_slug": "nizamabad",
+    "crop_name": "turmeric",
+    "crop_slug": "turmeric",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 5800,
+    "max_price_rs_per_qtl": 14000,
+    "modal_price_rs_per_qtl": 9600,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449712+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nizamabad",
+    "mandi_slug": "nizamabad",
+    "crop_name": "paddy",
+    "crop_slug": "paddy",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1750,
+    "max_price_rs_per_qtl": 2389,
+    "modal_price_rs_per_qtl": 2050,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449731+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nizamabad",
+    "mandi_slug": "nizamabad",
+    "crop_name": "maize",
+    "crop_slug": "maize",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1600,
+    "max_price_rs_per_qtl": 3000,
+    "modal_price_rs_per_qtl": 2380,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449737+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nizamabad",
+    "mandi_slug": "nizamabad",
+    "crop_name": "soybean",
+    "crop_slug": "soybean",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 3600,
+    "max_price_rs_per_qtl": 6200,
+    "modal_price_rs_per_qtl": 5480,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449742+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nizamabad",
+    "mandi_slug": "nizamabad",
+    "crop_name": "red_gram",
+    "crop_slug": "red_gram",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4500,
+    "max_price_rs_per_qtl": 9000,
+    "modal_price_rs_per_qtl": 7800,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449746+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nizamabad",
+    "mandi_slug": "nizamabad",
+    "crop_name": "sunflower",
+    "crop_slug": "sunflower",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4200,
+    "max_price_rs_per_qtl": 7000,
+    "modal_price_rs_per_qtl": 6100,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449751+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nizamabad",
+    "mandi_slug": "nizamabad",
+    "crop_name": "cotton",
+    "crop_slug": "cotton",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4800,
+    "max_price_rs_per_qtl": 9500,
+    "modal_price_rs_per_qtl": 6400,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449755+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Armur",
+    "mandi_slug": "armur",
+    "crop_name": "paddy",
+    "crop_slug": "paddy",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1750,
+    "max_price_rs_per_qtl": 2389,
+    "modal_price_rs_per_qtl": 2050,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449761+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Armur",
+    "mandi_slug": "armur",
+    "crop_name": "maize",
+    "crop_slug": "maize",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1600,
+    "max_price_rs_per_qtl": 3000,
+    "modal_price_rs_per_qtl": 2380,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449765+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Armur",
+    "mandi_slug": "armur",
+    "crop_name": "turmeric",
+    "crop_slug": "turmeric",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 5800,
+    "max_price_rs_per_qtl": 14000,
+    "modal_price_rs_per_qtl": 9600,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449768+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Armur",
+    "mandi_slug": "armur",
+    "crop_name": "soybean",
+    "crop_slug": "soybean",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 3600,
+    "max_price_rs_per_qtl": 6200,
+    "modal_price_rs_per_qtl": 5480,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449771+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Bodhan",
+    "mandi_slug": "bodhan",
+    "crop_name": "sugarcane",
+    "crop_slug": "sugarcane",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 370,
+    "max_price_rs_per_qtl": 370,
+    "modal_price_rs_per_qtl": 370,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449776+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Bodhan",
+    "mandi_slug": "bodhan",
+    "crop_name": "paddy",
+    "crop_slug": "paddy",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1750,
+    "max_price_rs_per_qtl": 2389,
+    "modal_price_rs_per_qtl": 2050,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449780+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Bodhan",
+    "mandi_slug": "bodhan",
+    "crop_name": "cotton",
+    "crop_slug": "cotton",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4800,
+    "max_price_rs_per_qtl": 9500,
+    "modal_price_rs_per_qtl": 6400,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449783+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Bodhan",
+    "mandi_slug": "bodhan",
+    "crop_name": "soybean",
+    "crop_slug": "soybean",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 3600,
+    "max_price_rs_per_qtl": 6200,
+    "modal_price_rs_per_qtl": 5480,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449786+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Kamareddy",
+    "mandi_slug": "kamareddy",
+    "crop_name": "maize",
+    "crop_slug": "maize",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1600,
+    "max_price_rs_per_qtl": 3000,
+    "modal_price_rs_per_qtl": 2380,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449791+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Kamareddy",
+    "mandi_slug": "kamareddy",
+    "crop_name": "soybean",
+    "crop_slug": "soybean",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 3600,
+    "max_price_rs_per_qtl": 6200,
+    "modal_price_rs_per_qtl": 5480,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449803+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Kamareddy",
+    "mandi_slug": "kamareddy",
+    "crop_name": "red_gram",
+    "crop_slug": "red_gram",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4500,
+    "max_price_rs_per_qtl": 9000,
+    "modal_price_rs_per_qtl": 7800,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449806+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Kamareddy",
+    "mandi_slug": "kamareddy",
+    "crop_name": "sunflower",
+    "crop_slug": "sunflower",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4200,
+    "max_price_rs_per_qtl": 7000,
+    "modal_price_rs_per_qtl": 6100,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449809+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Kamareddy",
+    "mandi_slug": "kamareddy",
+    "crop_name": "cotton",
+    "crop_slug": "cotton",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4800,
+    "max_price_rs_per_qtl": 9500,
+    "modal_price_rs_per_qtl": 6400,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449812+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nandipet",
+    "mandi_slug": "nandipet",
+    "crop_name": "paddy",
+    "crop_slug": "paddy",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1750,
+    "max_price_rs_per_qtl": 2389,
+    "modal_price_rs_per_qtl": 2050,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449817+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nandipet",
+    "mandi_slug": "nandipet",
+    "crop_name": "turmeric",
+    "crop_slug": "turmeric",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 5800,
+    "max_price_rs_per_qtl": 14000,
+    "modal_price_rs_per_qtl": 9600,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449820+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Nandipet",
+    "mandi_slug": "nandipet",
+    "crop_name": "maize",
+    "crop_slug": "maize",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1600,
+    "max_price_rs_per_qtl": 3000,
+    "modal_price_rs_per_qtl": 2380,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449823+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Balkonda",
+    "mandi_slug": "balkonda",
+    "crop_name": "cotton",
+    "crop_slug": "cotton",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4800,
+    "max_price_rs_per_qtl": 9500,
+    "modal_price_rs_per_qtl": 6400,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449828+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Balkonda",
+    "mandi_slug": "balkonda",
+    "crop_name": "soybean",
+    "crop_slug": "soybean",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 3600,
+    "max_price_rs_per_qtl": 6200,
+    "modal_price_rs_per_qtl": 5480,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449836+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Balkonda",
+    "mandi_slug": "balkonda",
+    "crop_name": "maize",
+    "crop_slug": "maize",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 1600,
+    "max_price_rs_per_qtl": 3000,
+    "modal_price_rs_per_qtl": 2380,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449840+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  },
+  {
+    "price_date": "2026-04-19",
+    "state": "Telangana",
+    "district": "Nizamabad",
+    "mandi_name": "Balkonda",
+    "mandi_slug": "balkonda",
+    "crop_name": "red_gram",
+    "crop_slug": "red_gram",
+    "variety": "district_fallback",
+    "min_price_rs_per_qtl": 4500,
+    "max_price_rs_per_qtl": 9000,
+    "modal_price_rs_per_qtl": 7800,
+    "source": "historical_fallback",
+    "source_resource": "data.nizamabad_district.CROPS",
+    "fetched_at_utc": "2026-04-19T16:44:09.449843+00:00",
+    "raw_record": {
+      "fallback": true,
+      "history_years": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "note": "Synthetic current-day row generated from hardcoded district price history."
+    }
+  }
+]

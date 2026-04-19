@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "season": "kharif_2025",
+      "farmer_key": "whatsapp:+919910284263",
+      "farmer_id": "whatsapp:+919910284263",
+      "survey_number": null,
+      "mandal": "nandipet",
+      "soil_zone": "deep_calcareous",
+      "water_source": "mixed",
+      "acres": 10.0,
+      "primary_crop": "maize",
+      "secondary_crop": "cotton",
+      "source": "whatsapp",
+      "logged_at_utc": "2026-04-19T17:44:10.733228+00:00"
+    }
+  ]
+}

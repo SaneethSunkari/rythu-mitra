@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+requests
+httpx
+supabase
+pandas
+openmeteo-requests
+twilio
+torch
+torchvision
+pillow
+numpy
