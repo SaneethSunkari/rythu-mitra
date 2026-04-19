@@ -125,6 +125,12 @@ Then open:
 http://localhost:4173
 ```
 
+After Railway redeploys, the same UI will be served from:
+
+```text
+https://<your-railway-domain>/dashboard
+```
+
 ## Why This Project Is Different
 
 Most agriculture assistants stop at “best crop for your soil.”  

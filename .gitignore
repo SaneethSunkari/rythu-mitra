@@ -13,3 +13,5 @@ build/
 .idea/
 .vscode/
 data/generated_audio/
+!dashboard/dist/
+!dashboard/dist/**

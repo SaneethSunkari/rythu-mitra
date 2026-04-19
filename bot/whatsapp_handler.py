@@ -14,6 +14,7 @@ from xml.sax.saxutils import escape
 import requests
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from twilio.rest import Client
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -58,6 +59,17 @@ app = FastAPI(title="Rythu Mitra")
 profile_manager = FarmerProfileManager()
 district_cap_tracker = DistrictCapTracker()
 logger = logging.getLogger(__name__)
+ROOT = Path(__file__).resolve().parent.parent
+DASHBOARD_DIST_DIR = ROOT / "dashboard" / "dist"
+DASHBOARD_INDEX = DASHBOARD_DIST_DIR / "index.html"
+DASHBOARD_ASSETS_DIR = DASHBOARD_DIST_DIR / "assets"
+
+if DASHBOARD_ASSETS_DIR.exists():
+    app.mount(
+        "/dashboard/assets",
+        StaticFiles(directory=str(DASHBOARD_ASSETS_DIR)),
+        name="dashboard-assets",
+    )
 
 
 @app.get("/")
@@ -70,6 +82,7 @@ async def root() -> dict:
         "message": "Rythu Mitra webhook is live.",
         "health_url": "/health",
         "whatsapp_webhook": "/whatsapp",
+        "dashboard_url": "/dashboard",
     }
 
 
@@ -78,6 +91,35 @@ async def health() -> dict:
     """Simple health route for local and Railway checks."""
 
     return {"status": "ok", "service": "rythu-mitra"}
+
+
+@app.get("/dashboard")
+@app.get("/dashboard/")
+async def dashboard_index() -> FileResponse:
+    """Serve the built dashboard shell when present."""
+
+    if not DASHBOARD_INDEX.exists():
+        raise HTTPException(status_code=404, detail="Dashboard build not found.")
+    return FileResponse(DASHBOARD_INDEX, media_type="text/html")
+
+
+@app.get("/dashboard/{path:path}")
+async def dashboard_spa(path: str) -> FileResponse:
+    """Fallback dashboard routes back to the SPA index for client-side navigation."""
+
+    if not DASHBOARD_INDEX.exists():
+        raise HTTPException(status_code=404, detail="Dashboard build not found.")
+
+    requested_path = (DASHBOARD_DIST_DIR / path).resolve()
+    if requested_path.is_file() and DASHBOARD_DIST_DIR in requested_path.parents:
+        guessed_type, _ = mimetypes.guess_type(requested_path.name)
+        return FileResponse(
+            requested_path,
+            media_type=guessed_type or "application/octet-stream",
+            filename=requested_path.name,
+        )
+
+    return FileResponse(DASHBOARD_INDEX, media_type="text/html")
 
 
 @app.get("/media/{filename}")
