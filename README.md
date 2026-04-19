@@ -24,7 +24,7 @@ Rythu Mitra is not meant to feel like a dashboard, a chatbot, or a generic agri 
 
 ![Rythu Mitra Architecture](docs/architecture.svg)
 
-## If You Are A Recruiter Or Hiring Manager
+## CORE
 
 This is the fastest way to evaluate the project.
 
