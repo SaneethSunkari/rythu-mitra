@@ -23,6 +23,21 @@ DEFAULT_TTS_SPEAKER = "manan"
 DEFAULT_TTS_PACE = 0.9
 DEFAULT_TTS_SAMPLE_RATE = 24000
 GENERATED_AUDIO_DIR = Path("data/generated_audio")
+MIME_EXTENSION_MAP = {
+    "wav": "wav",
+    "x-wav": "wav",
+    "wave": "wav",
+    "ogg": "ogg",
+    "opus": "opus",
+    "mpeg": "mp3",
+    "mp3": "mp3",
+    "aac": "aac",
+    "x-aac": "aac",
+    "webm": "webm",
+    "mp4": "mp4",
+    "x-m4a": "m4a",
+    "m4a": "m4a",
+}
 
 
 def _load_local_env(env_path: str = ".env") -> None:
@@ -94,6 +109,47 @@ def transliterate_for_telugu_speech(text: str) -> str:
     return data.get("transliterated_text") or cleaned
 
 
+def _normalized_mime_candidates(filename: str, mime_type: str | None) -> list[str | None]:
+    candidates: list[str | None] = []
+
+    def add(value: str | None) -> None:
+        if value not in candidates:
+            candidates.append(value)
+
+    cleaned = (mime_type or "").split(";", 1)[0].strip().lower()
+    if cleaned:
+        add(cleaned)
+        if "/" in cleaned:
+            subtype = cleaned.split("/", 1)[1].strip()
+            add(subtype)
+            mapped = MIME_EXTENSION_MAP.get(subtype)
+            if mapped:
+                add(mapped)
+            if subtype == "ogg":
+                add("opus")
+            if subtype == "opus":
+                add("ogg")
+
+    suffix = Path(filename).suffix.lower().lstrip(".")
+    if suffix:
+        add(suffix)
+        mapped = MIME_EXTENSION_MAP.get(suffix)
+        if mapped:
+            add(mapped)
+
+    add(None)
+    return candidates
+
+
+def _mode_candidates(requested_mode: str | None) -> list[str]:
+    preferred = requested_mode or os.getenv("SARVAM_STT_MODE", DEFAULT_STT_MODE)
+    modes = []
+    for mode in (preferred, "translit", "transcribe", "codemix"):
+        if mode and mode not in modes:
+            modes.append(mode)
+    return modes
+
+
 def transcribe_voice_note(
     audio_bytes: bytes,
     *,
@@ -105,28 +161,54 @@ def transcribe_voice_note(
 ) -> dict[str, Any]:
     """Convert a Telugu voice note into romanized text for the engine."""
 
-    payload = {
-        "model": model or os.getenv("SARVAM_STT_MODEL", DEFAULT_STT_MODEL),
-        "mode": mode or os.getenv("SARVAM_STT_MODE", DEFAULT_STT_MODE),
-        "language_code": language_code,
-    }
+    last_error: Exception | None = None
+    last_empty_response: dict[str, Any] | None = None
+    resolved_model = model or os.getenv("SARVAM_STT_MODEL", DEFAULT_STT_MODEL)
 
-    response = requests.post(
-        SARVAM_STT_URL,
-        headers=_sarvam_headers(),
-        data=payload,
-        files={"file": (filename, audio_bytes, mime_type)},
-        timeout=60,
-    )
-    response.raise_for_status()
-    data = response.json()
-    return {
-        "request_id": data.get("request_id"),
-        "transcript": (data.get("transcript") or "").strip(),
-        "language_code": data.get("language_code"),
-        "language_probability": data.get("language_probability"),
-        "raw": data,
-    }
+    for candidate_mode in _mode_candidates(mode):
+        payload = {
+            "model": resolved_model,
+            "mode": candidate_mode,
+            "language_code": language_code,
+        }
+
+        for candidate_mime in _normalized_mime_candidates(filename, mime_type):
+            file_tuple: tuple[Any, ...]
+            if candidate_mime:
+                file_tuple = (filename, audio_bytes, candidate_mime)
+            else:
+                file_tuple = (filename, audio_bytes)
+
+            try:
+                response = requests.post(
+                    SARVAM_STT_URL,
+                    headers=_sarvam_headers(),
+                    data=payload,
+                    files={"file": file_tuple},
+                    timeout=60,
+                )
+                response.raise_for_status()
+                data = response.json()
+                transcript = (data.get("transcript") or "").strip()
+                if transcript:
+                    return {
+                        "request_id": data.get("request_id"),
+                        "transcript": transcript,
+                        "language_code": data.get("language_code"),
+                        "language_probability": data.get("language_probability"),
+                        "mode_used": candidate_mode,
+                        "mime_type_used": candidate_mime,
+                        "raw": data,
+                    }
+                last_empty_response = data
+            except Exception as exc:
+                last_error = exc
+
+    if last_empty_response is not None:
+        raise RuntimeError("Sarvam STT returned an empty transcript.")
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError("Sarvam STT failed without a specific error.")
 
 
 def synthesize_telugu_reply(

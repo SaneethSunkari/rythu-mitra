@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 from pathlib import Path
@@ -55,6 +56,7 @@ _load_local_env()
 app = FastAPI(title="Rythu Mitra")
 profile_manager = FarmerProfileManager()
 district_cap_tracker = DistrictCapTracker()
+logger = logging.getLogger(__name__)
 
 
 @app.get("/")
@@ -114,16 +116,21 @@ async def whatsapp_webhook(request: Request, background_tasks: BackgroundTasks) 
         return _twiml_message("Phone number kanapadaledu. Malli try cheyyandi.")
 
     if num_media > 0:
-        if media_type.startswith("audio/"):
+        if media_type.startswith("audio/") or media_type in {"application/ogg", "application/octet-stream"}:
             try:
-                audio_bytes = _download_twilio_media(media_url)
+                audio_bytes, downloaded_media_type = _download_twilio_media(media_url)
                 transcript_result = transcribe_voice_note(
                     audio_bytes,
                     filename=_filename_from_media_url(media_url, media_type),
-                    mime_type=media_type or "audio/ogg",
+                    mime_type=downloaded_media_type or media_type or "audio/ogg",
                 )
                 message_text = transcript_result["transcript"]
             except Exception:
+                logger.exception(
+                    "Voice transcription failed for WhatsApp media. media_type=%s media_url_present=%s",
+                    media_type,
+                    bool(media_url),
+                )
                 reply = (
                     "Mee voice note clear ga artham kaaledu naanna. "
                     "Malli konchem slow ga pampandi lekapothe text lo cheppandi."
@@ -286,7 +293,7 @@ def _twiml_message(message: str) -> Response:
     return Response(content=xml, media_type="application/xml")
 
 
-def _download_twilio_media(media_url: str) -> bytes:
+def _download_twilio_media(media_url: str) -> tuple[bytes, str]:
     if not media_url:
         raise ValueError("Missing MediaUrl0 for incoming audio.")
 
@@ -296,7 +303,7 @@ def _download_twilio_media(media_url: str) -> bytes:
     auth = (sid, token) if sid and token else None
     response = requests.get(media_url, auth=auth, timeout=45)
     response.raise_for_status()
-    return response.content
+    return response.content, response.headers.get("Content-Type", "")
 
 
 def _filename_from_media_url(media_url: str, media_type: str) -> str:
