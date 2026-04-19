@@ -50,6 +50,9 @@ CROP_ALIASES = {
     "mokkajonna": "maize",
     "soybean": "soybean",
     "soyabean": "soybean",
+    "soya": "soybean",
+    "soy": "soybean",
+    "soya bean": "soybean",
     "cotton": "cotton",
     "patthi": "cotton",
     "patti": "cotton",
@@ -61,6 +64,44 @@ CROP_ALIASES = {
     "pesalu": "green_gram",
     "sugarcane": "sugarcane",
     "cheruku": "sugarcane",
+    "onion": "onion",
+    "ulli": "onion",
+    "tomato": "tomato",
+    "tamata": "tomato",
+}
+
+SOIL_PHRASES = {
+    "black cotton",
+    "deep calcareous",
+    "red clayey",
+}
+
+CROP_HISTORY_STOPWORDS = {
+    "last",
+    "crop",
+    "crops",
+    "loan",
+    "appu",
+    "no",
+    "undi",
+    "unna",
+    "ante",
+    "ledu",
+    "soil",
+    "water",
+    "borewell",
+    "canal",
+    "rainfed",
+    "mixed",
+    "black",
+    "deep",
+    "calcareous",
+    "red",
+    "clayey",
+    "and",
+    "with",
+    "acre",
+    "acres",
 }
 
 NUMBER_WORDS = {
@@ -444,6 +485,22 @@ class FarmerProfileManager:
                 "Udaharanaki: black cotton + borewell, red soil + rainfed, mixed + canal."
             )
         if stage == "history_and_loan":
+            if not profile.last_three_crops and profile.loan_situation is None:
+                return (
+                    "Last 3 crops emi vesaru? Loan unda? "
+                    "Udaharanaki: paddy, turmeric, maize. Loan 2 lakh undi. "
+                    "Ledu ante 'no loan' ani cheppandi."
+                )
+            if not profile.last_three_crops:
+                return (
+                    "Sare naanna. Ippudu last 3 crops cheppandi. "
+                    "Udaharanaki: onion, tomato, soybean."
+                )
+            if profile.loan_situation is None:
+                return (
+                    "Bagundi. Ippudu loan unda cheppandi. "
+                    "Udaharanaki: loan 2 lakh undi. Ledu ante 'no loan' ani cheppandi."
+                )
             return (
                 "Last 3 crops emi vesaru? Loan unda? "
                 "Udaharanaki: paddy, turmeric, maize. Loan 2 lakh undi. "
@@ -622,11 +679,48 @@ class FarmerProfileManager:
         return None
 
     def _extract_crops(self, normalized_text: str) -> list[str]:
+        working = f" {normalized_text} "
+
+        for keyword in LOAN_KEYWORDS:
+            marker = f" {keyword} "
+            if marker in working:
+                working = working.split(marker, 1)[0]
+
+        for phrase in SOIL_PHRASES:
+            working = working.replace(f" {phrase} ", " ")
+
         found: list[str] = []
-        for alias, canonical in CROP_ALIASES.items():
-            if alias in normalized_text and canonical not in found:
+        for alias, canonical in sorted(CROP_ALIASES.items(), key=lambda item: len(item[0]), reverse=True):
+            pattern = rf"\b{re.escape(alias)}\b"
+            if re.search(pattern, working) and canonical not in found:
                 found.append(canonical)
-        return found
+                working = re.sub(pattern, " ", working)
+
+        profile_signal_present = any((
+            self._extract_mandal(normalized_text),
+            self._extract_acres(normalized_text) is not None,
+            self._extract_soil(normalized_text),
+            self._extract_water(normalized_text),
+        ))
+        if profile_signal_present and not found:
+            return []
+
+        fallback_tokens: list[str] = []
+        for token in _tokenize_words(working):
+            if token in CROP_HISTORY_STOPWORDS:
+                continue
+            if token.isdigit():
+                continue
+            if len(token) <= 1:
+                continue
+            if token not in fallback_tokens:
+                fallback_tokens.append(token)
+
+        for token in fallback_tokens[:3]:
+            if token not in found:
+                found.append(token)
+
+        return found[:3]
 
     def _extract_loan_amount(self, normalized_text: str) -> int | None:
         if "no loan" in normalized_text or "loan ledu" in normalized_text:
