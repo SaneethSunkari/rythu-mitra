@@ -11,7 +11,7 @@
 
 Rythu Mitra is a district-specific farming copilot built around one constraint: it should feel like a knowledgeable son helping his father over WhatsApp, not like software asking a farmer to learn software.
 
-Built from a real family problem in Annaram village, the project combines Telugu voice UX, conservative crop recommendation logic, district market safeguards, and live messaging infrastructure.
+Built from a real family problem, the project combines Telugu voice UX, conservative crop recommendation logic, district market safeguards, and live messaging infrastructure.
 ## TL;DR
 
 - **Input:** WhatsApp text or Telugu voice notes
