@@ -90,6 +90,16 @@ def _load_local_env(env_path: str = ".env") -> None:
             os.environ[key] = value
 
 
+def _resolve_supabase_key(explicit_key: str | None = None) -> str:
+    if explicit_key:
+        return explicit_key
+    return (
+        os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+        or os.getenv("SUPABASE_KEY", "")
+        or os.getenv("SUPABASE_ANON_KEY", "")
+    )
+
+
 def _normalize_text(value: str | None) -> str:
     if not value:
         return ""
@@ -212,7 +222,7 @@ class PricePipeline:
 
         self.api_key = api_key or os.getenv("DATA_GOV_API_KEY", "")
         self.supabase_url = (supabase_url or os.getenv("SUPABASE_URL", "")).rstrip("/")
-        self.supabase_key = supabase_key or os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+        self.supabase_key = _resolve_supabase_key(supabase_key)
         self.resource_id = resource_id
         self.supabase_table = supabase_table
         self.timeout_seconds = timeout_seconds

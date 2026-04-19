@@ -50,6 +50,16 @@ def _load_local_env(env_path: str = ".env") -> None:
             os.environ[key] = value
 
 
+def _resolve_supabase_key(explicit_key: str | None = None) -> str:
+    if explicit_key:
+        return explicit_key
+    return (
+        os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+        or os.getenv("SUPABASE_KEY", "")
+        or os.getenv("SUPABASE_ANON_KEY", "")
+    )
+
+
 class WeatherPipeline:
     """Open-Meteo fetch + Supabase persistence for Nizamabad forecasts."""
 
@@ -73,7 +83,7 @@ class WeatherPipeline:
         self.forecast_days = forecast_days
         self.base_url = (base_url or os.getenv("OPEN_METEO_BASE_URL") or OPEN_METEO_BASE_URL).rstrip("/")
         self.supabase_url = (supabase_url or os.getenv("SUPABASE_URL", "")).rstrip("/")
-        self.supabase_key = supabase_key or os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+        self.supabase_key = _resolve_supabase_key(supabase_key)
         self.timeout_seconds = timeout_seconds
         self.local_hourly_cache_path = Path(LOCAL_HOURLY_CACHE_PATH)
         self.local_daily_cache_path = Path(LOCAL_DAILY_CACHE_PATH)

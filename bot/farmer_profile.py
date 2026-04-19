@@ -208,6 +208,16 @@ def _load_local_env(env_path: str = ".env") -> None:
             os.environ[key] = value
 
 
+def _resolve_supabase_key(explicit_key: str | None = None) -> str:
+    if explicit_key:
+        return explicit_key
+    return (
+        os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+        or os.getenv("SUPABASE_KEY", "")
+        or os.getenv("SUPABASE_ANON_KEY", "")
+    )
+
+
 def _normalize_text(value: str | None) -> str:
     if not value:
         return ""
@@ -300,7 +310,7 @@ class FarmerProfileManager:
         _load_local_env()
 
         self.supabase_url = (supabase_url or os.getenv("SUPABASE_URL", "")).rstrip("/")
-        self.supabase_key = supabase_key or os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
+        self.supabase_key = _resolve_supabase_key(supabase_key)
         self.table_name = table_name
         self.timeout_seconds = timeout_seconds
 
