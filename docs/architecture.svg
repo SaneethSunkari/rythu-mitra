@@ -1,0 +1,68 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="760" rx="24" fill="#0B1020"/>
+  <rect x="40" y="40" width="1120" height="680" rx="20" fill="#121A30" stroke="#2A3555"/>
+
+  <text x="70" y="95" fill="#F7F9FC" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Rythu Mitra Architecture</text>
+  <text x="70" y="128" fill="#98A6C5" font-family="Arial, Helvetica, sans-serif" font-size="18">WhatsApp -> voice/text understanding -> district-safe crop logic -> Telugu reply</text>
+
+  <rect x="70" y="170" width="220" height="110" rx="18" fill="#0F3D2E" stroke="#38B27A"/>
+  <text x="95" y="212" fill="#E9FFF6" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Farmer Interface</text>
+  <text x="95" y="245" fill="#D3F7E8" font-family="Arial, Helvetica, sans-serif" font-size="18">WhatsApp text</text>
+  <text x="95" y="270" fill="#D3F7E8" font-family="Arial, Helvetica, sans-serif" font-size="18">Telugu voice notes</text>
+
+  <rect x="340" y="170" width="240" height="110" rx="18" fill="#163E69" stroke="#5AA7FF"/>
+  <text x="365" y="212" fill="#EEF7FF" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Messaging Layer</text>
+  <text x="365" y="245" fill="#D7E9FF" font-family="Arial, Helvetica, sans-serif" font-size="18">Twilio WhatsApp Sandbox</text>
+  <text x="365" y="270" fill="#D7E9FF" font-family="Arial, Helvetica, sans-serif" font-size="18">Railway-hosted FastAPI</text>
+
+  <rect x="630" y="170" width="240" height="110" rx="18" fill="#4A2A12" stroke="#F8A74B"/>
+  <text x="655" y="212" fill="#FFF5EA" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Voice Layer</text>
+  <text x="655" y="245" fill="#FFE7CF" font-family="Arial, Helvetica, sans-serif" font-size="18">Sarvam STT</text>
+  <text x="655" y="270" fill="#FFE7CF" font-family="Arial, Helvetica, sans-serif" font-size="18">Sarvam TTS (Telugu)</text>
+
+  <rect x="920" y="170" width="200" height="110" rx="18" fill="#4C1F35" stroke="#FF78B0"/>
+  <text x="945" y="212" fill="#FFF0F7" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Storage</text>
+  <text x="945" y="245" fill="#FFD7EA" font-family="Arial, Helvetica, sans-serif" font-size="18">Supabase</text>
+  <text x="945" y="270" fill="#FFD7EA" font-family="Arial, Helvetica, sans-serif" font-size="18">Profiles + forecasts</text>
+
+  <rect x="120" y="360" width="960" height="290" rx="22" fill="#11182A" stroke="#2A3555"/>
+  <text x="155" y="405" fill="#F7F9FC" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Core Decision Engine</text>
+  <text x="155" y="438" fill="#9EB0D8" font-family="Arial, Helvetica, sans-serif" font-size="18">The recommendation only goes out if every safety filter passes.</text>
+
+  <rect x="155" y="470" width="150" height="120" rx="16" fill="#173E31" stroke="#46C48A"/>
+  <text x="176" y="510" fill="#EEFFF7" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Filter 1</text>
+  <text x="176" y="540" fill="#D4F7E8" font-family="Arial, Helvetica, sans-serif" font-size="18">Soil match</text>
+  <text x="176" y="566" fill="#D4F7E8" font-family="Arial, Helvetica, sans-serif" font-size="16">Hard reject</text>
+
+  <rect x="335" y="470" width="150" height="120" rx="16" fill="#17335B" stroke="#71B4FF"/>
+  <text x="356" y="510" fill="#EFF7FF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Filter 2</text>
+  <text x="356" y="540" fill="#D7EAFF" font-family="Arial, Helvetica, sans-serif" font-size="18">Water +</text>
+  <text x="356" y="565" fill="#D7EAFF" font-family="Arial, Helvetica, sans-serif" font-size="18">weather</text>
+
+  <rect x="515" y="470" width="150" height="120" rx="16" fill="#4C3113" stroke="#F6B458"/>
+  <text x="536" y="510" fill="#FFF7EB" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Filter 3</text>
+  <text x="536" y="540" fill="#FFE8D0" font-family="Arial, Helvetica, sans-serif" font-size="18">District</text>
+  <text x="536" y="565" fill="#FFE8D0" font-family="Arial, Helvetica, sans-serif" font-size="18">supply cap</text>
+
+  <rect x="695" y="470" width="150" height="120" rx="16" fill="#4F2340" stroke="#FF8BBE"/>
+  <text x="716" y="510" fill="#FFF2F8" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Filter 4</text>
+  <text x="716" y="540" fill="#FFDCEC" font-family="Arial, Helvetica, sans-serif" font-size="18">Price range</text>
+  <text x="716" y="566" fill="#FFDCEC" font-family="Arial, Helvetica, sans-serif" font-size="16">Floor / avg / top</text>
+
+  <rect x="875" y="470" width="170" height="120" rx="16" fill="#3D203A" stroke="#DE86FF"/>
+  <text x="896" y="510" fill="#FDF1FF" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700">Filter 5</text>
+  <text x="896" y="540" fill="#F0DAFF" font-family="Arial, Helvetica, sans-serif" font-size="18">Net profit +</text>
+  <text x="896" y="565" fill="#F0DAFF" font-family="Arial, Helvetica, sans-serif" font-size="18">cash safety</text>
+
+  <path d="M290 225H335" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M580 225H630" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M870 225H920" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M750 280V340" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M750 340H600" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M220 280V340" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M220 340H600" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M1020 280V340" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+  <path d="M1020 340H600" stroke="#8AA0C8" stroke-width="4" stroke-linecap="round"/>
+
+  <text x="70" y="700" fill="#91A3C7" font-family="Arial, Helvetica, sans-serif" font-size="16">Built around Nizamabad-specific data, Telugu voice UX, and conservative recommendation rules.</text>
+</svg>
