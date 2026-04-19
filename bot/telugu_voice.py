@@ -22,6 +22,7 @@ DEFAULT_TTS_MODEL = "bulbul:v3"
 DEFAULT_TTS_SPEAKER = "manan"
 DEFAULT_TTS_PACE = 0.9
 DEFAULT_TTS_SAMPLE_RATE = 24000
+DEFAULT_TTS_OUTPUT_CODEC = "mp3"
 GENERATED_AUDIO_DIR = Path("data/generated_audio")
 MIME_EXTENSION_MAP = {
     "wav": "wav",
@@ -37,6 +38,14 @@ MIME_EXTENSION_MAP = {
     "mp4": "mp4",
     "x-m4a": "m4a",
     "m4a": "m4a",
+}
+
+OUTPUT_CODEC_METADATA = {
+    "mp3": {"content_type": "audio/mpeg", "extension": "mp3"},
+    "mpeg": {"content_type": "audio/mpeg", "extension": "mp3"},
+    "wav": {"content_type": "audio/wav", "extension": "wav"},
+    "aac": {"content_type": "audio/aac", "extension": "aac"},
+    "opus": {"content_type": "audio/ogg", "extension": "ogg"},
 }
 
 
@@ -224,6 +233,8 @@ def synthesize_telugu_reply(
     requested_speaker = (speaker or os.getenv("SARVAM_TTS_SPEAKER", DEFAULT_TTS_SPEAKER)).strip().lower()
     if requested_speaker == "maan":
         requested_speaker = "manan"
+    output_codec = (os.getenv("SARVAM_TTS_OUTPUT_CODEC", DEFAULT_TTS_OUTPUT_CODEC) or DEFAULT_TTS_OUTPUT_CODEC).strip().lower()
+    codec_meta = OUTPUT_CODEC_METADATA.get(output_codec, OUTPUT_CODEC_METADATA[DEFAULT_TTS_OUTPUT_CODEC])
 
     script_text = transliterate_for_telugu_speech(text)
     payload = {
@@ -233,6 +244,7 @@ def synthesize_telugu_reply(
         "pace": pace if pace is not None else float(os.getenv("SARVAM_TTS_PACE", str(DEFAULT_TTS_PACE))),
         "speech_sample_rate": int(os.getenv("SARVAM_TTS_SAMPLE_RATE", str(DEFAULT_TTS_SAMPLE_RATE))),
         "model": model or os.getenv("SARVAM_TTS_MODEL", DEFAULT_TTS_MODEL),
+        "output_audio_codec": output_codec,
     }
 
     response = requests.post(
@@ -254,10 +266,11 @@ def synthesize_telugu_reply(
     return {
         "request_id": data.get("request_id"),
         "audio_bytes": audio_bytes,
-        "content_type": "audio/wav",
-        "extension": "wav",
+        "content_type": codec_meta["content_type"],
+        "extension": codec_meta["extension"],
         "speaker": requested_speaker,
         "script_text": script_text,
+        "output_codec": output_codec,
         "raw": data,
     }
 

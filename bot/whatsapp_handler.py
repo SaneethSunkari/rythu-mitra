@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import mimetypes
 import os
 import sys
 from pathlib import Path
@@ -86,7 +87,8 @@ async def media_file(filename: str) -> FileResponse:
     path = get_generated_audio_path(filename)
     if not path.exists():
         raise HTTPException(status_code=404, detail="Audio file not found.")
-    return FileResponse(path, media_type="audio/wav", filename=path.name)
+    guessed_type, _ = mimetypes.guess_type(path.name)
+    return FileResponse(path, media_type=guessed_type or "application/octet-stream", filename=path.name)
 
 
 @app.post("/whatsapp")
