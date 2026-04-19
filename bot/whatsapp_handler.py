@@ -57,6 +57,19 @@ profile_manager = FarmerProfileManager()
 district_cap_tracker = DistrictCapTracker()
 
 
+@app.get("/")
+async def root() -> dict:
+    """Friendly root route for browser checks on Railway."""
+
+    return {
+        "status": "ok",
+        "service": "rythu-mitra",
+        "message": "Rythu Mitra webhook is live.",
+        "health_url": "/health",
+        "whatsapp_webhook": "/whatsapp",
+    }
+
+
 @app.get("/health")
 async def health() -> dict:
     """Simple health route for local and Railway checks."""
