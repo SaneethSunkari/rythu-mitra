@@ -95,6 +95,8 @@ NUMBER_WORDS = {
     "ten": 10,
     "padi": 10,
     "padhi": 10,
+    "adi": 10,
+    "adhi": 10,
     "eleven": 11,
     "padakondu": 11,
     "twelve": 12,
@@ -157,6 +159,20 @@ MULTIPLIER_WORDS = {
 
 ACRE_UNITS = {"acre", "acres", "ekar", "ekara", "ekarlu", "ekaralu"}
 LOAN_KEYWORDS = {"loan", "appu", "debt", "borrowing"}
+ACRE_BLOCKLIST = {
+    "loan",
+    "appu",
+    "laksh",
+    "laksha",
+    "lakh",
+    "crop",
+    "crops",
+    "paddy",
+    "paadi",
+    "soil",
+    "water",
+    "mandal",
+}
 NUMBER_NOISE_WORDS = {
     "undi",
     "unna",
@@ -532,12 +548,17 @@ class FarmerProfileManager:
                 if parsed is not None:
                     return float(parsed)
 
-            parsed = _parse_number_phrase(normalized_text)
-            if parsed is not None and 0 < parsed <= 500:
-                return float(parsed)
+            compact_tokens = [token for token in tokens if token not in NUMBER_NOISE_WORDS]
+            has_blocked_context = any(token in ACRE_BLOCKLIST for token in compact_tokens)
+            if compact_tokens and not has_blocked_context and len(compact_tokens) <= 3:
+                parsed = _parse_number_phrase(normalized_text)
+                if parsed is not None and 0 < parsed <= 500:
+                    return float(parsed)
             return None
         value = float(match.group(1))
-        if match.group(2) or 0 < value <= 500:
+        compact_text = normalized_text.strip()
+        standalone_number = bool(re.fullmatch(r"\d+(?:\.\d+)?", compact_text))
+        if match.group(2) or (standalone_number and 0 < value <= 500):
             return value
         return None
 
