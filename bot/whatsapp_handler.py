@@ -297,13 +297,24 @@ def _download_twilio_media(media_url: str) -> tuple[bytes, str]:
     if not media_url:
         raise ValueError("Missing MediaUrl0 for incoming audio.")
 
-    sid = os.getenv("TWILIO_ACCOUNT_SID") or os.getenv("TWILIO_SID")
+    sid = _extract_account_sid_from_media_url(media_url) or os.getenv("TWILIO_ACCOUNT_SID") or os.getenv("TWILIO_SID")
     token = os.getenv("TWILIO_AUTH_TOKEN") or os.getenv("TWILIO_TOKEN")
 
     auth = (sid, token) if sid and token else None
     response = requests.get(media_url, auth=auth, timeout=45)
     response.raise_for_status()
     return response.content, response.headers.get("Content-Type", "")
+
+
+def _extract_account_sid_from_media_url(media_url: str) -> str:
+    marker = "/Accounts/"
+    if marker not in media_url:
+        return ""
+    tail = media_url.split(marker, 1)[1]
+    sid = tail.split("/", 1)[0].strip()
+    if sid.startswith("AC") and len(sid) == 34:
+        return sid
+    return ""
 
 
 def _filename_from_media_url(media_url: str, media_type: str) -> str:
