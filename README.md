@@ -11,8 +11,6 @@
 
 Rythu Mitra is not meant to feel like a dashboard, a chatbot, or a generic agri app. It is designed to feel like a knowledgeable son helping his father make safer farming decisions over WhatsApp voice notes.
 
-This project started from a personal place: a family farming 10 acres in Annaram village, debt pressure at home, and a founder studying in the US while trying to build something genuinely useful back home.
-
 ## TL;DR
 
 - **Input:** WhatsApp text or Telugu voice notes
