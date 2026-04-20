@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 
 from data.nizamabad_district import CROPS
+from data.specialty_crops import SPECIALTY_CROPS
 
 
 FERTILIZER_WINDOWS = {
@@ -61,6 +62,8 @@ class SeasonCalendar:
         delay_days: int = 0,
     ) -> dict:
         crop_key = crop_name.strip().lower().replace(" ", "_")
+        if crop_key in SPECIALTY_CROPS:
+            return self._build_specialty_calendar(crop_key, sowing_date, delay_days=delay_days)
         if crop_key not in CROPS:
             raise ValueError(f"Unknown crop: {crop_name}")
 
@@ -115,6 +118,87 @@ class SeasonCalendar:
                 title="Harvest window opens",
                 stage="harvest",
                 note="Start checking moisture, buyers, and drying conditions.",
+            )
+        )
+        events.append(
+            CalendarEvent(
+                date=harvest_end.isoformat(),
+                day_from_sowing=grow_duration + 7,
+                type="harvest_window",
+                title="Harvest window closes",
+                stage="harvest",
+                note="Late harvest risk rises after this point.",
+            )
+        )
+
+        events.sort(key=lambda event: (event.day_from_sowing, event.type, event.title))
+
+        return {
+            "crop": crop_key,
+            "crop_telugu_name": crop.get("telugu_name", crop_key),
+            "sowing_date": start_date.isoformat(),
+            "delay_days": delay_days,
+            "grow_duration_days": grow_duration,
+            "harvest_window": {
+                "start_date": harvest_start.isoformat(),
+                "end_date": harvest_end.isoformat(),
+            },
+            "events": [event.__dict__ for event in events],
+        }
+
+    def _build_specialty_calendar(
+        self,
+        crop_key: str,
+        sowing_date: str | date | datetime,
+        *,
+        delay_days: int = 0,
+    ) -> dict:
+        crop = SPECIALTY_CROPS[crop_key]
+        start_date = _coerce_date(sowing_date) + timedelta(days=delay_days)
+        grow_duration = int(crop.get("grow_duration_days", 180))
+        harvest_start = start_date + timedelta(days=max(grow_duration - 7, 0))
+        harvest_end = start_date + timedelta(days=grow_duration + 7)
+
+        events: list[CalendarEvent] = [
+            CalendarEvent(
+                date=start_date.isoformat(),
+                day_from_sowing=0,
+                type="milestone",
+                title="Sowing confirmed",
+                stage="sowing",
+                note="Specialty-crop calendar starts from the confirmed sowing date.",
+            ),
+            CalendarEvent(
+                date=start_date.isoformat(),
+                day_from_sowing=0,
+                type="buyer_activation",
+                title="Buyer search starts now",
+                stage="buyer_search",
+                note="High-value crop: buyer confirmation should start from day 1.",
+            ),
+        ]
+
+        for item in crop.get("monitoring_schedule", []):
+            event_date = start_date + timedelta(days=int(item["day"]))
+            events.append(
+                CalendarEvent(
+                    date=event_date.isoformat(),
+                    day_from_sowing=int(item["day"]),
+                    type=item.get("type", "monitoring"),
+                    title=item["title"],
+                    stage=item.get("stage"),
+                    note=item["note"],
+                )
+            )
+
+        events.append(
+            CalendarEvent(
+                date=harvest_start.isoformat(),
+                day_from_sowing=max(grow_duration - 7, 0),
+                type="harvest_window",
+                title="Harvest window opens",
+                stage="harvest",
+                note="Premium buyer coordination should already be active before this window.",
             )
         )
         events.append(

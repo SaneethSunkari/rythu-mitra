@@ -242,7 +242,7 @@ That is the heart of this project.
 
 ### Still evolving
 
-- The scenario spec is broader than the currently shipped surface; see [`docs/scenario_coverage.md`](docs/scenario_coverage.md) for the honest scenario-by-scenario status
+- The scenario spec is now fully mapped in code; see [`docs/scenario_coverage.md`](docs/scenario_coverage.md) for the honest implemented-vs-partial breakdown
 - Live `data.gov.in` mandi pulls require an API key
 - Strong disease accuracy still depends on shipping trained model weights
 - Dharani survey-number to soil lookup is not wired yet
@@ -322,6 +322,7 @@ flowchart TD
 ```text
 rythu-mitra/
 ├── bot/
+│   ├── canal_alerts.py        # Canal release ingest + advance irrigation alerts
 │   ├── crop_cycle_service.py  # Persistent crop-cycle state + due reminder collection
 │   ├── farmer_profile.py      # Progressive profile collection over 3-4 messages
 │   ├── intent_classifier.py   # Weather / scheme / disease / crop routing
@@ -330,11 +331,13 @@ rythu-mitra/
 │   ├── proactive_monitor.py   # Weather + crop-stage proactive disease checks
 │   └── drying_alerts.py       # Post-harvest drying-risk evaluation
 ├── data/
+│   ├── canal_release_schedule.json # Canal release feed seed / fallback
 │   ├── nizamabad_district.py  # District ground truth: mandals, crops, schemes, weather
 │   ├── crop_cycles.json       # Local crop-cycle reminder state when present
 │   ├── price_history.csv      # Historical mandi price backfill
 │   ├── price_history.json     # Additional bundled history
 │   ├── schemes.py             # Scheme helpers
+│   ├── specialty_crops.py     # Dragon fruit + specialty crop monitoring baselines
 │   └── recommendation_log.json# Per-season recommendation history
 ├── dashboard/
 │   ├── package.json           # Vite React dashboard app
@@ -346,7 +349,7 @@ rythu-mitra/
 │   ├── src/components/BotDemo.jsx
 │   └── src/styles.css
 ├── disease/
-│   ├── train.py               # Training scaffold
+│   ├── train.py               # ResNet18 training entrypoint for ImageFolder datasets
 │   ├── model.py               # Optional checkpoint-backed image model loader
 │   └── inference.py           # Confidence-threshold image diagnosis replies
 ├── docs/
@@ -358,6 +361,7 @@ rythu-mitra/
 ├── engine/
 │   ├── crop_engine.py         # 5-filter recommendation engine
 │   ├── district_cap.py        # Recommendation log + acreage aggregation
+│   ├── long_cycle_outlook.py  # 6-month outlooks for dragon fruit / turmeric decisions
 │   ├── price_pipeline.py      # Historical/fallback/live mandi price pipeline
 │   ├── weather_pipeline.py    # Open-Meteo forecast normalization + storage
 │   └── season_calendar.py     # Crop-stage season calendar generation

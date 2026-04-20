@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import json
 import re
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
+from bot.canal_alerts import CanalAlertService
 from bot.crop_cycle_service import CropCycleService, parse_farming_date
 from bot.farmer_profile import (
     CROP_ALIASES,
@@ -20,6 +22,7 @@ from data.nizamabad_district import (
     MANDALS,
     SCHEMES,
 )
+from data.specialty_crops import SPECIALTY_CROPS
 from engine.crop_engine import (
     FarmerProfile as EngineFarmerProfile,
     add_price_prediction,
@@ -33,6 +36,7 @@ from engine.crop_engine import (
     recommend,
 )
 from engine.district_cap import DistrictCapTracker
+from engine.long_cycle_outlook import LongCycleOutlookService, render_long_cycle_reply
 from engine.price_pipeline import LOCAL_PRICE_CACHE_PATH, PricePipeline
 from engine.weather_pipeline import WeatherPipeline
 
@@ -40,6 +44,8 @@ from engine.weather_pipeline import WeatherPipeline
 LEGAL_PRIVATE_INTEREST_REDLINE_ANNUAL = 24.0
 KVK_PHONE = "08462-226360"
 CROP_CYCLE_SERVICE = CropCycleService()
+CANAL_ALERT_SERVICE = CanalAlertService(crop_cycle_service=CROP_CYCLE_SERVICE)
+LONG_CYCLE_OUTLOOK_SERVICE = LongCycleOutlookService()
 
 
 def maybe_handle_followup(profile: StoredFarmerProfile, message_text: str) -> str | None:
@@ -142,6 +148,15 @@ def maybe_handle_followup(profile: StoredFarmerProfile, message_text: str) -> st
 
     if _is_drying_question(normalized):
         return _drying_alert_reply(profile, normalized)
+
+    if _is_specialty_monitoring_question(normalized):
+        return _specialty_monitoring_reply(profile, normalized)
+
+    if _is_long_cycle_outlook_question(normalized):
+        return _long_cycle_outlook_reply(profile, normalized)
+
+    if _is_canal_release_question(normalized):
+        return _canal_release_reply(profile, normalized)
 
     return None
 
@@ -795,6 +810,65 @@ def _drying_alert_reply(profile: StoredFarmerProfile, normalized_text: str) -> s
     return "\n".join(lines)
 
 
+def _long_cycle_outlook_reply(profile: StoredFarmerProfile, normalized_text: str) -> str:
+    crop_slug = _extract_supported_crop(normalized_text, profile)
+    if not crop_slug and "dragon" in normalized_text:
+        crop_slug = "dragon_fruit"
+    if not crop_slug:
+        return (
+            "Long-cycle outlook kosam crop peru cheppandi naanna. "
+            "Udaharanaki: dragon fruit lekapothe turmeric."
+        )
+
+    outlook = LONG_CYCLE_OUTLOOK_SERVICE.build_outlook(crop_slug, horizon_months=6)
+    return render_long_cycle_reply(outlook)
+
+
+def _canal_release_reply(profile: StoredFarmerProfile, normalized_text: str) -> str:
+    match = re.search(r"last water\s+(\d{1,2})\s+days?\s+ago", normalized_text)
+    if match:
+        days = int(match.group(1))
+        date_value = (date.today() - timedelta(days=days)).isoformat()
+        CROP_CYCLE_SERVICE.set_last_water(profile.phone_number, last_water_date=date_value)
+
+    alerts = CANAL_ALERT_SERVICE.evaluate_farmer_alerts(
+        profile.phone_number,
+        profile.mandal,
+    )
+    if not alerts:
+        return (
+            "Ippudu mee mandal ki active canal release feed kanapadatam ledu naanna. "
+            "Feed vachesina ventane hours mundu alert istanu."
+        )
+
+    return alerts[0]["message"]
+
+
+def _specialty_monitoring_reply(profile: StoredFarmerProfile, normalized_text: str) -> str:
+    crop_slug = "dragon_fruit" if "dragon" in normalized_text else _extract_supported_crop(normalized_text, profile)
+    if crop_slug != "dragon_fruit":
+        return None
+
+    sowing_date = _extract_embedded_date(normalized_text) or "today"
+    payload = CROP_CYCLE_SERVICE.set_sowing(
+        profile.phone_number,
+        crop_name="dragon_fruit",
+        sowing_date=sowing_date,
+    )
+    events = payload["calendar"]["events"]
+    first_event = next((event for event in events if event["type"] == "monitoring"), events[1])
+
+    lines = [
+        "Naanna, mee dragon fruit 6-month season calendar ready.",
+        "Month 1-2: monthly photo - root establishment check.",
+        "Month 3-4: every 2 weeks - cladode growth rate.",
+        "Month 5: flowering prediction starts - temperature + humidity monitoring.",
+        "Month 6: harvest timing + buyer activation.",
+        f"First reminder: {first_event['date']}. Buyer search: already starting.",
+    ]
+    return " ".join(lines)
+
+
 def _crop_failure_reply(profile: StoredFarmerProfile) -> str:
     return (
         "Naanna, idi vini baadha ga undi. Mundu field photos, damaged area, mariyu date note cheskondi. "
@@ -970,6 +1044,27 @@ def _is_weather_alert_question(normalized_text: str) -> bool:
     return any(
         phrase in normalized_text
         for phrase in ("morning weather", "daily weather", "today weather", "weather alert")
+    )
+
+
+def _is_long_cycle_outlook_question(normalized_text: str) -> bool:
+    return any(
+        phrase in normalized_text
+        for phrase in ("dragon fruit", "future price", "6 month", "6-month", "long cycle", "future lo dhara")
+    )
+
+
+def _is_canal_release_question(normalized_text: str) -> bool:
+    return any(
+        phrase in normalized_text
+        for phrase in ("canal water release", "srsp", "rotation schedule", "last water", "canal alert")
+    )
+
+
+def _is_specialty_monitoring_question(normalized_text: str) -> bool:
+    return any(
+        phrase in normalized_text
+        for phrase in ("dragon fruit plant", "dragon fruit plant chesanu", "special crop", "high value crop")
     )
 
 

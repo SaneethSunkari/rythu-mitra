@@ -124,11 +124,11 @@ SCENARIOS = [
         "id": "C3",
         "category": "Market & selling",
         "title": "Long-cycle crop: price prediction 6 months out",
-        "status": "not_built",
+        "status": "implemented",
         "current_repo_reality": (
-            "The current engine works from historical district price ranges and does not model long-horizon buyer-confirmation workflows."
+            "The repo now has a dedicated long-cycle outlook service for crops like turmeric and dragon fruit that returns a probability range, confidence, and explicit buyer-confirmation guidance."
         ),
-        "evidence": ["engine/crop_engine.py"],
+        "evidence": ["engine/long_cycle_outlook.py", "bot/scenario_logic.py", "scripts/test_agronomy_services.py"],
     },
     {
         "id": "C4",
@@ -324,11 +324,11 @@ SCENARIOS = [
         "id": "J1",
         "category": "Water & irrigation",
         "title": "Canal water release timing alert",
-        "status": "not_built",
+        "status": "implemented",
         "current_repo_reality": (
-            "There is no canal-release event ingest or irrigation alerting service."
+            "The repo now has a canal-release ingest/evaluation service that reads a feed or local schedule, maps branch releases to mandals, and generates advance preparation alerts."
         ),
-        "evidence": [],
+        "evidence": ["bot/canal_alerts.py", "bot/scenario_logic.py", "data/canal_release_schedule.json", "scripts/test_agronomy_services.py"],
     },
     {
         "id": "J2",
@@ -384,11 +384,11 @@ SCENARIOS = [
         "id": "M1",
         "category": "Special crops",
         "title": "High-value crop (dragon fruit) — full 6-month monitoring",
-        "status": "not_built",
+        "status": "implemented",
         "current_repo_reality": (
-            "Long-cycle specialty crop monitoring is outside the current engine and reminder system."
+            "Dragon fruit now has a dedicated 6-month specialty calendar with buyer activation from day 1 and stage-specific monitoring checkpoints."
         ),
-        "evidence": [],
+        "evidence": ["data/specialty_crops.py", "engine/season_calendar.py", "bot/scenario_logic.py", "scripts/test_followup_scenarios.py"],
     },
     {
         "id": "M2",

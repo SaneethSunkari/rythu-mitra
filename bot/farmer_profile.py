@@ -68,6 +68,8 @@ CROP_ALIASES = {
     "ulli": "onion",
     "tomato": "tomato",
     "tamata": "tomato",
+    "dragon fruit": "dragon_fruit",
+    "dragonfruit": "dragon_fruit",
 }
 
 SOIL_PHRASES = {

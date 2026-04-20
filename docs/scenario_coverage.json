@@ -3,9 +3,9 @@
   "source_text": "docs/rythu_mitra_33_scenarios_extracted.txt",
   "summary": {
     "declared_in_pdf_title": 33,
-    "implemented": 23,
+    "implemented": 26,
     "partial": 14,
-    "not_built": 3,
+    "not_built": 0,
     "enumerated_in_pdf_body": 40
   },
   "scenarios": [
@@ -133,10 +133,12 @@
       "id": "C3",
       "category": "Market & selling",
       "title": "Long-cycle crop: price prediction 6 months out",
-      "status": "not_built",
-      "current_repo_reality": "The current engine works from historical district price ranges and does not model long-horizon buyer-confirmation workflows.",
+      "status": "implemented",
+      "current_repo_reality": "The repo now has a dedicated long-cycle outlook service for crops like turmeric and dragon fruit that returns a probability range, confidence, and explicit buyer-confirmation guidance.",
       "evidence": [
-        "engine/crop_engine.py"
+        "engine/long_cycle_outlook.py",
+        "bot/scenario_logic.py",
+        "scripts/test_agronomy_services.py"
       ]
     },
     {
@@ -348,9 +350,14 @@
       "id": "J1",
       "category": "Water & irrigation",
       "title": "Canal water release timing alert",
-      "status": "not_built",
-      "current_repo_reality": "There is no canal-release event ingest or irrigation alerting service.",
-      "evidence": []
+      "status": "implemented",
+      "current_repo_reality": "The repo now has a canal-release ingest/evaluation service that reads a feed or local schedule, maps branch releases to mandals, and generates advance preparation alerts.",
+      "evidence": [
+        "bot/canal_alerts.py",
+        "bot/scenario_logic.py",
+        "data/canal_release_schedule.json",
+        "scripts/test_agronomy_services.py"
+      ]
     },
     {
       "id": "J2",
@@ -411,9 +418,14 @@
       "id": "M1",
       "category": "Special crops",
       "title": "High-value crop (dragon fruit) — full 6-month monitoring",
-      "status": "not_built",
-      "current_repo_reality": "Long-cycle specialty crop monitoring is outside the current engine and reminder system.",
-      "evidence": []
+      "status": "implemented",
+      "current_repo_reality": "Dragon fruit now has a dedicated 6-month specialty calendar with buyer activation from day 1 and stage-specific monitoring checkpoints.",
+      "evidence": [
+        "data/specialty_crops.py",
+        "engine/season_calendar.py",
+        "bot/scenario_logic.py",
+        "scripts/test_followup_scenarios.py"
+      ]
     },
     {
       "id": "M2",

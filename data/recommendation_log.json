@@ -1,3 +1,46 @@
 {
-  "entries": []
+  "entries": [
+    {
+      "season": "kharif_2025",
+      "farmer_key": "whatsapp:+919900000123",
+      "farmer_id": "whatsapp:+919900000123",
+      "survey_number": null,
+      "mandal": "nandipet",
+      "soil_zone": "deep_calcareous",
+      "water_source": "mixed",
+      "acres": 10.0,
+      "primary_crop": "maize",
+      "secondary_crop": "soybean",
+      "source": "whatsapp",
+      "logged_at_utc": "2026-04-20T02:56:14.932946+00:00"
+    },
+    {
+      "season": "kharif_2025",
+      "farmer_key": "whatsapp:+919900001234",
+      "farmer_id": "whatsapp:+919900001234",
+      "survey_number": null,
+      "mandal": "nandipet",
+      "soil_zone": "deep_calcareous",
+      "water_source": "mixed",
+      "acres": 10.0,
+      "primary_crop": "maize",
+      "secondary_crop": "soybean",
+      "source": "whatsapp",
+      "logged_at_utc": "2026-04-20T02:56:16.538219+00:00"
+    },
+    {
+      "season": "kharif_2025",
+      "farmer_key": "whatsapp:+919984693834",
+      "farmer_id": "whatsapp:+919984693834",
+      "survey_number": null,
+      "mandal": "nandipet",
+      "soil_zone": "deep_calcareous",
+      "water_source": "mixed",
+      "acres": 10.0,
+      "primary_crop": "maize",
+      "secondary_crop": "soybean",
+      "source": "whatsapp",
+      "logged_at_utc": "2026-04-20T02:56:26.898614+00:00"
+    }
+  ]
 }

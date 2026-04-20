@@ -1,0 +1,18 @@
+[
+  {
+    "system": "SRSP",
+    "branch_slug": "nandipet_branch",
+    "branch_name": "Nandipet branch",
+    "release_time": "2026-04-21T06:00:00+05:30",
+    "available_hours": 8,
+    "rotation_gap_days": 12,
+    "mandals": [
+      "nandipet",
+      "balkonda",
+      "bheemgal",
+      "jakranpally"
+    ],
+    "source": "scenario_seed",
+    "source_note": "Seeded from the approved scenario so canal-alert logic can be exercised until a live official feed is attached."
+  }
+]

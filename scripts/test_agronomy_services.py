@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import subprocess
 import sys
 import tempfile
 from datetime import datetime
@@ -17,11 +18,13 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import bot.whatsapp_handler as whatsapp_handler
+from bot.canal_alerts import CanalAlertService
 from bot.crop_cycle_service import CropCycleService
 from bot.drying_alerts import DryingAlertService
 from bot.proactive_monitor import ProactiveMonitor
 from bot.whatsapp_handler import app
 from disease.inference import diagnose_disease_image
+from engine.long_cycle_outlook import LongCycleOutlookService
 from engine.season_calendar import SeasonCalendar
 
 
@@ -67,6 +70,55 @@ def run_cycle_service_checks() -> dict:
     assert preview["upcoming_events"]
     assert any(item["alert_type"] == "season_calendar" for item in due)
     return {"due_alerts": len(due)}
+
+
+def run_long_cycle_checks() -> dict:
+    service = LongCycleOutlookService()
+    dragon = service.build_outlook("dragon_fruit", horizon_months=6)
+    turmeric = service.build_outlook("turmeric", horizon_months=6)
+    assert dragon["buyer_confirmation_required"] is True
+    assert dragon["floor_price"] == 60
+    assert turmeric["avg_price"] >= turmeric["floor_price"]
+    return {
+        "dragon_range": [dragon["floor_price"], dragon["ceiling_price"]],
+        "turmeric_avg": turmeric["avg_price"],
+    }
+
+
+def run_canal_alert_checks() -> dict:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        store_path = Path(temp_dir) / "crop_cycles.json"
+        schedule_path = Path(temp_dir) / "canal_release_schedule.json"
+        service = CropCycleService(store_path=store_path)
+        service.set_sowing("whatsapp:+910000000002", crop_name="paddy", sowing_date="2026-04-01")
+        service.set_last_water("whatsapp:+910000000002", last_water_date="2026-04-12")
+        schedule_path.write_text(
+            json.dumps(
+                [
+                    {
+                        "system": "SRSP",
+                        "branch_slug": "nandipet_branch",
+                        "branch_name": "Nandipet branch",
+                        "release_time": "2026-04-20T06:00:00+05:30",
+                        "available_hours": 8,
+                        "rotation_gap_days": 12,
+                        "mandals": ["nandipet"],
+                        "source": "test",
+                    }
+                ]
+            ),
+            encoding="utf-8",
+        )
+        alert_service = CanalAlertService(schedule_path=schedule_path, crop_cycle_service=service)
+        alerts = alert_service.evaluate_farmer_alerts(
+            "whatsapp:+910000000002",
+            "nandipet",
+            now="2026-04-19T12:00:00+05:30",
+        )
+
+    assert alerts
+    assert "8 gantalu" in alerts[0]["message"]
+    return {"alerts": len(alerts)}
 
 
 def run_proactive_monitor_checks() -> dict:
@@ -184,6 +236,39 @@ def run_disease_inference_checks() -> dict:
     }
 
 
+def run_disease_training_dry_run() -> dict:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        dataset_dir = Path(temp_dir) / "dataset"
+        for class_name in ("paddy_blast", "maize_fall_army_worm"):
+            class_dir = dataset_dir / class_name
+            class_dir.mkdir(parents=True, exist_ok=True)
+            image_path = class_dir / "sample.jpg"
+            image_path.write_bytes(_make_image_bytes())
+
+        completed = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "disease" / "train.py"),
+                "--dataset-dir",
+                str(dataset_dir),
+                "--dry-run",
+            ],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    if completed.returncode != 0:
+        raise AssertionError(
+            "Disease training dry-run failed.\n"
+            f"stdout:\n{completed.stdout}\n\nstderr:\n{completed.stderr}"
+        )
+    payload = json.loads(completed.stdout)
+    assert payload["samples"] == 2
+    return payload
+
+
 def run_image_webhook_check() -> dict:
     original_download = whatsapp_handler._download_twilio_media
     original_diagnose = whatsapp_handler.diagnose_disease_image
@@ -223,9 +308,12 @@ def main() -> None:
     summary = {
         "calendar": run_calendar_checks(),
         "cycle_service": run_cycle_service_checks(),
+        "long_cycle": run_long_cycle_checks(),
+        "canal_alerts": run_canal_alert_checks(),
         "proactive_monitor": run_proactive_monitor_checks(),
         "drying_alerts": run_drying_checks(),
         "disease_inference": run_disease_inference_checks(),
+        "disease_training_dry_run": run_disease_training_dry_run(),
         "image_webhook": run_image_webhook_check(),
     }
     print(json.dumps(summary, indent=2, ensure_ascii=False))

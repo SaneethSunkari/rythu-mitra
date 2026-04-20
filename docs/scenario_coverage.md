@@ -10,9 +10,9 @@ Important note: the PDF title says **33** scenarios, but the enumerated scenario
 
 ## Snapshot
 
-- Implemented: 23
+- Implemented: 26
 - Partial: 14
-- Not built: 3
+- Not built: 0
 - Declared in PDF title: 33
 - Enumerated in PDF body: 40
 
@@ -59,7 +59,7 @@ The matrix below is intentionally strict: it marks a scenario as implemented onl
 | --- | --- | --- | --- | --- |
 | C1 | Farmer asks where to sell at best price | Partial | Price data pipelines exist, but the bot does not yet calculate transport-adjusted net price across mandis inside the WhatsApp flow. | `engine/price_pipeline.py`, `dashboard/src/components/MandiPrices.jsx` |
 | C2 | Trader arrives at village, quotes low price | Partial | The underlying price data exists, but there is no dedicated compare-against-trader negotiation response yet. | `engine/price_pipeline.py` |
-| C3 | Long-cycle crop: price prediction 6 months out | Not built | The current engine works from historical district price ranges and does not model long-horizon buyer-confirmation workflows. | `engine/crop_engine.py` |
+| C3 | Long-cycle crop: price prediction 6 months out | Implemented | The repo now has a dedicated long-cycle outlook service for crops like turmeric and dragon fruit that returns a probability range, confidence, and explicit buyer-confirmation guidance. | `engine/long_cycle_outlook.py`, `bot/scenario_logic.py`, `scripts/test_agronomy_services.py` |
 | C4 | Farmer planted without buyer — harvest approaching, no buyer found | Partial | The bot now has a generic buyer-not-found escalation path that points the farmer toward FPO, e-NAM, and storage routes, but it does not yet have contact-level integrations. | `bot/scenario_logic.py` |
 
 ## Financial & loans
@@ -114,7 +114,7 @@ The matrix below is intentionally strict: it marks a scenario as implemented onl
 
 | ID | Scenario | Status | Current repo reality | Evidence |
 | --- | --- | --- | --- | --- |
-| J1 | Canal water release timing alert | Not built | There is no canal-release event ingest or irrigation alerting service. | — |
+| J1 | Canal water release timing alert | Implemented | The repo now has a canal-release ingest/evaluation service that reads a feed or local schedule, maps branch releases to mandals, and generates advance preparation alerts. | `bot/canal_alerts.py`, `bot/scenario_logic.py`, `data/canal_release_schedule.json`, `scripts/test_agronomy_services.py` |
 | J2 | Drought conditions — crop water stress | Implemented | The bot now has a dedicated drought/water-stress reply that shifts the farmer toward lower-water crops and moisture-saving actions. | `engine/crop_engine.py`, `bot/scenario_logic.py` |
 
 ## Accessibility
@@ -135,7 +135,7 @@ The matrix below is intentionally strict: it marks a scenario as implemented onl
 
 | ID | Scenario | Status | Current repo reality | Evidence |
 | --- | --- | --- | --- | --- |
-| M1 | High-value crop (dragon fruit) — full 6-month monitoring | Not built | Long-cycle specialty crop monitoring is outside the current engine and reminder system. | — |
+| M1 | High-value crop (dragon fruit) — full 6-month monitoring | Implemented | Dragon fruit now has a dedicated 6-month specialty calendar with buyer activation from day 1 and stage-specific monitoring checkpoints. | `data/specialty_crops.py`, `engine/season_calendar.py`, `bot/scenario_logic.py`, `scripts/test_followup_scenarios.py` |
 | M2 | Intercropping recommendation to maximise land use | Implemented | The bot now has a practical intercropping advisory path with simple crop-pair suggestions for risk spreading, though it is not yet fully engine-scored. | `engine/crop_engine.py`, `bot/scenario_logic.py` |
 
 ## Onboarding

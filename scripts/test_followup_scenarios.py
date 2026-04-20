@@ -144,6 +144,18 @@ def main() -> None:
                     "start drying today",
                     ["drying watch active", "Start date"],
                 ),
+                "c3_long_cycle_outlook": (
+                    "dragon fruit veyyalani future lo dhara ela untundi",
+                    ["Dragon Fruit", "Buyer confirm chesaka matrame plant cheyyandi"],
+                ),
+                "j1_canal_release": (
+                    "srsp canal water release, last water 8 days ago",
+                    ["URGENT", "rotation", "8 gantalu"],
+                ),
+                "m1_specialty_monitoring": (
+                    "dragon fruit plant chesanu 2026-04-19",
+                    ["dragon fruit 6-month season calendar ready", "Buyer search: already starting"],
+                ),
             }
 
             results: dict[str, str] = {}

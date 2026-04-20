@@ -103,6 +103,7 @@ class CropCycleState:
     delay_days: int = 0
     drying_start: str | None = None
     last_harvest_date: str | None = None
+    last_water_date: str | None = None
     sent_alert_keys: list[str] = field(default_factory=list)
     created_at_utc: str | None = None
     updated_at_utc: str | None = None
@@ -193,6 +194,19 @@ class CropCycleService:
             state.crop_name = normalize_cycle_crop(crop_name) or crop_name
         state.drying_start = parsed.isoformat()
         state.last_harvest_date = parsed.isoformat()
+        return self.save_state(state)
+
+    def set_last_water(
+        self,
+        phone_number: str,
+        *,
+        last_water_date: str | date | datetime,
+    ) -> CropCycleState:
+        state = self.get_state(phone_number)
+        parsed = parse_farming_date(last_water_date)
+        if not parsed:
+            raise ValueError("Could not parse last water date.")
+        state.last_water_date = parsed.isoformat()
         return self.save_state(state)
 
     def get_calendar(self, phone_number: str) -> dict | None:
