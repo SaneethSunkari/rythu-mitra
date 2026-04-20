@@ -138,7 +138,7 @@ def build_filter_trace(farmer: FarmerProfile) -> list[dict]:
         if crop_data.get("active_for_recommendation", True)
     ]
     after_season = filter_season(candidates, season_name)
-    after_soil = filter_soil(after_season, farmer.soil_zone)
+    after_soil = filter_soil(after_season, farmer.soil_zone, farmer.mandal)
     after_water = filter_water_weather(after_soil, farmer.water_source, weather)
     after_supply, supply_info = filter_supply_cap(after_water, farmer.mandal, farmer.acres)
     price_preds = add_price_prediction(after_supply, farmer.water_source)

@@ -31,9 +31,10 @@ def main() -> None:
     assert result["top_pick"] is not None, "Expected at least one recommendation."
     assert result["top_pick"]["crop"] == "maize", f"Expected maize top pick, got {result['top_pick']['crop']}"
     assert result["second_pick"] is not None, "Expected a second option."
-    assert result["second_pick"]["crop"] == "cotton", f"Expected cotton second pick, got {result['second_pick']['crop']}"
+    assert result["second_pick"]["crop"] == "soybean", f"Expected soybean second pick, got {result['second_pick']['crop']}"
     assert "paddy" in rejected_reasons and "Supply cap" in rejected_reasons["paddy"], "Paddy should fail supply cap."
     assert "turmeric" in rejected_reasons and "Supply cap" in rejected_reasons["turmeric"], "Turmeric should fail supply cap."
+    assert "cotton" in rejected_reasons and "local suitability" in rejected_reasons["cotton"], "Cotton should be rejected for Nandipet local suitability."
     assert "Naanu guarantee ivvaleddu" in telugu_reply, "Telugu response must include the no-guarantee line."
 
     print(

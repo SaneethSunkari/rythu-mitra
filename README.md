@@ -35,11 +35,12 @@ Input
 
 Output
 - Top pick: maize
-- Second pick: cotton
-- Rejected: paddy, turmeric
+- Second pick: soybean
+- Rejected: paddy, turmeric, cotton
 
 Reason
 - district supply pressure is already too high for paddy and turmeric
+- Nandipet cotton is rejected here on local soil-suitability grounds
 - the final list only keeps crops that stay safe at conservative floor-price assumptions
 ```
 
@@ -66,9 +67,12 @@ Everything else, including the bot, voice layer, and dashboard, exists to make t
 ## Quick Links
 
 - [Engine test](scripts/test_engine.py)
+- [System test sweep](scripts/test_system.py)
 - [WhatsApp webhook](bot/whatsapp_handler.py)
 - [Dashboard app](dashboard/src/App.jsx)
 - [District data](data/nizamabad_district.py)
+- [Scenario spec PDF](docs/scenarios.pdf)
+- [Scenario coverage matrix](docs/scenario_coverage.md)
 
 ## Dashboard Preview
 
@@ -113,7 +117,7 @@ This is the fastest path to understanding the codebase.
 - **Run these first**
   `python3 scripts/test_engine.py` and `python3 scripts/test_whatsapp_voice.py`
 - **Know the current boundaries**
-  Crop recommendations, weather ingest, progressive farmer profiling, WhatsApp routing, and the dashboard are real. Disease diagnosis and proactive alerts are still partial.
+  Crop recommendations, weather ingest, progressive farmer profiling, season calendars, scheduled alert evaluation, WhatsApp routing, and the dashboard are real. Disease image diagnosis is wired conservatively and gets strongest only when trained weights are available.
 - **Know the external dependencies**
   Supabase, Twilio, and Sarvam are required for the full live flow. `data.gov.in` is optional today because the project already supports historical and fallback price paths.
 - **Know where the bot starts**
@@ -149,9 +153,9 @@ Expected recommendation for the main smoke-test profile:
 
 ```text
 Top pick: maize
-Second pick: cotton
-Rejected: paddy, turmeric
-Reason: district supply pressure
+Second pick: soybean
+Rejected: paddy, turmeric, cotton
+Reason: district supply pressure plus local suitability
 ```
 
 ## Run The Dashboard
@@ -220,10 +224,8 @@ That is the heart of this project.
 
 ### Scaffolded / partially built
 
-- Disease model training and inference files
-- Proactive monitoring and drying alerts
-- Season calendar automation
-- Future dashboard polish, richer visuals, and production data refresh
+- Disease-model training weights and richer calibration
+- Dashboard polish, richer visuals, and automated data refresh
 
 ## Current Project Status
 
@@ -234,14 +236,17 @@ That is the heart of this project.
 - Price pipeline works with historical and fallback data even without `data.gov.in`
 - WhatsApp text flow works
 - WhatsApp voice flow is implemented end-to-end in code
-- Dashboard builds successfully and uses exported backend data
+- Season calendar, proactive disease checks, and drying alert evaluation work locally
+- Dashboard is served through FastAPI and builds successfully from exported backend data
+- Image diagnosis path is wired with photo-quality checks and confidence-threshold replies
 
 ### Still evolving
 
+- The scenario spec is broader than the currently shipped surface; see [`docs/scenario_coverage.md`](docs/scenario_coverage.md) for the honest scenario-by-scenario status
 - Live `data.gov.in` mandi pulls require an API key
-- Disease diagnosis is scaffolded but not fully integrated into the bot
+- Strong disease accuracy still depends on shipping trained model weights
 - Dharani survey-number to soil lookup is not wired yet
-- The dashboard is functional, but it is still a local frontend app rather than a production-integrated surface
+- Automated dashboard refresh and deeper production polish are still pending
 
 ## Example Recommendation
 
@@ -257,7 +262,7 @@ The main smoke test uses this profile:
 Expected result from the current engine:
 
 - **Top pick:** maize
-- **Second pick:** cotton
+- **Second pick:** soybean
 - **Rejected:** paddy and turmeric because district supply is already too high
 
 Run it locally:
@@ -317,14 +322,16 @@ flowchart TD
 ```text
 rythu-mitra/
 ├── bot/
+│   ├── crop_cycle_service.py  # Persistent crop-cycle state + due reminder collection
 │   ├── farmer_profile.py      # Progressive profile collection over 3-4 messages
 │   ├── intent_classifier.py   # Weather / scheme / disease / crop routing
 │   ├── telugu_voice.py        # Sarvam STT + TTS helpers
 │   ├── whatsapp_handler.py    # FastAPI webhook, media handling, Twilio replies
-│   ├── proactive_monitor.py   # Scaffold for future proactive alerts
-│   └── drying_alerts.py       # Scaffold for future drying alerts
+│   ├── proactive_monitor.py   # Weather + crop-stage proactive disease checks
+│   └── drying_alerts.py       # Post-harvest drying-risk evaluation
 ├── data/
 │   ├── nizamabad_district.py  # District ground truth: mandals, crops, schemes, weather
+│   ├── crop_cycles.json       # Local crop-cycle reminder state when present
 │   ├── price_history.csv      # Historical mandi price backfill
 │   ├── price_history.json     # Additional bundled history
 │   ├── schemes.py             # Scheme helpers
@@ -340,8 +347,8 @@ rythu-mitra/
 │   └── src/styles.css
 ├── disease/
 │   ├── train.py               # Training scaffold
-│   ├── model.py               # Model scaffold
-│   └── inference.py           # Inference scaffold
+│   ├── model.py               # Optional checkpoint-backed image model loader
+│   └── inference.py           # Confidence-threshold image diagnosis replies
 ├── docs/
 │   ├── dashboard-preview.svg
 │   ├── architecture.svg
@@ -353,13 +360,15 @@ rythu-mitra/
 │   ├── district_cap.py        # Recommendation log + acreage aggregation
 │   ├── price_pipeline.py      # Historical/fallback/live mandi price pipeline
 │   ├── weather_pipeline.py    # Open-Meteo forecast normalization + storage
-│   └── season_calendar.py     # Scaffold for season schedule generation
+│   └── season_calendar.py     # Crop-stage season calendar generation
 ├── scripts/
 │   ├── create_farmer_profiles_table.sql
 │   ├── create_mandi_prices_table.sql
 │   ├── create_weather_forecast_tables.sql
 │   ├── export_dashboard_data.py
+│   ├── run_scheduled_alerts.py
 │   ├── seed_supabase.py
+│   ├── test_agronomy_services.py
 │   ├── test_engine.py
 │   └── test_whatsapp_voice.py
 ├── Procfile
@@ -583,17 +592,14 @@ That is why the code emphasizes:
 
 - `data.gov.in` live mandi data still depends on obtaining an API key
 - Twilio sandbox and account-level daily limits can interrupt live testing
-- Disease detection is scaffolded but not yet fully wired into the WhatsApp flow
+- Disease diagnosis stays intentionally conservative unless trained weights are available
 - Soil can be collected manually today, but Dharani survey-number lookup is not integrated yet
-- The dashboard is functional, but it is still a local frontend app rather than a production-integrated surface
+- Dashboard data refresh is still export-driven rather than automated on a schedule
 
 ## Roadmap
 
-- Finish disease model integration with confidence thresholds
-- Add proactive disease alerts based on weather + crop stage
-- Add drying-weather alerts for harvest/post-harvest use
-- Complete season calendar automation
-- Add production data refresh and FastAPI/static integration for the dashboard
+- Improve disease-model calibration and ship trained weights
+- Add automated production data refresh for the dashboard
 - Replace all remaining legacy reference baselines with fresher season data where available
 
 ## Why This Belongs In A Portfolio

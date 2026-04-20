@@ -466,6 +466,24 @@ class FarmerProfileManager:
             self._extract_loan_amount(normalized) is not None,
         ))
 
+    def message_contains_profile_update_signal(self, message_text: str) -> bool:
+        normalized = _normalize_text(message_text)
+        update_words = {
+            "change", "update", "new profile", "restart", "reset", "again",
+            "mandal", "acre", "acres", "soil", "water", "borewell", "canal",
+            "rainfed", "mixed",
+        }
+        if any(word in normalized for word in update_words):
+            return True
+
+        return any((
+            self._extract_mandal(normalized),
+            self._extract_acres(normalized) is not None,
+            self._extract_soil(normalized),
+            self._extract_water(normalized),
+            self._extract_loan_amount(normalized) is not None,
+        ))
+
     def next_question(self, profile: FarmerProfile) -> str:
         stage = self._next_stage(profile)
 

@@ -1,6 +1,6 @@
 {
   "summary": {
-    "generatedAtUtc": "2026-04-19T22:52:31.861946+00:00",
+    "generatedAtUtc": "2026-04-20T02:37:09.450311+00:00",
     "currentSeason": "kharif_2025",
     "mandalCount": 36,
     "mandiCount": 6,
@@ -1176,9 +1176,9 @@
         "active": true
       },
       "secondPick": {
-        "slug": "cotton",
-        "name": "Cotton",
-        "teluguName": "పత్తి",
+        "slug": "soybean",
+        "name": "Soybean",
+        "teluguName": "సోయాబీన్",
         "season": [
           "kharif"
         ],
@@ -1187,7 +1187,7 @@
       "topPickExpectedProfit": 199154,
       "topPickWorstProfit": 126360,
       "competitionStatus": "OVERSUPPLY",
-      "notes": "Annaram village is here. Godavari river border on east.",
+      "notes": "Annaram village is here. Godavari river border on east. Local deep calcareous tracts are not treated as cotton-suitable in this project.",
       "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
     },
     {
@@ -2521,9 +2521,9 @@
         "active": true
       },
       "secondPick": {
-        "slug": "cotton",
-        "name": "Cotton",
-        "teluguName": "పత్తి",
+        "slug": "soybean",
+        "name": "Soybean",
+        "teluguName": "సోయాబీన్",
         "season": [
           "kharif"
         ],
@@ -2547,21 +2547,21 @@
         {
           "id": "soil",
           "title": "Soil filter",
-          "kept": 9,
-          "removed": 2,
+          "kept": 8,
+          "removed": 3,
           "note": "Only crops compatible with Deep Calcareous soil survive.",
           "highlights": [
             "Paddy",
             "Turmeric",
             "Maize",
             "Soybean",
-            "Cotton"
+            "Red Gram"
           ]
         },
         {
           "id": "water",
           "title": "Water + weather filter",
-          "kept": 8,
+          "kept": 7,
           "removed": 1,
           "note": "Water source is Mixed. Drought and flood risk are checked here.",
           "highlights": [
@@ -2569,13 +2569,13 @@
             "Turmeric",
             "Maize",
             "Soybean",
-            "Cotton"
+            "Red Gram"
           ]
         },
         {
           "id": "supply",
           "title": "District cap filter",
-          "kept": 6,
+          "kept": 5,
           "removed": 2,
           "note": "This is the anti-rat-race layer. The bot avoids recommending crops that are already crowding the district.",
           "highlights": [
@@ -2586,13 +2586,13 @@
         {
           "id": "profit",
           "title": "Floor-price survivability",
-          "kept": 5,
+          "kept": 4,
           "removed": 1,
           "note": "Only crops that stay profitable even at conservative floor prices make the final list.",
           "highlights": [
             "Maize",
-            "Cotton",
-            "Soybean"
+            "Soybean",
+            "Red Gram"
           ]
         }
       ],
@@ -2606,6 +2606,10 @@
           "reason": "Supply cap exceeded"
         },
         {
+          "crop": "Cotton",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
           "crop": "Sunflower",
           "reason": "Season mismatch (kharif)"
         },
@@ -2616,13 +2620,9 @@
         {
           "crop": "Sugarcane",
           "reason": "Water requirement not met"
-        },
-        {
-          "crop": "Bengal Gram",
-          "reason": "Season mismatch (kharif)"
         }
       ],
-      "teluguReply": "Naanna, naanu 10 acres, deep_calcareous soil, mixed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 10 acres ki expected profit: ₹398,309\n  Worst case profit: ₹252,720\n  Appu pressure tharvatha migiledi: ₹222,720\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — పత్తి (COTTON):\n  Rate range: floor ₹4,800 / avg ₹6,430 / ceiling ₹9,500\n  Expected profit: ₹352,912\n  Worst case: ₹225,120\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",
+      "teluguReply": "Naanna, naanu 10 acres, deep_calcareous soil, mixed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 10 acres ki expected profit: ₹398,309\n  Worst case profit: ₹252,720\n  Appu pressure tharvatha migiledi: ₹222,720\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200\n  Expected profit: ₹342,472\n  Worst case: ₹216,170\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",
       "conversation": [
         {
           "speaker": "bot",
@@ -2658,7 +2658,7 @@
         },
         {
           "speaker": "bot",
-          "text": "Naanna, naanu 10 acres, deep_calcareous soil, mixed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 10 acres ki expected profit: ₹398,309\n  Worst case profit: ₹252,720\n  Appu pressure tharvatha migiledi: ₹222,720\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — పత్తి (COTTON):\n  Rate range: floor ₹4,800 / avg ₹6,430 / ceiling ₹9,500\n  Expected profit: ₹352,912\n  Worst case: ₹225,120\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi."
+          "text": "Naanna, naanu 10 acres, deep_calcareous soil, mixed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 10 acres ki expected profit: ₹398,309\n  Worst case profit: ₹252,720\n  Appu pressure tharvatha migiledi: ₹222,720\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200\n  Expected profit: ₹342,472\n  Worst case: ₹216,170\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi."
         }
       ]
     },
@@ -2766,15 +2766,15 @@
         },
         {
           "crop": "Turmeric",
-          "reason": "Soil mismatch"
+          "reason": "Soil or local suitability mismatch"
         },
         {
           "crop": "Maize",
-          "reason": "Soil mismatch"
+          "reason": "Soil or local suitability mismatch"
         },
         {
           "crop": "Red Gram",
-          "reason": "Soil mismatch"
+          "reason": "Soil or local suitability mismatch"
         },
         {
           "crop": "Sunflower",
@@ -2927,7 +2927,7 @@
       "rejected": [
         {
           "crop": "Paddy",
-          "reason": "Soil mismatch"
+          "reason": "Soil or local suitability mismatch"
         },
         {
           "crop": "Turmeric",
@@ -2935,7 +2935,7 @@
         },
         {
           "crop": "Cotton",
-          "reason": "Soil mismatch"
+          "reason": "Soil or local suitability mismatch"
         },
         {
           "crop": "Sunflower",
@@ -2947,7 +2947,7 @@
         },
         {
           "crop": "Sugarcane",
-          "reason": "Soil mismatch"
+          "reason": "Soil or local suitability mismatch"
         }
       ],
       "teluguReply": "Naanna, naanu 6 acres, red_clayey soil, rainfed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 6 acres ki expected profit: ₹238,985\n  Worst case profit: ₹151,632\n  Appu pressure tharvatha migiledi: ₹139,632\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200\n  Expected profit: ₹205,483\n  Worst case: ₹129,702\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",

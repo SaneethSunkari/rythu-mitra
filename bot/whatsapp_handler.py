@@ -19,14 +19,17 @@ from twilio.rest import Client
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from bot.crop_cycle_service import CropCycleService
 from bot.farmer_profile import FarmerProfileManager
 from bot.intent_classifier import classify_intent
+from bot.scenario_logic import maybe_handle_followup
 from bot.telugu_voice import (
     get_generated_audio_path,
     save_generated_audio,
     synthesize_telugu_reply,
     transcribe_voice_note,
 )
+from disease.inference import diagnose_disease_image
 from data.nizamabad_district import SCHEMES
 from engine.district_cap import DistrictCapTracker
 from engine.crop_engine import (
@@ -58,6 +61,7 @@ _load_local_env()
 app = FastAPI(title="Rythu Mitra")
 profile_manager = FarmerProfileManager()
 district_cap_tracker = DistrictCapTracker()
+crop_cycle_service = CropCycleService()
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parent.parent
 DASHBOARD_DIST_DIR = ROOT / "dashboard" / "dist"
@@ -187,10 +191,30 @@ async def whatsapp_webhook(request: Request, background_tasks: BackgroundTasks) 
                 )
                 return _twiml_message(reply)
         if media_type.startswith("image/"):
-            return _twiml_message(
-                "Photo diagnosis module inkem konchem pending lo undi. "
-                "Ippatiki symptoms text lo cheppandi, urgent aithe KVK: 08462-226360."
+            try:
+                image_bytes, _ = _download_twilio_media(media_url)
+                profile = profile_manager.get_profile(from_number)
+                cycle_state = crop_cycle_service.get_state(from_number)
+                crop_hint = cycle_state.crop_name or (profile.last_three_crops[0] if profile.last_three_crops else None)
+                diagnosis = diagnose_disease_image(image_bytes, crop_hint=crop_hint)
+                reply = diagnosis["reply_text"]
+            except Exception:
+                logger.exception(
+                    "Image diagnosis failed for WhatsApp media. media_type=%s media_url_present=%s",
+                    media_type,
+                    bool(media_url),
+                )
+                reply = (
+                    "Photo process cheyyadam ippudu fail ayyindi naanna. "
+                    "Malli clear daylight photo pampandi lekapothe KVK 08462-226360 ki chupinchandi."
+                )
+            _maybe_schedule_voice_reply(
+                background_tasks,
+                to_number=from_number,
+                reply_text=reply,
+                public_base_url=public_base_url,
             )
+            return _twiml_message(reply)
 
     reply = _process_farmer_text(from_number, message_text)
     _maybe_schedule_voice_reply(
@@ -210,6 +234,7 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
     )
     if reset_requested:
         profile_manager.reset_profile(from_number)
+        crop_cycle_service.clear_state(from_number)
         return (
             "Sare naanna, old profile clear chesanu. "
             "Malli fresh ga start cheddam. Mundu mee mandal cheppandi."
@@ -218,8 +243,49 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
     existing_profile = profile_manager.get_profile(from_number)
     force_overwrite = (
         existing_profile.profile_complete
-        and profile_manager.message_contains_profile_signal(message_text)
+        and profile_manager.message_contains_profile_update_signal(message_text)
     )
+
+    if existing_profile.profile_complete and not force_overwrite:
+        followup_reply = maybe_handle_followup(existing_profile, message_text)
+        if followup_reply:
+            return followup_reply
+
+        intent = classify_intent(message_text)
+
+        if intent == "weather_question":
+            return _weather_reply()
+
+        if intent == "scheme_match" or intent == "loan_help":
+            return _scheme_reply()
+
+        if intent == "disease_detection":
+            return (
+                "Clear leaf/photo pampandi naanna. "
+                "Photo quality bagunte confidence-threshold batti reply istanu. "
+                "Urgent aithe Nizamabad KVK: 08462-226360."
+            )
+
+        if intent == "unknown":
+            return (
+                "Mee profile already na daggara undi naanna. "
+                "Kotha analysis kavali ante kotha details cheppandi "
+                "(udaharana: 5 acres, black cotton, borewell, loan 1 lakh) "
+                "lekapothe 'weather', 'scheme', 'disease', lekapothe 'crop recommend' ani cheppandi."
+            )
+
+        engine_farmer = EngineFarmerProfile(
+            mandal=existing_profile.mandal,
+            acres=existing_profile.acres,
+            soil_zone=existing_profile.soil_type,
+            water_source=existing_profile.water_source,
+            loan_burden_rs=existing_profile.loan_burden_rs,
+            last_crops=existing_profile.last_three_crops,
+            farmer_id=existing_profile.phone_number,
+        )
+        result = recommend(engine_farmer)
+        _log_recommendation(engine_farmer, result)
+        return generate_telugu_response(result)
 
     conversation = profile_manager.handle_message(
         from_number,
@@ -246,6 +312,10 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
         return generate_telugu_response(result)
 
     if force_overwrite:
+        followup_reply = maybe_handle_followup(profile, message_text)
+        if followup_reply:
+            return followup_reply
+
         engine_farmer = EngineFarmerProfile(
             mandal=profile.mandal,
             acres=profile.acres,
@@ -272,8 +342,8 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
 
     if intent == "disease_detection":
         return (
-            "Photo diagnosis module ippudu connect chesthunnanu. "
-            "Clear leaf/photo pampandi ani taruvatha direct check chesthanu. "
+            "Clear leaf/photo pampandi naanna. "
+            "Photo quality bagunte confidence-threshold batti reply istanu. "
             "Urgent aithe Nizamabad KVK: 08462-226360."
         )
 
@@ -307,7 +377,7 @@ def _weather_reply() -> str:
             f"{location} forecast chusanu. "
             f"Next {summary['daily_rows_prepared']} rojula daily forecast ready undi, "
             f"hourly rain check kuda undi. "
-            "Drying alerts and proactive disease warnings next ga connect chesthanu."
+            "Drying watch mariyu proactive disease warnings kuda evaluate cheyyachu."
         )
     except Exception:
         return (

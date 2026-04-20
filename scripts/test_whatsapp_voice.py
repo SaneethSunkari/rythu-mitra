@@ -12,7 +12,7 @@ from fastapi.testclient import TestClient
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import bot.whatsapp_handler as whatsapp_handler
-from bot.telugu_voice import synthesize_telugu_reply
+from bot.telugu_voice import save_generated_audio
 
 
 VOICE_STEPS = [
@@ -32,19 +32,39 @@ def _extract_twiml_message(xml_text: str) -> str:
 
 
 def main() -> None:
-    media_store: dict[str, bytes] = {}
+    media_store: dict[str, tuple[bytes, str]] = {}
+    transcript_store: dict[str, str] = {}
 
     for index, text in enumerate(VOICE_STEPS, start=1):
-        audio = synthesize_telugu_reply(text, speaker="maan", pace=0.9)
-        media_store[f"https://voice.test/{index}.wav"] = audio["audio_bytes"]
+        media_store[f"https://voice.test/{index}.wav"] = (
+            b"voice-bytes",
+            "audio/wav",
+        )
+        transcript_store[f"{index}.wav"] = text
 
     original_download = whatsapp_handler._download_twilio_media
+    original_schedule = whatsapp_handler._maybe_schedule_voice_reply
+    original_transcribe = whatsapp_handler.transcribe_voice_note
     whatsapp_handler._download_twilio_media = media_store.__getitem__
+
+    def _local_voice_reply(_background_tasks, *, reply_text: str, public_base_url: str, to_number: str) -> None:
+        del reply_text, public_base_url, to_number
+        save_generated_audio(b"fake-audio-reply", extension="mp3")
+
+    def _mock_transcribe(_audio_bytes: bytes, *, filename: str, mime_type: str) -> dict:
+        return {
+            "transcript": transcript_store[filename],
+            "mime_type_used": mime_type,
+            "mode_used": "mock",
+        }
+
+    whatsapp_handler._maybe_schedule_voice_reply = _local_voice_reply
+    whatsapp_handler.transcribe_voice_note = _mock_transcribe
 
     phone_number = f"whatsapp:+9199{uuid.uuid4().int % 100000000:08d}"
     reply_dir = Path("data/generated_audio")
     reply_dir.mkdir(parents=True, exist_ok=True)
-    before_files = set(reply_dir.glob("reply_*.wav"))
+    before_files = set(reply_dir.glob("reply_*.wav")) | set(reply_dir.glob("reply_*.mp3"))
 
     try:
         client = TestClient(whatsapp_handler.app)
@@ -68,7 +88,7 @@ def main() -> None:
             final_reply = _extract_twiml_message(response.text)
             print(f"step_{index}: {final_reply[:180]}")
 
-        after_files = set(reply_dir.glob("reply_*.wav"))
+        after_files = set(reply_dir.glob("reply_*.wav")) | set(reply_dir.glob("reply_*.mp3"))
         new_files = sorted(after_files - before_files)
 
         if "maize" not in final_reply.lower():
@@ -81,6 +101,8 @@ def main() -> None:
         print("voice_flow_status: ok")
     finally:
         whatsapp_handler._download_twilio_media = original_download
+        whatsapp_handler._maybe_schedule_voice_reply = original_schedule
+        whatsapp_handler.transcribe_voice_note = original_transcribe
 
 
 if __name__ == "__main__":

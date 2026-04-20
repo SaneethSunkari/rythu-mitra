@@ -25,13 +25,14 @@ MANDALS = {
         "soil_zone": "deep_calcareous",
         "water": "mixed",           # SRSP canal + rainfed
         "primary_crops": ["paddy", "turmeric", "maize", "soybean"],
+        "unsuitable_crops": ["cotton"],
         "nearest_mandis": [
             {"name": "Nandipet", "distance_km": 10},
             {"name": "Armur", "distance_km": 22},
             {"name": "Nizamabad", "distance_km": 42},
         ],
         "villages": 47,
-        "notes": "Annaram village is here. Godavari river border on east.",
+        "notes": "Annaram village is here. Godavari river border on east. Local deep calcareous tracts are not treated as cotton-suitable in this project.",
     },
     "nizamabad_rural": {
         "soil_zone": "mixed",

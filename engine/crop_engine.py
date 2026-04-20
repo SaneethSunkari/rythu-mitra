@@ -98,11 +98,13 @@ def get_weather_forecast(mandal: str) -> dict:
 
 # ── FILTER 1: SOIL MATCH ───────────────────────────────────────────────────────
 
-def filter_soil(candidates: list, soil_zone: str) -> list:
-    """Remove crops that cannot grow in this soil type."""
+def filter_soil(candidates: list, soil_zone: str, mandal: str | None = None) -> list:
+    """Remove crops that cannot grow in this soil type or are locally unsuitable."""
+    mandal_data = MANDALS.get(mandal, {}) if mandal else {}
+    unsuitable_crops = set(mandal_data.get("unsuitable_crops", []))
     return [
         c for c in candidates
-        if soil_zone in CROPS[c]["soil_compatible"]
+        if soil_zone in CROPS[c]["soil_compatible"] and c not in unsuitable_crops
     ]
 
 
@@ -381,7 +383,7 @@ def recommend(farmer: FarmerProfile) -> dict:
     after_season = filter_season(all_crops, season_name)
 
     # Filter 1 — Soil
-    after_soil = filter_soil(after_season, farmer.soil_zone)
+    after_soil = filter_soil(after_season, farmer.soil_zone, farmer.mandal)
 
     # Filter 2 — Water + Weather
     after_water = filter_water_weather(after_soil, farmer.water_source, weather)
@@ -411,7 +413,7 @@ def recommend(farmer: FarmerProfile) -> dict:
             elif crop not in after_season:
                 rejected.append({"crop": crop, "reason": f"Season mismatch ({season_name})"})
             elif crop not in after_soil:
-                rejected.append({"crop": crop, "reason": "Soil mismatch"})
+                rejected.append({"crop": crop, "reason": "Soil or local suitability mismatch"})
             elif crop not in after_water:
                 rejected.append({"crop": crop, "reason": "Water requirement not met"})
             else:
