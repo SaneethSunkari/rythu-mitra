@@ -30,6 +30,8 @@ Built from a real family problem, the project combines Telugu voice UX, conserva
 
 ## Dashboard Preview
 
+- https://web-production-d8869.up.railway.app/dashboard
+
 ![Rythu Mitra Dashboard](docs/dashboard-preview.svg)
 
 ## Architecture Preview
