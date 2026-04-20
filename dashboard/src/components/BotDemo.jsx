@@ -13,15 +13,16 @@ export default function BotDemo({ scenarios }) {
   const scenario = scenarios.find((item) => item.id === selectedId) ?? scenarios[0];
 
   return (
-    <section className="section-card">
-      <div className="section-card__header">
+    <section className="section-shell">
+      <div className="section-heading">
         <div>
-          <span className="eyebrow eyebrow--small">WhatsApp walkthrough</span>
-          <h2>Bot demo with visible reasoning</h2>
+          <span className="eyebrow eyebrow--soft">Bot walkthrough</span>
+          <h2>The WhatsApp assistant, opened up for inspection</h2>
           <p>
-            This panel turns the invisible part of the bot into something you
-            can inspect: which farmer profile was assumed, what the filter path
-            looked like, and what Telugu message the user would actually hear.
+            The voice and chat interface is only useful if the hidden reasoning
+            stays auditable. This panel lets someone inspect the farmer
+            assumption, the filter trail, the rejected crops, and the Telugu
+            reply that would actually go out.
           </p>
         </div>
       </div>
@@ -39,35 +40,25 @@ export default function BotDemo({ scenarios }) {
         ))}
       </div>
 
-      <div className="bot-layout">
-        <article className="bot-panel">
-          <div className="bot-panel__header">
-            <h3>Farmer profile</h3>
-            <div className="profile-grid">
-              <div>
-                <span>Mandal</span>
-                <strong>{scenario.profile.mandal}</strong>
-              </div>
-              <div>
-                <span>Acres</span>
-                <strong>{scenario.profile.acres}</strong>
-              </div>
-              <div>
-                <span>Soil</span>
-                <strong>{scenario.profile.soilZone}</strong>
-              </div>
-              <div>
-                <span>Water</span>
-                <strong>{scenario.profile.waterSource}</strong>
-              </div>
-              <div>
-                <span>Loan</span>
-                <strong>{money(scenario.profile.loanBurden)}</strong>
-              </div>
-              <div>
-                <span>History</span>
-                <strong>{scenario.profile.lastCrops.join(", ")}</strong>
-              </div>
+      <div className="demo-stage">
+        <article className="panel phone-panel">
+          <div className="phone-panel__chrome">
+            <div className="phone-panel__camera" />
+            <span>WhatsApp field conversation</span>
+          </div>
+
+          <div className="phone-panel__profile">
+            <div>
+              <span className="micro-label">Farmer profile</span>
+              <strong>
+                {scenario.profile.mandal} • {scenario.profile.acres} acres
+              </strong>
+            </div>
+            <div>
+              <span className="micro-label">Soil / water</span>
+              <strong>
+                {scenario.profile.soilZone} • {scenario.profile.waterSource}
+              </strong>
             </div>
           </div>
 
@@ -86,46 +77,96 @@ export default function BotDemo({ scenarios }) {
           </div>
         </article>
 
-        <article className="bot-panel">
-          <div className="bot-picks">
-            <div className="pick-banner">
-              <span>Top pick</span>
-              <strong>{scenario.topPick?.name ?? "No safe pick"}</strong>
-              <small>{scenario.topPick?.teluguName ?? "fallback to advisory"}</small>
-            </div>
-            <div className="pick-banner pick-banner--soft">
-              <span>Second option</span>
-              <strong>{scenario.secondPick?.name ?? "No second option"}</strong>
-              <small>{scenario.secondPick?.teluguName ?? "—"}</small>
-            </div>
-          </div>
-
-          <div className="trace-list">
-            {scenario.filterTrace.map((step) => (
-              <article className="trace-card" key={step.id}>
-                <div className="trace-card__top">
-                  <strong>{step.title}</strong>
-                  <span>
-                    kept {step.kept} • removed {step.removed}
-                  </span>
+        <div className="logic-column">
+          <article className="panel decision-panel">
+            <div className="decision-panel__top">
+              <div>
+                <span className="micro-label">Final shortlist</span>
+                <h3>
+                  {scenario.topPick?.name ?? "No safe pick"} over{" "}
+                  {scenario.secondPick?.name ?? "no second option"}
+                </h3>
+              </div>
+              <div className="decision-pair">
+                <div className="decision-pair__card">
+                  <span className="micro-label">Top pick</span>
+                  <strong>{scenario.topPick?.teluguName ?? "—"}</strong>
                 </div>
-                <p>{step.note}</p>
-                <div className="trace-card__chips">
-                  {step.highlights.map((item) => (
-                    <span className="mini-chip" key={item}>
-                      {item}
-                    </span>
-                  ))}
+                <div className="decision-pair__card decision-pair__card--soft">
+                  <span className="micro-label">Loan burden</span>
+                  <strong>{money(scenario.profile.loanBurden)}</strong>
                 </div>
-              </article>
-            ))}
-          </div>
+              </div>
+            </div>
 
-          <div className="reply-card">
-            <h3>Final Telugu reply</h3>
+            <div className="profile-ledger">
+              <div>
+                <span className="micro-label">Mandal</span>
+                <strong>{scenario.profile.mandal}</strong>
+              </div>
+              <div>
+                <span className="micro-label">Soil</span>
+                <strong>{scenario.profile.soilZone}</strong>
+              </div>
+              <div>
+                <span className="micro-label">Water</span>
+                <strong>{scenario.profile.waterSource}</strong>
+              </div>
+              <div>
+                <span className="micro-label">Crop history</span>
+                <strong>{scenario.profile.lastCrops.join(", ")}</strong>
+              </div>
+            </div>
+
+            <div className="rejection-rack">
+              {scenario.rejected.slice(0, 6).map((item) => (
+                <div className="rejection-chip" key={`${item.crop}-${item.reason}`}>
+                  <strong>{item.crop}</strong>
+                  <span>{item.reason}</span>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className="panel trace-panel">
+            <div className="trace-panel__header">
+              <span className="micro-label">Filter trail</span>
+              <h3>How the shortlist shrank</h3>
+            </div>
+
+            <div className="trace-timeline">
+              {scenario.filterTrace.map((step, index) => (
+                <article className="trace-step" key={step.id}>
+                  <div className="trace-step__rail">
+                    <span>{index + 1}</span>
+                  </div>
+                  <div className="trace-step__body">
+                    <div className="trace-step__top">
+                      <strong>{step.title}</strong>
+                      <span>
+                        kept {step.kept} • removed {step.removed}
+                      </span>
+                    </div>
+                    <p>{step.note}</p>
+                    <div className="mini-chip-row">
+                      {step.highlights.map((item) => (
+                        <span className="mini-chip" key={item}>
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </article>
+
+          <article className="panel telugu-panel">
+            <span className="micro-label">Reply that goes back to the farmer</span>
+            <h3>Final Telugu response</h3>
             <pre>{scenario.teluguReply}</pre>
-          </div>
-        </article>
+          </article>
+        </div>
       </div>
     </section>
   );

@@ -11,92 +11,223 @@ function formatUtcStamp(value) {
   });
 }
 
+function formatMoney(value) {
+  if (value === null || value === undefined) {
+    return "—";
+  }
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatSeason(value) {
+  return value.replaceAll("_", " ");
+}
+
+function parseRupees(reply, label) {
+  const pattern = new RegExp(`${label}:\\s*₹([\\d,]+)`, "i");
+  const match = reply.match(pattern);
+  if (!match) {
+    return null;
+  }
+  return Number(match[1].replaceAll(",", ""));
+}
+
 export default function App() {
   const { summary, cropCaps, mandals, priceRows, weatherDaily, demoScenarios } =
     dashboardData;
 
-  const oversupplied = cropCaps
+  const featuredScenario =
+    demoScenarios.find((item) => item.id === "annaram-family") ?? demoScenarios[0];
+
+  const crowdedCrops = cropCaps
     .filter((item) => item.status === "REJECT" || item.status === "OVERSUPPLY")
-    .slice(0, 3);
-  const openOpportunities = cropCaps
-    .filter((item) => item.status === "LOW")
     .slice(0, 4);
+  const openLanes = cropCaps.filter((item) => item.status === "LOW").slice(0, 4);
+  const frontlineMandals = [...mandals]
+    .filter((item) => item.topPickExpectedProfit)
+    .sort(
+      (left, right) => right.topPickExpectedProfit - left.topPickExpectedProfit,
+    )
+    .slice(0, 3);
+  const featuredExpected = parseRupees(
+    featuredScenario.teluguReply,
+    "expected profit",
+  );
+  const featuredWorst = parseRupees(
+    featuredScenario.teluguReply,
+    "Worst case profit",
+  );
+  const rejectionCopy = featuredScenario.rejected
+    .slice(0, 3)
+    .map((item) => item.crop.toLowerCase())
+    .join(", ");
 
   return (
     <main className="page-shell">
-      <div className="page-backdrop page-backdrop--one" />
-      <div className="page-backdrop page-backdrop--two" />
+      <div className="page-glow page-glow--green" />
+      <div className="page-glow page-glow--amber" />
 
-      <section className="hero">
-        <div className="hero__copy">
-          <span className="eyebrow">Nizamabad district command view</span>
-          <h1>Rythu Mitra Dashboard</h1>
-          <p className="hero__lede">
-            A working control room for the WhatsApp agricultural assistant:
-            district crop pressure, mandi pricing, weather context, and a live
-            walkthrough of how the Telugu bot reasons.
+      <header className="hero-shell">
+        <section className="panel hero-story">
+          <span className="eyebrow">District decision room</span>
+          <h1>A field desk for crop decisions under uncertainty.</h1>
+          <p className="hero-story__lede">
+            This dashboard is not here to decorate the project. It exposes the
+            engine that matters: soil fit, water reality, district crowding,
+            price ranges, and downside safety for a real farmer in Nizamabad.
           </p>
 
-          <div className="hero__signals">
-            <div className="signal-card">
-              <span className="signal-card__label">Current season</span>
-              <strong>{summary.currentSeason.replace("_", " ")}</strong>
-            </div>
-            <div className="signal-card">
-              <span className="signal-card__label">Open opportunities</span>
-              <strong>{summary.openOpportunityCropCount} crops</strong>
-            </div>
-            <div className="signal-card">
-              <span className="signal-card__label">Last dataset refresh</span>
-              <strong>{formatUtcStamp(summary.generatedAtUtc)}</strong>
-            </div>
-          </div>
-        </div>
+          <div className="hero-story__ledger">
+            <article className="ledger-card">
+              <span className="micro-label">Example input</span>
+              <h2>{featuredScenario.title}</h2>
+              <div className="ledger-grid">
+                <div>
+                  <span className="micro-label">Mandal</span>
+                  <strong>{featuredScenario.profile.mandal}</strong>
+                </div>
+                <div>
+                  <span className="micro-label">Land</span>
+                  <strong>{featuredScenario.profile.acres} acres</strong>
+                </div>
+                <div>
+                  <span className="micro-label">Soil</span>
+                  <strong>{featuredScenario.profile.soilZone}</strong>
+                </div>
+                <div>
+                  <span className="micro-label">Water</span>
+                  <strong>{featuredScenario.profile.waterSource}</strong>
+                </div>
+                <div>
+                  <span className="micro-label">Loan</span>
+                  <strong>{formatMoney(featuredScenario.profile.loanBurden)}</strong>
+                </div>
+                <div>
+                  <span className="micro-label">History</span>
+                  <strong>{featuredScenario.profile.lastCrops.join(", ")}</strong>
+                </div>
+              </div>
+            </article>
 
-        <aside className="hero__panel">
-          <h2>What this page proves</h2>
-          <ul className="proof-list">
-            <li>36-mandal district logic is loaded into a usable interface.</li>
-            <li>
-              The recommendation engine is not guessing. It applies visible
-              filters and cap logic.
-            </li>
-            <li>
-              The product can be explained to a recruiter and audited by an
-              engineer from the same screen.
-            </li>
-          </ul>
-          <div className="hero__chip-row">
-            {oversupplied.map((item) => (
-              <span className="status-chip status-chip--danger" key={item.slug}>
-                {item.name} crowded
-              </span>
-            ))}
-            {openOpportunities.map((item) => (
-              <span className="status-chip status-chip--good" key={item.slug}>
-                {item.name} open
-              </span>
-            ))}
+            <article className="ledger-card ledger-card--verdict">
+              <span className="micro-label">Engine output</span>
+              <div className="verdict-lockup">
+                <div>
+                  <span className="micro-label">Top pick</span>
+                  <strong>{featuredScenario.topPick?.name ?? "No safe pick"}</strong>
+                  <small>{featuredScenario.topPick?.teluguName ?? "—"}</small>
+                </div>
+                <div>
+                  <span className="micro-label">Second lane</span>
+                  <strong>
+                    {featuredScenario.secondPick?.name ?? "No second option"}
+                  </strong>
+                  <small>{featuredScenario.secondPick?.teluguName ?? "—"}</small>
+                </div>
+              </div>
+              <div className="verdict-metrics">
+                <div>
+                  <span className="micro-label">Expected</span>
+                  <strong>{formatMoney(featuredExpected)}</strong>
+                </div>
+                <div>
+                  <span className="micro-label">Worst case</span>
+                  <strong>{formatMoney(featuredWorst)}</strong>
+                </div>
+              </div>
+              <p className="verdict-note">
+                Rejected crops in this example include {rejectionCopy}. The
+                shortlist only survives if it stays profitable at conservative
+                floor prices.
+              </p>
+            </article>
           </div>
+        </section>
+
+        <aside className="hero-rail">
+          <article className="panel rail-panel">
+            <span className="micro-label">Live district state</span>
+            <div className="rail-metric">
+              <strong>{formatSeason(summary.currentSeason)}</strong>
+              <span>season in view</span>
+            </div>
+            <div className="rail-metric">
+              <strong>{summary.mandalCount}</strong>
+              <span>mandals modeled</span>
+            </div>
+            <div className="rail-metric">
+              <strong>{summary.activeRecommendationCrops}</strong>
+              <span>active crops scored</span>
+            </div>
+            <p className="rail-footnote">
+              Refreshed {formatUtcStamp(summary.generatedAtUtc)}
+            </p>
+          </article>
+
+          <article className="panel rail-panel">
+            <span className="micro-label">Crowding alerts</span>
+            <div className="rail-list">
+              {crowdedCrops.map((item) => (
+                <div className="rail-list__item rail-list__item--hot" key={item.slug}>
+                  <strong>{item.name}</strong>
+                  <span>{item.statusLabel}</span>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className="panel rail-panel">
+            <span className="micro-label">Open lanes</span>
+            <div className="rail-list">
+              {openLanes.map((item) => (
+                <div className="rail-list__item rail-list__item--cool" key={item.slug}>
+                  <strong>{item.name}</strong>
+                  <span>{item.pctFilled}% of safe cap</span>
+                </div>
+              ))}
+            </div>
+          </article>
+
+          <article className="panel rail-panel">
+            <span className="micro-label">Frontline mandals</span>
+            <div className="frontline-stack">
+              {frontlineMandals.map((mandal) => (
+                <div className="frontline-row" key={mandal.slug}>
+                  <div>
+                    <strong>{mandal.name}</strong>
+                    <span>{mandal.topPick?.name ?? "No pick"}</span>
+                  </div>
+                  <em>{formatMoney(mandal.topPickExpectedProfit)}</em>
+                </div>
+              ))}
+            </div>
+          </article>
         </aside>
-      </section>
+      </header>
 
-      <section className="summary-strip">
-        <article className="summary-card">
-          <span className="summary-card__label">Mandals</span>
-          <strong>{summary.mandalCount}</strong>
+      <section className="signal-ribbon">
+        <article className="signal-panel">
+          <span className="micro-label">Decision coverage</span>
+          <strong>{summary.mandalTopPickCount}</strong>
+          <p>mandals currently return a safe top pick</p>
         </article>
-        <article className="summary-card">
-          <span className="summary-card__label">Active recommendation crops</span>
-          <strong>{summary.activeRecommendationCrops}</strong>
-        </article>
-        <article className="summary-card">
-          <span className="summary-card__label">Mandis covered</span>
-          <strong>{summary.mandiCount}</strong>
-        </article>
-        <article className="summary-card">
-          <span className="summary-card__label">Price rows in board</span>
+        <article className="signal-panel">
+          <span className="micro-label">Market board</span>
           <strong>{summary.priceRowCount}</strong>
+          <p>price rows available across district mandis</p>
+        </article>
+        <article className="signal-panel">
+          <span className="micro-label">Crowding pressure</span>
+          <strong>{summary.oversuppliedCropCount}</strong>
+          <p>crops are currently flagged as crowded or blocked</p>
+        </article>
+        <article className="signal-panel">
+          <span className="micro-label">Weather stream</span>
+          <strong>{weatherDaily.length} days</strong>
+          <p>district forecast feeding risk filters and alerts</p>
         </article>
       </section>
 
@@ -106,8 +237,9 @@ export default function App() {
 
       <footer className="page-footer">
         <p>
-          Dashboard data is generated from the Python backend and cached project
-          data, then exported into this frontend snapshot.
+          The interface is stylized, but the numbers come from the same Python
+          backend export that powers the bot, the cap tracker, and the scenario
+          walkthrough.
         </p>
       </footer>
     </main>

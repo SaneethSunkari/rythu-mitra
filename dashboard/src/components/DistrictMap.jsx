@@ -18,19 +18,37 @@ function prettyLabel(value) {
 function statusClass(status) {
   switch (status) {
     case "REJECT":
-      return "tone tone--danger";
+      return "status-pill status-pill--danger";
     case "OVERSUPPLY":
-      return "tone tone--warning";
+      return "status-pill status-pill--warning";
     case "MEDIUM":
-      return "tone tone--watch";
+      return "status-pill status-pill--watch";
     default:
-      return "tone tone--good";
+      return "status-pill status-pill--good";
+  }
+}
+
+function statusCopy(status) {
+  switch (status) {
+    case "REJECT":
+      return "Blocked";
+    case "OVERSUPPLY":
+      return "High pressure";
+    case "MEDIUM":
+      return "Watch";
+    case "LOW":
+      return "Open";
+    default:
+      return "Signal";
   }
 }
 
 export default function DistrictMap({ summary, cropCaps, mandals }) {
   const [soilFilter, setSoilFilter] = useState("all");
   const [waterFilter, setWaterFilter] = useState("all");
+  const [activeSlug, setActiveSlug] = useState(
+    mandals.find((item) => item.slug === "nandipet")?.slug ?? mandals[0]?.slug,
+  );
 
   const soilOptions = ["all", ...new Set(mandals.map((item) => item.soilZone))];
   const waterOptions = ["all", ...new Set(mandals.map((item) => item.waterSource))];
@@ -45,27 +63,42 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
     return true;
   });
 
+  const activeMandal =
+    filteredMandals.find((item) => item.slug === activeSlug) ??
+    filteredMandals[0] ??
+    mandals[0];
+
+  const capRows = [...cropCaps]
+    .sort((left, right) => (right.pctFilled ?? 0) - (left.pctFilled ?? 0))
+    .slice(0, 8);
+
   return (
-    <section className="section-card">
-      <div className="section-card__header">
+    <section className="section-shell">
+      <div className="section-heading">
         <div>
-          <span className="eyebrow eyebrow--small">District opportunity layer</span>
-          <h2>36-mandal snapshot</h2>
+          <span className="eyebrow eyebrow--soft">District atlas</span>
+          <h2>Where the engine is willing to send farmers</h2>
           <p>
-            This is not a literal map yet. It is a decision surface: every
-            mandal shows what the engine would surface for a representative
-            5-acre farmer using that mandal’s default soil and water profile.
+            Each tile is a representative 5-acre farmer in that mandal. This
+            is not a decorative map. It is a visual index of where the
+            recommendation logic still sees safe room to move.
           </p>
         </div>
-        <div className="section-card__meta">
-          <span>{summary.mandalTopPickCount} mandals have a safe top pick</span>
-          <span>{summary.oversuppliedCropCount} crops are under crowding pressure</span>
+        <div className="section-kickers">
+          <div>
+            <strong>{summary.mandalTopPickCount}</strong>
+            <span>mandals with a safe top pick</span>
+          </div>
+          <div>
+            <strong>{filteredMandals.length}</strong>
+            <span>mandals visible after filtering</span>
+          </div>
         </div>
       </div>
 
-      <div className="filters">
+      <div className="filter-bar">
         <div className="filter-group">
-          <span className="filter-group__label">Soil zone</span>
+          <span className="micro-label">Soil zone</span>
           <div className="chip-row">
             {soilOptions.map((option) => (
               <button
@@ -81,7 +114,7 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
         </div>
 
         <div className="filter-group">
-          <span className="filter-group__label">Water source</span>
+          <span className="micro-label">Water source</span>
           <div className="chip-row">
             {waterOptions.map((option) => (
               <button
@@ -97,35 +130,92 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
         </div>
       </div>
 
-      <div className="district-layout">
-        <aside className="cap-board">
-          <div className="cap-board__header">
-            <h3>District cap tracker</h3>
+      <div className="district-stage">
+        <article className="panel spotlight-panel">
+          <div className="spotlight-panel__top">
+            <div>
+              <span className="micro-label">Selected mandal</span>
+              <h3>{activeMandal.name}</h3>
+              <p>
+                {prettyLabel(activeMandal.soilZone)} soil •{" "}
+                {prettyLabel(activeMandal.waterSource)} water •{" "}
+                {activeMandal.villages} villages
+              </p>
+            </div>
+            <span className={statusClass(activeMandal.competitionStatus)}>
+              {statusCopy(activeMandal.competitionStatus)}
+            </span>
+          </div>
+
+          <div className="spotlight-grid">
+            <article className="spotlight-stat">
+              <span className="micro-label">Top pick</span>
+              <strong>{activeMandal.topPick?.name ?? "No safe pick"}</strong>
+              <small>{activeMandal.topPick?.teluguName ?? "KVK fallback"}</small>
+            </article>
+            <article className="spotlight-stat">
+              <span className="micro-label">Second lane</span>
+              <strong>{activeMandal.secondPick?.name ?? "No second option"}</strong>
+              <small>{activeMandal.secondPick?.teluguName ?? "—"}</small>
+            </article>
+            <article className="spotlight-stat">
+              <span className="micro-label">Expected profit</span>
+              <strong>{formatMoney(activeMandal.topPickExpectedProfit)}</strong>
+              <small>representative 5-acre snapshot</small>
+            </article>
+            <article className="spotlight-stat">
+              <span className="micro-label">Worst-case profit</span>
+              <strong>{formatMoney(activeMandal.topPickWorstProfit)}</strong>
+              <small>floor-price survivability</small>
+            </article>
+          </div>
+
+          <div className="spotlight-notes">
+            <div>
+              <span className="micro-label">Nearest mandi</span>
+              <strong>
+                {activeMandal.nearestMandi} ({activeMandal.nearestMandiDistanceKm} km)
+              </strong>
+            </div>
+            <div>
+              <span className="micro-label">Primary crops today</span>
+              <strong>{activeMandal.primaryCrops.join(", ")}</strong>
+            </div>
+            <div>
+              <span className="micro-label">Snapshot assumption</span>
+              <strong>{activeMandal.snapshotAssumption}</strong>
+            </div>
+          </div>
+        </article>
+
+        <aside className="panel cap-panel">
+          <div className="cap-panel__heading">
+            <span className="micro-label">District pressure ledger</span>
+            <h3>Cap tracker</h3>
             <p>
-              This is the project’s distinctive layer: the bot refuses to keep
-              pushing farmers into already crowded crops.
+              The bot tracks supply pressure before it hands out advice. That is
+              the anti-rat-race layer that makes this system materially
+              different.
             </p>
           </div>
 
-          <div className="cap-list">
-            {cropCaps.map((item) => (
-              <article className="cap-row" key={item.slug}>
-                <div className="cap-row__top">
+          <div className="cap-ledger">
+            {capRows.map((item) => (
+              <article className="cap-ledger__row" key={item.slug}>
+                <div className="cap-ledger__row-top">
                   <div>
                     <strong>{item.name}</strong>
                     <span>{item.teluguName}</span>
                   </div>
                   <span className={statusClass(item.status)}>{item.statusLabel}</span>
                 </div>
-                <div className="progress-track">
+                <div className="cap-meter">
                   <div
-                    className={`progress-fill progress-fill--${item.status.toLowerCase()}`}
-                    style={{
-                      width: `${Math.min(item.pctFilled ?? 0, 100)}%`,
-                    }}
+                    className={`cap-meter__fill cap-meter__fill--${item.status.toLowerCase()}`}
+                    style={{ width: `${Math.min(item.pctFilled ?? 0, 100)}%` }}
                   />
                 </div>
-                <div className="cap-row__bottom">
+                <div className="cap-ledger__row-bottom">
                   <span>{item.totalAcres.toLocaleString("en-IN")} acres active</span>
                   <span>
                     safe cap {item.safeCapAcres?.toLocaleString("en-IN") ?? "—"}
@@ -135,52 +225,45 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
             ))}
           </div>
         </aside>
+      </div>
 
-        <div className="mandal-grid">
-          {filteredMandals.map((mandal) => (
-            <article className="mandal-card" key={mandal.slug}>
-              <div className="mandal-card__header">
-                <div>
-                  <h3>{mandal.name}</h3>
-                  <p>
-                    {prettyLabel(mandal.soilZone)} • {prettyLabel(mandal.waterSource)}
-                  </p>
-                </div>
-                <span className={statusClass(mandal.competitionStatus)}>
-                  {mandal.competitionStatus === "NONE"
-                    ? "no signal"
-                    : mandal.competitionStatus.toLowerCase()}
-                </span>
-              </div>
-
-              <div className="mandal-card__body">
-                <div className="mandal-pick">
-                  <span className="mandal-pick__label">Top pick</span>
-                  <strong>{mandal.topPick?.name ?? "No safe pick"}</strong>
-                  <small>{mandal.topPick?.teluguName ?? "KVK fallback likely"}</small>
-                </div>
-                <div className="mandal-pick">
-                  <span className="mandal-pick__label">Expected / worst</span>
-                  <strong>
-                    {mandal.topPickExpectedProfit
-                      ? `${formatMoney(mandal.topPickExpectedProfit)} / ${formatMoney(mandal.topPickWorstProfit)}`
-                      : "—"}
-                  </strong>
-                  <small>
-                    {mandal.secondPick ? `Second: ${mandal.secondPick.name}` : "No second option"}
-                  </small>
-                </div>
-              </div>
-
-              <div className="mandal-card__footer">
+      <div className="mandal-grid">
+        {filteredMandals.map((mandal) => (
+          <button
+            type="button"
+            className={`mandal-card ${mandal.slug === activeMandal.slug ? "mandal-card--active" : ""}`}
+            key={mandal.slug}
+            onClick={() => setActiveSlug(mandal.slug)}
+          >
+            <div className="mandal-card__head">
+              <div>
+                <strong>{mandal.name}</strong>
                 <span>
-                  Nearest mandi: {mandal.nearestMandi} ({mandal.nearestMandiDistanceKm} km)
+                  {prettyLabel(mandal.soilZone)} • {prettyLabel(mandal.waterSource)}
                 </span>
-                <span>{mandal.villages} villages</span>
               </div>
-            </article>
-          ))}
-        </div>
+              <span className={statusClass(mandal.competitionStatus)}>
+                {statusCopy(mandal.competitionStatus)}
+              </span>
+            </div>
+
+            <div className="mandal-card__body">
+              <div>
+                <span className="micro-label">Top</span>
+                <strong>{mandal.topPick?.name ?? "No safe pick"}</strong>
+              </div>
+              <div>
+                <span className="micro-label">Second</span>
+                <strong>{mandal.secondPick?.name ?? "—"}</strong>
+              </div>
+            </div>
+
+            <div className="mandal-card__tail">
+              <span>{formatMoney(mandal.topPickExpectedProfit)}</span>
+              <span>{mandal.nearestMandi}</span>
+            </div>
+          </button>
+        ))}
       </div>
     </section>
   );
