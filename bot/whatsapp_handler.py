@@ -30,7 +30,7 @@ from bot.telugu_voice import (
     transcribe_voice_note,
 )
 from disease.inference import diagnose_disease_image
-from data.nizamabad_district import SCHEMES
+from data.nizamabad_district import CROPS, SCHEMES
 from engine.district_cap import DistrictCapTracker
 from engine.crop_engine import (
     FarmerProfile as EngineFarmerProfile,
@@ -267,11 +267,24 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
             )
 
         if intent == "unknown":
+            engine_farmer = EngineFarmerProfile(
+                mandal=existing_profile.mandal,
+                acres=existing_profile.acres,
+                soil_zone=existing_profile.soil_type,
+                water_source=existing_profile.water_source,
+                loan_burden_rs=existing_profile.loan_burden_rs,
+                last_crops=existing_profile.last_three_crops,
+                farmer_id=existing_profile.phone_number,
+            )
+            result = recommend(engine_farmer)
+            top = result.get("top_pick")
+            top_name = CROPS[top["crop"]].get("telugu_name", top["crop"]) if top else "clear shortlist"
             return (
                 "Mee profile already na daggara undi naanna. "
-                "Kotha analysis kavali ante kotha details cheppandi "
-                "(udaharana: 5 acres, black cotton, borewell, loan 1 lakh) "
-                "lekapothe 'weather', 'scheme', 'disease', lekapothe 'crop recommend' ani cheppandi."
+                f"Ippudu naa shortlist lo {top_name} undi. "
+                "Meeru ila adagochu: 'paddy enduku vaddu', 'takkuva risk option cheppu', "
+                "'vere crop suggest cheyyu', 'maize mariyu soybean lo yedi better', "
+                "lekapothe kotha details cheppandi."
             )
 
         engine_farmer = EngineFarmerProfile(
@@ -348,11 +361,24 @@ def _process_farmer_text(from_number: str, message_text: str) -> str:
         )
 
     if intent == "unknown":
+        engine_farmer = EngineFarmerProfile(
+            mandal=profile.mandal,
+            acres=profile.acres,
+            soil_zone=profile.soil_type,
+            water_source=profile.water_source,
+            loan_burden_rs=profile.loan_burden_rs,
+            last_crops=profile.last_three_crops,
+            farmer_id=profile.phone_number,
+        )
+        result = recommend(engine_farmer)
+        top = result.get("top_pick")
+        top_name = CROPS[top["crop"]].get("telugu_name", top["crop"]) if top else "clear shortlist"
         return (
             "Mee profile already na daggara undi naanna. "
-            "Kotha analysis kavali ante kotha details cheppandi "
-            "(udaharana: 5 acres, black cotton, borewell, loan 1 lakh) "
-            "lekapothe 'weather', 'scheme', 'disease', lekapothe 'crop recommend' ani cheppandi."
+            f"Ippudu naa shortlist lo {top_name} undi. "
+            "Meeru ila adagochu: 'paddy enduku vaddu', 'takkuva risk option cheppu', "
+            "'vere crop suggest cheyyu', 'maize mariyu soybean lo yedi better', "
+            "lekapothe kotha details cheppandi."
         )
 
     engine_farmer = EngineFarmerProfile(

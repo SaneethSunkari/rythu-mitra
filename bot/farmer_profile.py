@@ -104,6 +104,15 @@ CROP_HISTORY_STOPWORDS = {
     "with",
     "acre",
     "acres",
+    "lakh",
+    "lakhs",
+    "laksh",
+    "laksha",
+    "lakshalu",
+    "lakshala",
+    "rupees",
+    "rupee",
+    "rs",
 }
 
 NUMBER_WORDS = {
@@ -428,10 +437,11 @@ class FarmerProfileManager:
                 "just_completed": False,
             }
 
+        current_stage = self._next_stage(profile)
         self._fill_from_message(profile, text, force_overwrite=force_overwrite)
         profile.profile_stage = self._next_stage(profile)
         profile.profile_complete = profile.profile_stage == "complete"
-        reply = self._build_reply(profile)
+        reply = self._build_reply(profile, text, current_stage=current_stage)
         save_result = self.save_profile(profile)
 
         return {
@@ -500,6 +510,16 @@ class FarmerProfileManager:
                 "Acres lo cheppandi. Udaharanaki: 10 acres."
             )
         if stage == "soil_and_water":
+            if profile.water_source and not profile.soil_type:
+                return (
+                    f"Sare naanna, {profile.water_source} artham ayindi. "
+                    "Ippudu soil type matram cheppandi. Udaharanaki: black cotton, deep calcareous, red clayey, mixed."
+                )
+            if profile.soil_type and not profile.water_source:
+                return (
+                    f"Sare naanna, {profile.soil_type} soil artham ayindi. "
+                    "Ippudu neellu source cheppandi. Udaharanaki: borewell, canal, rainfed, mixed."
+                )
             return (
                 "Mee bhoomi soil type mariyu neellu ela unnayo cheppandi. "
                 "Udaharanaki: black cotton + borewell, red soil + rainfed, mixed + canal."
@@ -528,8 +548,32 @@ class FarmerProfileManager:
             )
         return "Mee profile complete ayyindi."
 
-    def _build_reply(self, profile: FarmerProfile) -> str:
+    def _build_reply(self, profile: FarmerProfile, latest_text: str | None = None, *, current_stage: str | None = None) -> str:
+        normalized = _normalize_text(latest_text or "")
+        current_stage = current_stage or self._next_stage(profile)
         stage = self._next_stage(profile)
+
+        if current_stage == "soil_and_water":
+            crop_like = self._extract_crops(normalized) if normalized else []
+            if crop_like and not self._extract_soil(normalized):
+                crop_name = crop_like[0].replace("_", " ")
+                if profile.water_source and not profile.soil_type:
+                    return (
+                        f"{crop_name} ante crop peru naanna, soil kaadu. "
+                        "Ippudu soil type matram cheppandi. Udaharanaki: black cotton, deep calcareous, red clayey, mixed."
+                    )
+                return (
+                    f"{crop_name} ante crop peru naanna, soil / water details kaadu. "
+                    "Mee bhoomi soil type mariyu neellu source cheppandi. Udaharanaki: black cotton + borewell."
+                )
+
+        if current_stage == "history_and_loan" and profile.last_three_crops and profile.loan_situation is None:
+            if normalized and re.fullmatch(r"\d+(?:\.\d+)?", normalized):
+                return (
+                    f"Naanna, {normalized} ante loan amount exact ga ardham kaaledu. "
+                    "20 velu aa? 20 lakh aa? 'loan 20 lakh undi' la clear ga cheppandi."
+                )
+
         if stage == "complete":
             crops = ", ".join(profile.last_three_crops) if profile.last_three_crops else "cheppaledu"
             loan = profile.loan_situation or "cheppaledu"
@@ -553,6 +597,7 @@ class FarmerProfileManager:
         force_overwrite: bool = False,
     ) -> None:
         normalized = _normalize_text(text)
+        current_stage = self._next_stage(profile)
 
         mandal = self._extract_mandal(normalized)
         if mandal and (force_overwrite or not profile.mandal):
@@ -570,18 +615,20 @@ class FarmerProfileManager:
         if water:
             profile.water_source = water
 
-        crops = self._extract_crops(normalized)
+        crop_context_allowed = current_stage == "history_and_loan" or self._looks_like_crop_history_message(normalized)
+        crops = self._extract_crops(normalized) if crop_context_allowed else []
         if crops:
             profile.last_three_crops = crops[:3]
 
-        loan_amount = self._extract_loan_amount(normalized)
+        loan_context_allowed = current_stage == "history_and_loan" or self._looks_like_loan_message(normalized)
+        loan_amount = self._extract_loan_amount(normalized) if loan_context_allowed else None
         if loan_amount is not None:
             profile.loan_burden_rs = loan_amount
             if loan_amount == 0:
                 profile.loan_situation = "no loan"
             else:
                 profile.loan_situation = f"₹{loan_amount:,} loan"
-        elif not profile.loan_situation:
+        elif not profile.loan_situation and loan_context_allowed:
             if "no loan" in normalized or "loan ledu" in normalized or "ledu" == normalized:
                 profile.loan_situation = "no loan"
                 profile.loan_burden_rs = 0
@@ -598,6 +645,25 @@ class FarmerProfileManager:
         if not profile.last_three_crops or profile.loan_situation is None:
             return "history_and_loan"
         return "complete"
+
+    def _looks_like_crop_history_message(self, normalized_text: str) -> bool:
+        signals = (
+            "last crop",
+            "last crops",
+            "crop history",
+            "history",
+            "vesanu",
+            "vesaru",
+            "vesta",
+            "pandichanu",
+            "previous crop",
+        )
+        return any(signal in normalized_text for signal in signals)
+
+    def _looks_like_loan_message(self, normalized_text: str) -> bool:
+        if any(keyword in normalized_text for keyword in LOAN_KEYWORDS):
+            return True
+        return "no loan" in normalized_text or "loan ledu" in normalized_text
 
     def _fetch_from_supabase(self, phone_number: str) -> FarmerProfile | None:
         if not self.supabase_url or not self.supabase_key:
@@ -715,6 +781,13 @@ class FarmerProfileManager:
             if re.search(pattern, working) and canonical not in found:
                 found.append(canonical)
                 working = re.sub(pattern, " ", working)
+
+        if not found and (
+            any(char.isdigit() for char in normalized_text)
+            or any(multiplier in normalized_text for multiplier in MULTIPLIER_WORDS)
+            or any(keyword in normalized_text for keyword in LOAN_KEYWORDS)
+        ):
+            return []
 
         profile_signal_present = any((
             self._extract_mandal(normalized_text),

@@ -48,6 +48,26 @@ def main() -> None:
                     "naku inka vere crop suggest cheyyu",
                     ["vere safe crops shortlist", "SOYBEAN", "takkuva risk"],
                 ),
+                "a4_compare_crops": (
+                    "maize mariyu soybean lo yedi better",
+                    ["direct compare", "మొక్కజొన్న", "సోయాబీన్", "better side"],
+                ),
+                "a5_why_not_paddy": (
+                    "paddy enduku vaddu",
+                    ["వరి", "reason", "safer ga kanipistondi"],
+                ),
+                "a6_low_risk_shortlist": (
+                    "naku takkuva risk option cheppu",
+                    ["takkuva risk", "మొక్కజొన్న", "సోయాబీన్"],
+                ),
+                "a7_input_cost_phrase": (
+                    "cost ekkuva",
+                    ["low-cost safe options", "input approx"],
+                ),
+                "a8_alternative_with_preference": (
+                    "naku vere crop with high income and low risk",
+                    ["ekkuva income + takkuva risk", "strongest answer", "detail ga compare"],
+                ),
                 "c1_best_market": (
                     "anna paddy ekkada ammalani",
                     ["Best reachable mandi", "net"],

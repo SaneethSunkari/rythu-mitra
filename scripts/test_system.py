@@ -109,6 +109,116 @@ def run_text_onboarding() -> dict:
     return {"steps": len(messages), "final_contains_maize": True}
 
 
+def run_messy_text_onboarding() -> dict:
+    phone = "whatsapp:+919900000124"
+    original_schedule = whatsapp_handler._maybe_schedule_voice_reply
+    replies: list[str] = []
+
+    try:
+        whatsapp_handler._maybe_schedule_voice_reply = lambda *args, **kwargs: None
+
+        with TestClient(app) as client:
+            for body in (
+                "reset",
+                "nandipet",
+                "34",
+                "cotton + borewell",
+                "black cotton + borewell",
+                "20 lakhs",
+                "cotton, soybean, maize",
+            ):
+                response = client.post(
+                    "/whatsapp",
+                    data={"From": phone, "Body": body, "NumMedia": "0"},
+                    headers={"Content-Type": "application/x-www-form-urlencoded"},
+                )
+                response.raise_for_status()
+                replies.append(response.text)
+    finally:
+        whatsapp_handler._maybe_schedule_voice_reply = original_schedule
+
+    if "soil type" not in replies[3].lower():
+        raise AssertionError("Expected bot to keep asking for soil after 'cotton + borewell'.")
+    if "crop peru" not in replies[3].lower():
+        raise AssertionError("Expected bot to clarify that cotton is a crop, not soil details.")
+    if "last 3 crops" not in replies[4].lower():
+        raise AssertionError("Expected bot to ask for crop history after proper soil+water.")
+    if "last 3 crops" not in replies[5].lower():
+        raise AssertionError("Expected bot to ask for crop history after receiving only loan amount.")
+    if "BEST CHOICE" not in replies[6]:
+        raise AssertionError("Expected final recommendation after crop history is provided.")
+
+    return {"steps": 7, "handled_messy_inputs": True}
+
+
+def run_ambiguous_loan_prompt() -> dict:
+    phone = "whatsapp:+919900000125"
+    original_schedule = whatsapp_handler._maybe_schedule_voice_reply
+    replies: list[str] = []
+
+    try:
+        whatsapp_handler._maybe_schedule_voice_reply = lambda *args, **kwargs: None
+
+        with TestClient(app) as client:
+            for body in (
+                "reset",
+                "nandipet",
+                "34",
+                "black cotton + borewell",
+                "paddy, soybean, maize",
+                "20",
+            ):
+                response = client.post(
+                    "/whatsapp",
+                    data={"From": phone, "Body": body, "NumMedia": "0"},
+                    headers={"Content-Type": "application/x-www-form-urlencoded"},
+                )
+                response.raise_for_status()
+                replies.append(response.text)
+    finally:
+        whatsapp_handler._maybe_schedule_voice_reply = original_schedule
+
+    if "20 velu aa? 20 lakh aa?" not in replies[-1]:
+        raise AssertionError("Expected clarification prompt for ambiguous bare-number loan input.")
+    return {"status": "ok"}
+
+
+def run_black_cotton_preference_followups() -> dict:
+    phone = "whatsapp:+919900000126"
+    original_schedule = whatsapp_handler._maybe_schedule_voice_reply
+    replies: list[str] = []
+
+    try:
+        whatsapp_handler._maybe_schedule_voice_reply = lambda *args, **kwargs: None
+
+        with TestClient(app) as client:
+            for body in (
+                "reset",
+                "nandipet",
+                "34",
+                "black cotton + borewell",
+                "paddy, soybean, maize",
+                "loan 20 lakhs undi",
+                "naku vere crop with high income and low risk",
+                "cost ekkuva",
+            ):
+                response = client.post(
+                    "/whatsapp",
+                    data={"From": phone, "Body": body, "NumMedia": "0"},
+                    headers={"Content-Type": "application/x-www-form-urlencoded"},
+                )
+                response.raise_for_status()
+                replies.append(response.text)
+    finally:
+        whatsapp_handler._maybe_schedule_voice_reply = original_schedule
+
+    if "strongest answer" not in replies[-2]:
+        raise AssertionError("Expected honest top-pick explanation for alternative high-income/low-risk ask.")
+    if "lowest input cost side lo strongest option" not in replies[-1]:
+        raise AssertionError("Expected input-cost reply to acknowledge the current top crop when true.")
+    return {"status": "ok"}
+
+
 def run_price_weather_checks() -> dict:
     price_result = PricePipeline().run(persist=False)
     weather_result = WeatherPipeline().run(persist=False)
@@ -173,6 +283,9 @@ def main() -> None:
         "mandal_sweep": run_mandal_sweep(),
         "route_checks": run_route_checks(),
         "text_onboarding": run_text_onboarding(),
+        "messy_text_onboarding": run_messy_text_onboarding(),
+        "ambiguous_loan_prompt": run_ambiguous_loan_prompt(),
+        "black_cotton_preference_followups": run_black_cotton_preference_followups(),
         "followup_scenarios": run_followup_scenarios(),
         "agronomy_services": run_agronomy_services(),
         "price_weather_checks": run_price_weather_checks(),

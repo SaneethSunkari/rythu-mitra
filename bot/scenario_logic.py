@@ -73,7 +73,7 @@ def maybe_handle_followup(profile: StoredFarmerProfile, message_text: str) -> st
             return reply
 
     if _is_alternative_crop_question(normalized):
-        reply = _alternative_crop_reply(profile)
+        reply = _alternative_crop_reply(profile, normalized)
         if reply:
             return reply
 
@@ -163,6 +163,10 @@ def maybe_handle_followup(profile: StoredFarmerProfile, message_text: str) -> st
     if _is_canal_release_question(normalized):
         return _canal_release_reply(profile, normalized)
 
+    reply = _contextual_advice_reply(profile, normalized)
+    if reply:
+        return reply
+
     return None
 
 
@@ -199,14 +203,14 @@ def _load_current_price_rows() -> list[dict[str, Any]]:
 def _extract_supported_crop(normalized_text: str, profile: StoredFarmerProfile | None = None) -> str | None:
     aliases = sorted(CROP_ALIASES.items(), key=lambda item: len(item[0]), reverse=True)
     for alias, canonical in aliases:
-        if canonical not in CROPS:
+        if canonical not in CROPS and canonical not in SPECIALTY_CROPS:
             continue
         if re.search(rf"\b{re.escape(alias)}\b", normalized_text):
             return canonical
 
     if profile:
         for crop in profile.last_three_crops:
-            if crop in CROPS:
+            if crop in CROPS or crop in SPECIALTY_CROPS:
                 return crop
     return None
 
@@ -215,7 +219,7 @@ def _extract_multiple_supported_crops(normalized_text: str) -> list[str]:
     found: list[str] = []
     aliases = sorted(CROP_ALIASES.items(), key=lambda item: len(item[0]), reverse=True)
     for alias, canonical in aliases:
-        if canonical not in CROPS:
+        if canonical not in CROPS and canonical not in SPECIALTY_CROPS:
             continue
         if canonical in found:
             continue
@@ -372,10 +376,344 @@ def _recommendation_bundle(profile: StoredFarmerProfile) -> tuple[EngineFarmerPr
     return farmer, recommend(farmer)
 
 
-def _alternative_crop_reply(profile: StoredFarmerProfile) -> str:
+def _contextual_advice_reply(profile: StoredFarmerProfile, normalized_text: str) -> str | None:
+    mentioned_crops = _extract_multiple_supported_crops(normalized_text)
+    compare_signal = any(
+        phrase in normalized_text
+        for phrase in (
+            "which is better",
+            "edi better",
+            "yedi better",
+            "compare",
+            "difference",
+            "versus",
+            "vs",
+            "better for me",
+        )
+    )
+    why_signal = any(
+        phrase in normalized_text
+        for phrase in (
+            "why not",
+            "enduku vaddu",
+            "enduku kaadu",
+            "enduku suggest cheyyaledu",
+            "enduku recommend cheyyaledu",
+        )
+    )
+    preference = _extract_preference_focus(normalized_text)
+    broad_advice_signal = any(
+        phrase in normalized_text
+        for phrase in (
+            "emi veyali",
+            "which crop",
+            "best crop",
+            "best option",
+            "ippudu emi",
+            "naku suggest",
+            "naaku suggest",
+            "mee suggestion",
+            "suggest cheyyu",
+        )
+    )
+
+    if why_signal and mentioned_crops:
+        return _why_not_crop_reply(profile, mentioned_crops[0])
+
+    if compare_signal and mentioned_crops:
+        return _compare_crops_reply(profile, mentioned_crops[:2])
+
+    if preference:
+        return _preference_guided_reply(profile, preference, mentioned_crops[:1])
+
+    if broad_advice_signal:
+        return _general_context_reply(profile)
+
+    return None
+
+
+def _extract_preference_focus(normalized_text: str) -> str | None:
+    low_risk = any(
+        phrase in normalized_text
+        for phrase in ("takkuva risk", "safe option", "safer option", "less risk", "risk takkuva", "low risk")
+    )
+    high_income = any(
+        phrase in normalized_text
+        for phrase in ("high income", "income ekkuva", "profit ekkuva", "ekkuva profit", "ekkuva income", "high profit")
+    )
+    if low_risk and high_income:
+        return "high_income_low_risk"
+    if any(
+        phrase in normalized_text
+        for phrase in ("takkuva risk", "safe option", "safer option", "less risk", "risk takkuva", "low risk")
+    ):
+        return "low_risk"
+    if any(
+        phrase in normalized_text
+        for phrase in (
+            "takkuva investment",
+            "low investment",
+            "low cost",
+            "input takkuva",
+            "investment takkuva",
+            "cost ekkuva",
+            "ekkuva cost",
+            "investment ekkuva",
+            "input cost ekkuva",
+        )
+    ):
+        return "low_investment"
+    if high_income:
+        return "high_income"
+    if any(
+        phrase in normalized_text
+        for phrase in ("quick cash", "fast money", "tvaraga dabbulu", "short term", "early cash")
+    ):
+        return "quick_cash"
+    if any(
+        phrase in normalized_text
+        for phrase in ("less water", "takkuva water", "water takkuva", "neellu takkuva", "low water")
+    ):
+        return "low_water"
+    if any(
+        phrase in normalized_text
+        for phrase in ("less labour", "takkuva labour", "takkuva labor", "labour takkuva", "labor takkuva")
+    ):
+        return "low_labour"
+    if any(
+        phrase in normalized_text
+        for phrase in ("price safe", "market safe", "dhara safe", "safe market")
+    ):
+        return "market_safety"
+    return None
+
+
+def _describe_focus(focus: str) -> str:
+    labels = {
+        "low_risk": "takkuva risk",
+        "low_investment": "takkuva investment",
+        "high_income": "ekkuva income",
+        "high_income_low_risk": "ekkuva income + takkuva risk",
+        "quick_cash": "quick cash flow",
+        "low_water": "takkuva water need",
+        "low_labour": "takkuva labour load",
+        "market_safety": "market safety",
+    }
+    return labels.get(focus, focus)
+
+
+def _sort_rows_for_focus(rows: list[dict[str, Any]], focus: str) -> list[dict[str, Any]]:
+    def water_score(crop_slug: str) -> int:
+        requirement = CROPS[crop_slug].get("water_requirement")
+        order = {"low": 0, "medium": 1, "high": 2, "very_high": 3}
+        return order.get(requirement, 99)
+
+    def labour_score(crop_slug: str) -> tuple[int, int]:
+        crop = CROPS[crop_slug]
+        return (
+            int(crop.get("input_cost_per_acre", 0)),
+            int(crop.get("grow_duration_days", 999)),
+        )
+
+    if focus in {"low_risk", "market_safety"}:
+        return sorted(rows, key=lambda item: item["net_floor"], reverse=True)
+    if focus == "high_income":
+        return sorted(rows, key=lambda item: item["net_current"], reverse=True)
+    if focus == "high_income_low_risk":
+        return sorted(
+            rows,
+            key=lambda item: (
+                item["net_floor"],
+                item["net_current"],
+            ),
+            reverse=True,
+        )
+    if focus == "low_investment":
+        return sorted(
+            rows,
+            key=lambda item: (
+                CROPS[item["crop"]].get("input_cost_per_acre", 0),
+                -item["net_floor"],
+            ),
+        )
+    if focus == "quick_cash":
+        return sorted(
+            rows,
+            key=lambda item: (
+                CROPS[item["crop"]].get("grow_duration_days", 999),
+                -item["net_floor"],
+            ),
+        )
+    if focus == "low_water":
+        return sorted(
+            rows,
+            key=lambda item: (
+                water_score(item["crop"]),
+                -item["net_floor"],
+            ),
+        )
+    if focus == "low_labour":
+        return sorted(
+            rows,
+            key=lambda item: (
+                labour_score(item["crop"]),
+                -item["net_floor"],
+            ),
+        )
+    return rows
+
+
+def _rank_for_focus(result: dict[str, Any], focus: str) -> list[dict[str, Any]]:
+    ranked = list(result.get("ranked", []))
+    return _sort_rows_for_focus(ranked, focus)
+
+
+def _crop_summary_line(row: dict[str, Any]) -> str:
+    crop = CROPS[row["crop"]]
+    return (
+        f"{crop.get('telugu_name', row['crop'])} ({row['crop'].upper()}): "
+        f"expected {_money(row['net_current'])}, worst case {_money(row['net_floor'])}."
+    )
+
+
+def _general_context_reply(profile: StoredFarmerProfile) -> str:
+    _, result = _recommendation_bundle(profile)
+    top = result.get("top_pick")
+    second = result.get("second_pick")
+
+    if not top:
+        return (
+            "Naanna, mee current profile batti strong safe crop clear ga kanapadaledu. "
+            f"Specific crop peru cheppandi lekapothe KVK {KVK_PHONE} side kuda check cheddam."
+        )
+
+    top_row = next((item for item in result.get("ranked", []) if item["crop"] == top["crop"]), None)
+    lines = [
+        f"Naanna, mee profile ki ippudu best safe option {CROPS[top['crop']].get('telugu_name', top['crop'])}.",
+    ]
+    if top_row:
+        lines.append(
+            f"Expected {_money(top_row['net_current'])}, worst case {_money(top_row['net_floor'])} varaku hold avtundi."
+        )
+    if second:
+        lines.append(
+            f"Second side {CROPS[second['crop']].get('telugu_name', second['crop'])} kuda undi."
+        )
+    lines.append(
+        "Meeru compare cheyyali ante crop peru cheppandi, lekapothe takkuva risk / takkuva investment / quick cash ani cheppandi."
+    )
+    return " ".join(lines)
+
+
+def _why_not_crop_reply(profile: StoredFarmerProfile, crop_slug: str) -> str | None:
+    snapshot = _build_crop_snapshot(profile, crop_slug)
+    if not snapshot:
+        return None
+
+    crop_name = CROPS[crop_slug].get("telugu_name", crop_slug)
+    _, result = _recommendation_bundle(profile)
+    top = result.get("top_pick")
+
+    if snapshot["viable"] and snapshot["profitability"]:
+        return (
+            f"Naanna, {crop_name} full ga reject kaaledu. "
+            f"Kani current shortlist lo top kaadu. Floor-safe profit {_money(snapshot['profitability']['net_floor'])} varaku undi. "
+            "Top option tho compare chesthe risk-adjusted ga konchem weak ga undi."
+        )
+
+    reason = snapshot.get("rejection_reason") or "current profile ki strong ga set avvaledu"
+    lines = [f"Naanna, {crop_name} ni nenu suggest cheyyaledu reason: {reason}."]
+    if top:
+        top_name = CROPS[top["crop"]].get("telugu_name", top["crop"])
+        lines.append(f"Mee profile ki {top_name} safer ga kanipistondi.")
+    lines.append("Meeru danini compare cheyyali ante nenu side-by-side chepthanu.")
+    return " ".join(lines)
+
+
+def _compare_crops_reply(profile: StoredFarmerProfile, crop_slugs: list[str]) -> str | None:
+    unique_crops = []
+    for crop_slug in crop_slugs:
+        if crop_slug not in unique_crops:
+            unique_crops.append(crop_slug)
+    if not unique_crops:
+        return None
+
+    snapshots = [snap for crop in unique_crops if (snap := _build_crop_snapshot(profile, crop))]
+    if not snapshots:
+        return None
+
+    def compare_key(snapshot: dict[str, Any]) -> tuple[int, int]:
+        viability = 1 if snapshot["viable"] and snapshot["profitability"] else 0
+        floor = snapshot["profitability"]["net_floor"] if snapshot["profitability"] else -10**12
+        return viability, floor
+
+    best = max(snapshots, key=compare_key)
+    lines = ["Naanna, mee profile batti direct compare chesthanu."]
+    for snapshot in snapshots:
+        crop = CROPS[snapshot["crop"]]
+        crop_name = crop.get("telugu_name", snapshot["crop"])
+        if snapshot["profitability"]:
+            lines.append(
+                f"{crop_name}: expected {_money(snapshot['profitability']['net_current'])}, "
+                f"worst case {_money(snapshot['profitability']['net_floor'])}."
+            )
+        if snapshot["rejection_reason"]:
+            lines.append(f"{crop_name} weak point: {snapshot['rejection_reason']}.")
+
+    best_name = CROPS[best["crop"]].get("telugu_name", best["crop"])
+    lines.append(f"Ippudu mee profile ki {best_name} better side lo undi.")
+    return " ".join(lines)
+
+
+def _preference_guided_reply(
+    profile: StoredFarmerProfile,
+    focus: str,
+    mentioned_crop_slugs: list[str],
+) -> str:
+    _, result = _recommendation_bundle(profile)
+    ranked = _rank_for_focus(result, focus)
+    if not ranked:
+        return (
+            f"Naanna, {_describe_focus(focus)} batti shortlist ippudu clear ga dorakaledu. "
+            "Specific crop peru cheppandi, nenu compare chesi chepthanu."
+        )
+
+    if mentioned_crop_slugs:
+        mentioned = _build_crop_snapshot(profile, mentioned_crop_slugs[0])
+        if mentioned and mentioned["profitability"]:
+            crop_name = CROPS[mentioned["crop"]].get("telugu_name", mentioned["crop"])
+            top = ranked[0]
+            top_name = CROPS[top["crop"]].get("telugu_name", top["crop"])
+            if top["crop"] == mentioned["crop"]:
+                return (
+                    f"Naanna, {_describe_focus(focus)} angle lo kuda {crop_name} strong ga undi. "
+                    f"Expected {_money(mentioned['profitability']['net_current'])}, "
+                    f"worst case {_money(mentioned['profitability']['net_floor'])}."
+                )
+            return (
+                f"Naanna, {_describe_focus(focus)} angle lo {crop_name} kanna {top_name} better ga kanipistondi. "
+                f"{top_name} lo {_crop_summary_line(top)}"
+            )
+
+    top_default = result.get("top_pick")
+    top_focus = ranked[0]
+    lines = [
+        f"Naanna, {_describe_focus(focus)} batti shortlist ivvi.",
+    ]
+    if top_default and top_focus["crop"] == top_default["crop"]:
+        top_name = CROPS[top_focus["crop"]].get("telugu_name", top_focus["crop"])
+        lines.append(f"Honest ga cheppali ante ee angle lo kuda {top_name} ne strongest ga undi.")
+    for row in ranked[:3]:
+        lines.append(_crop_summary_line(row))
+    lines.append("Mee mind lo crop peru unte cheppandi, danini ee angle lo direct ga compare chesthanu.")
+    return " ".join(lines)
+
+
+def _alternative_crop_reply(profile: StoredFarmerProfile, normalized_text: str = "") -> str:
     _, result = _recommendation_bundle(profile)
     ranked = result.get("ranked", [])
     top = result.get("top_pick")
+    focus = _extract_preference_focus(normalized_text)
 
     if len(ranked) < 2:
         if top:
@@ -391,6 +729,8 @@ def _alternative_crop_reply(profile: StoredFarmerProfile) -> str:
         )
 
     alternatives = ranked[1:4]
+    if focus:
+        alternatives = _sort_rows_for_focus(alternatives, focus)
     lines = [
         "Naanna, sare. Top option ni pakkana petti vere safe crops shortlist chesthanu.",
     ]
@@ -398,6 +738,13 @@ def _alternative_crop_reply(profile: StoredFarmerProfile) -> str:
     if top:
         top_name = CROPS[top["crop"]].get("telugu_name", top["crop"])
         lines.append(f"Top lo inka {top_name} undi, kani meeru vere option adigaru kabatti alternatives ivvi.")
+        if focus:
+            lines.append(f"Mee {_describe_focus(focus)} preference batti chusi chepthunna.")
+            focus_ranked = _rank_for_focus(result, focus)
+            if focus_ranked and focus_ranked[0]["crop"] == top["crop"]:
+                lines.append(
+                    f"Honest ga cheppali ante mee {_describe_focus(focus)} target ki {top_name} ne inka strongest answer."
+                )
 
     for index, row in enumerate(alternatives, start=1):
         crop = CROPS[row["crop"]]
@@ -406,10 +753,28 @@ def _alternative_crop_reply(profile: StoredFarmerProfile) -> str:
             f"expected {_money(row['net_current'])}, worst case {_money(row['net_floor'])}."
         )
 
-    lines.append(
-        "Mee target enti cheppandi naanna: takkuva risk aa, takkuva input cost aa, lekapothe quick cash flow aa. "
-        "Appudu nenu shortlist ni inka sharp ga narrow chesthanu."
-    )
+    if focus and not alternatives:
+        lines.append("Top option ni teesesthe mee preference ki vere safe crop ippudu dorakaledu.")
+    elif focus and len(alternatives) == 1:
+        alt_name = CROPS[alternatives[0]["crop"]].get("telugu_name", alternatives[0]["crop"])
+        if top:
+            top_name = CROPS[top["crop"]].get("telugu_name", top["crop"])
+            lines.append(
+                f"Meeru top ni pakkana pedite {alt_name} okkate safe alternative migilindi, kani {top_name} kanna weaker side lo undi."
+            )
+        else:
+            lines.append("Top option ni pakkana pedite ippudu okkate safe alternative migilindi.")
+
+    if focus:
+        if top:
+            lines.append("Meeru top option accept chesthara, lekapothe ee alternative ni detail ga compare cheyyala?")
+        else:
+            lines.append("Ee alternative ni detail ga compare cheyyala lekapothe vere crop peru cheppala?")
+    else:
+        lines.append(
+            "Mee target enti cheppandi naanna: takkuva risk aa, takkuva input cost aa, lekapothe quick cash flow aa. "
+            "Appudu nenu shortlist ni inka sharp ga narrow chesthanu."
+        )
     return " ".join(lines)
 
 
@@ -638,11 +1003,23 @@ def _input_cost_reply(profile: StoredFarmerProfile) -> str:
         return "Input cost pressure unna time lo safe alternatives ippudu identify cheyyalekapoyanu naanna."
 
     lines = ["Naanna, input cost perigite low-cost safe options ki shift chudali."]
+    top = result.get("top_pick")
+    if top and low_cost and low_cost[0]["crop"] == top["crop"]:
+        top_name = CROPS[top["crop"]].get("telugu_name", top["crop"])
+        lines.append(
+            f"Truth ga cheppali ante mee shortlist lo {top_name} already lowest input cost side lo strongest option."
+        )
     for option in low_cost[:3]:
         lines.append(
             f"{CROPS[option['crop']].get('telugu_name', option['crop'])}: "
             f"input approx {_money(option['cost_per_acre'])}/acre, "
             f"floor-safe profit {_money(option['net_floor'])}."
+        )
+    if top and len(low_cost) > 1 and low_cost[0]["crop"] == top["crop"]:
+        next_option = low_cost[1]
+        next_name = CROPS[next_option["crop"]].get("telugu_name", next_option["crop"])
+        lines.append(
+            f"Vere crop insist chesthe next practical option {next_name}, kani input cost ekkuva / floor profit takkuva undi."
         )
     return " ".join(lines)
 
@@ -1060,7 +1437,16 @@ def _is_idle_land_question(normalized_text: str) -> bool:
 def _is_input_cost_question(normalized_text: str) -> bool:
     return any(
         phrase in normalized_text
-        for phrase in ("input cost", "fertilizer cost", "chemical cost", "cost perig", "rate perig")
+        for phrase in (
+            "input cost",
+            "fertilizer cost",
+            "chemical cost",
+            "cost perig",
+            "rate perig",
+            "cost ekkuva",
+            "ekkuva cost",
+            "investment ekkuva",
+        )
     )
 
 
