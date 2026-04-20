@@ -1,6 +1,6 @@
 # Rythu Mitra
 
-**A WhatsApp-based Telugu agricultural assistant built for small farmers in Nizamabad, Telangana.**
+**A risk-aware crop decision engine built for high-uncertainty farming environments.**
 
 [![Python](https://img.shields.io/badge/Python-3.12.7-3776AB?logo=python&logoColor=white)](requirements.txt)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Webhook-009688?logo=fastapi&logoColor=white)](bot/whatsapp_handler.py)
@@ -9,17 +9,59 @@
 [![Railway](https://img.shields.io/badge/Railway-Deployed-0B0D0E?logo=railway&logoColor=white)](Procfile)
 [![Status](https://img.shields.io/badge/Status-Core%20Engine%20Working-success)](scripts/test_engine.py)
 
-Rythu Mitra is a district-specific farming copilot built around one constraint: it should feel like a knowledgeable son helping his father over WhatsApp, not like software asking a farmer to learn software.
+Rythu Mitra helps farmers choose what to grow using constraint-based logic: soil, water, district supply pressure, price ranges, and downside risk.
 
-Built from a real family problem, the project combines Telugu voice UX, conservative crop recommendation logic, district market safeguards, and live messaging infrastructure.
+It is deployed as a WhatsApp + Telugu voice system for real-world use in Nizamabad district, Telangana, built from a real family farming problem.
+
 ## TL;DR
 
-- **Input:** WhatsApp text or Telugu voice notes
-- **Core output:** crop recommendation with district-aware safety checks
+- **Core system:** a 5-filter crop decision engine
+- **Inputs:** soil, water, district supply pressure, price history, and loan-sensitive downside checks
+- **Delivery layer:** WhatsApp text or Telugu voice notes
 - **Region:** Nizamabad district, Telangana
 - **Interfaces:** Twilio WhatsApp, FastAPI, Sarvam STT/TTS, Supabase, Railway
 - **Current strength:** a working 5-filter recommendation engine, deployable WhatsApp voice flow, and runnable React dashboard
 - **Key differentiator:** the bot tracks district planting pressure so it does not create a new oversupply rat race
+
+## See It In 10 Seconds
+
+```text
+Input
+- Mandal: Nandipet
+- Land: 10 acres
+- Soil: deep calcareous
+- Water: mixed
+- Loan: ₹2 lakh
+
+Output
+- Top pick: maize
+- Second pick: cotton
+- Rejected: paddy, turmeric
+
+Reason
+- district supply pressure is already too high for paddy and turmeric
+- the final list only keeps crops that stay safe at conservative floor-price assumptions
+```
+
+## Core System
+
+The intellectual center of this repo is the decision engine, not the WhatsApp wrapper.
+
+- **Filter 1:** soil compatibility
+- **Filter 2:** water + weather fit
+- **Filter 3:** district supply cap
+- **Filter 4:** floor / average / ceiling price range
+- **Filter 5:** net profit and downside survivability
+
+Everything else, including the bot, voice layer, and dashboard, exists to make that logic usable in the real world.
+
+## Why This Problem Is Hard
+
+- Agricultural data is incomplete, delayed, and often noisy.
+- Market prices are volatile, but farmers must commit early.
+- A crop can be agronomically suitable and still be economically unsafe.
+- Debt pressure changes what counts as a “good” recommendation.
+- A naive recommender can worsen district oversupply by pushing everyone into the same crop.
 
 ## Quick Links
 
@@ -55,8 +97,8 @@ This is the fastest way to evaluate the project.
 
 If you only read three sections, read:
 
-1. [Why This Project Is Different](#why-this-project-is-different)
-2. [Example Recommendation](#example-recommendation)
+1. [See It In 10 Seconds](#see-it-in-10-seconds)
+2. [Core System](#core-system)
 3. [Why This Belongs In A Portfolio](#why-this-belongs-in-a-portfolio)
 
 ## If You Are A Developer
@@ -355,7 +397,7 @@ This repo tries to stay explicit about what is:
 - live and fetched from APIs
 - fallback or legacy-official reference data
 
-That distinction matters because this is a decision-support system, not a demo with invented numbers.
+That distinction matters because the system uses a mix of district data, historical price ranges, and fallback logic to model safer decisions without pretending certainty.
 
 ## Quick Start
 
