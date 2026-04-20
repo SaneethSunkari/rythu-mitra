@@ -20,7 +20,7 @@ It is deployed as a WhatsApp + Telugu voice system for real-world use in Nizamab
 - **Delivery layer:** WhatsApp text or Telugu voice notes
 - **Region:** Nizamabad district, Telangana
 - **Interfaces:** Twilio WhatsApp, FastAPI, Sarvam STT/TTS, Supabase, Railway
-- **Current strength:** a working 5-filter recommendation engine, deployable WhatsApp voice flow, and runnable React dashboard
+- **Current strength:** a working 5-filter recommendation engine, deployable WhatsApp voice flow, and a distinctive live dashboard served on Railway
 - **Key differentiator:** the bot tracks district planting pressure so it does not create a new oversupply rat race
 
 ## See It In 10 Seconds
@@ -77,6 +77,7 @@ Everything else, including the bot, voice layer, and dashboard, exists to make t
 ## Dashboard Preview
 
 - https://web-production-d8869.up.railway.app/dashboard
+- The live UI is designed like a district field desk: a crop-pressure ledger, mandal spotlight, market tape, weather stream, and bot reasoning walkthrough in one place.
 
 ![Rythu Mitra Dashboard](docs/dashboard-preview.svg)
 
@@ -129,7 +130,7 @@ This is the fastest path to understanding the codebase.
 - Deterministic decision logic layered with voice AI rather than replaced by it
 - Careful handling of uncertainty in a high-stakes domain
 - End-to-end backend ownership: data, logic, APIs, persistence, deployment, and testing
-- Strong portfolio narrative without depending on flashy UI
+- Strong portfolio narrative with a distinctive UI anchored by real decision logic
 
 ## Demo Flow
 
@@ -218,14 +219,14 @@ That is the heart of this project.
 - **WhatsApp bot**
   FastAPI webhook, progressive farmer profiling, intent routing, Sarvam STT/TTS integration, Twilio-compatible responses
 - **Dashboard**
-  A runnable React command view for district opportunity, mandi prices, weather context, and bot walkthroughs
+  A live React field-desk interface for district opportunity, mandi prices, weather context, and bot walkthroughs, served through FastAPI at `/dashboard`
 - **Deployment path**
   Railway-ready runtime config and live webhook routes
 
 ### Scaffolded / partially built
 
 - Disease-model training weights and richer calibration
-- Dashboard polish, richer visuals, and automated data refresh
+- Automated production data refresh for the dashboard
 
 ## Current Project Status
 
@@ -237,7 +238,7 @@ That is the heart of this project.
 - WhatsApp text flow works
 - WhatsApp voice flow is implemented end-to-end in code
 - Season calendar, proactive disease checks, and drying alert evaluation work locally
-- Dashboard is served through FastAPI and builds successfully from exported backend data
+- Dashboard is served through FastAPI, builds successfully from exported backend data, and now includes the redesigned field-desk interface
 - Image diagnosis path is wired with photo-quality checks and confidence-threshold replies
 
 ### Still evolving
@@ -246,7 +247,7 @@ That is the heart of this project.
 - Live `data.gov.in` mandi pulls require an API key
 - Strong disease accuracy still depends on shipping trained model weights
 - Dharani survey-number to soil lookup is not wired yet
-- Automated dashboard refresh and deeper production polish are still pending
+- Automated dashboard refresh is still export-driven rather than scheduled in production
 
 ## Example Recommendation
 
@@ -573,7 +574,7 @@ This repo separates deployment dependencies from ML training dependencies on pur
 
 That split is important because free-tier Railway builds can fail if PyTorch is included in the web image.
 
-The dashboard is currently a separate Vite app and is not yet bundled into the FastAPI deployment.
+The dashboard is built with Vite, committed as static assets, and served through the FastAPI deployment at `/dashboard`.
 
 ## Safety, Trust, and Product Principles
 
@@ -598,7 +599,7 @@ That is why the code emphasizes:
 - Twilio sandbox and account-level daily limits can interrupt live testing
 - Disease diagnosis stays intentionally conservative unless trained weights are available
 - Soil can be collected manually today, but Dharani survey-number lookup is not integrated yet
-- Dashboard data refresh is still export-driven rather than automated on a schedule
+- Dashboard data refresh is still export-driven rather than automated on a production schedule
 
 ## Roadmap
 
