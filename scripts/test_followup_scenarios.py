@@ -44,6 +44,10 @@ def main() -> None:
                     "andaru paddy vestunnaru naanu kuda veyyali",
                     ["Decision meeru cheyyandi", "safe cap"],
                 ),
+                "a3_alternative_crop": (
+                    "naku inka vere crop suggest cheyyu",
+                    ["vere safe crops shortlist", "SOYBEAN", "takkuva risk"],
+                ),
                 "c1_best_market": (
                     "anna paddy ekkada ammalani",
                     ["Best reachable mandi", "net"],

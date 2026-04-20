@@ -72,6 +72,11 @@ def maybe_handle_followup(profile: StoredFarmerProfile, message_text: str) -> st
         if reply:
             return reply
 
+    if _is_alternative_crop_question(normalized):
+        reply = _alternative_crop_reply(profile)
+        if reply:
+            return reply
+
     if _is_trader_offer_question(normalized):
         reply = _trader_offer_reply(profile, normalized)
         if reply:
@@ -365,6 +370,47 @@ def _best_market_options(profile: StoredFarmerProfile, crop_slug: str) -> list[d
 def _recommendation_bundle(profile: StoredFarmerProfile) -> tuple[EngineFarmerProfile, dict[str, Any]]:
     farmer = _build_engine_farmer(profile)
     return farmer, recommend(farmer)
+
+
+def _alternative_crop_reply(profile: StoredFarmerProfile) -> str:
+    _, result = _recommendation_bundle(profile)
+    ranked = result.get("ranked", [])
+    top = result.get("top_pick")
+
+    if len(ranked) < 2:
+        if top:
+            crop_name = CROPS[top["crop"]].get("telugu_name", top["crop"])
+            return (
+                f"Naanna, mee profile batti {crop_name} okkate ippudu floor-safe option ga kanipistondi. "
+                "Vere crop adigithe risk perigedhi lekapothe loss chance ekkuva undi. "
+                "Meeru specific ga ye crop gurinchi alochistunnaro cheppandi, nenu compare chesi chepthanu."
+            )
+        return (
+            "Naanna, mee profile ki ippudu strong alternative shortlist clear ga ledu. "
+            "Ye crop meeku mind lo undho cheppandi, danini separate ga compare chesi chepthanu."
+        )
+
+    alternatives = ranked[1:4]
+    lines = [
+        "Naanna, sare. Top option ni pakkana petti vere safe crops shortlist chesthanu.",
+    ]
+
+    if top:
+        top_name = CROPS[top["crop"]].get("telugu_name", top["crop"])
+        lines.append(f"Top lo inka {top_name} undi, kani meeru vere option adigaru kabatti alternatives ivvi.")
+
+    for index, row in enumerate(alternatives, start=1):
+        crop = CROPS[row["crop"]]
+        lines.append(
+            f"{index}. {crop.get('telugu_name', row['crop'])} ({row['crop'].upper()}): "
+            f"expected {_money(row['net_current'])}, worst case {_money(row['net_floor'])}."
+        )
+
+    lines.append(
+        "Mee target enti cheppandi naanna: takkuva risk aa, takkuva input cost aa, lekapothe quick cash flow aa. "
+        "Appudu nenu shortlist ni inka sharp ga narrow chesthanu."
+    )
+    return " ".join(lines)
 
 
 def _crop_pressure_reply(profile: StoredFarmerProfile, normalized_text: str) -> str | None:
@@ -982,6 +1028,26 @@ def _is_scheme_question(normalized_text: str) -> bool:
 
 def _is_crop_pressure_question(normalized_text: str) -> bool:
     return any(word in normalized_text for word in ("andaru", "everyone", "pressure", "cap", "naanu kuda", "nenu kuda"))
+
+
+def _is_alternative_crop_question(normalized_text: str) -> bool:
+    phrases = (
+        "vere crop",
+        "inka vere crop",
+        "maro crop",
+        "maroka crop",
+        "different crop",
+        "another crop",
+        "other crop",
+        "alternative crop",
+        "alternative option",
+        "other option",
+        "second option",
+        "inkemaina crop",
+        "inka emaina crop",
+        "suggest different",
+    )
+    return any(phrase in normalized_text for phrase in phrases)
 
 
 def _is_idle_land_question(normalized_text: str) -> bool:
