@@ -12,17 +12,6 @@ function formatUtcStamp(value) {
   });
 }
 
-function formatMoney(value) {
-  if (value === null || value === undefined) {
-    return "—";
-  }
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
 function formatSeason(value) {
   return value.replaceAll("_", " ");
 }
@@ -35,186 +24,174 @@ export default function App() {
     demoScenarios.find((item) => item.id === "annaram-family") ?? demoScenarios[0];
   const crowdedCrops = cropCaps
     .filter((item) => item.status === "REJECT" || item.status === "OVERSUPPLY")
-    .slice(0, 4);
-  const openLanes = cropCaps.filter((item) => item.status === "LOW").slice(0, 4);
+    .slice(0, 3);
+  const openLanes = cropCaps.filter((item) => item.status === "LOW").slice(0, 3);
 
   return (
-    <main className="page-shell topo-backdrop">
-      <div className="page-glow page-glow--green" />
-      <div className="page-glow page-glow--amber" />
-
-      <nav className="nav-strip">
-        <div className="nav-strip__logo">
-          <span>Rythu</span> Mitra
+    <main className="topo-bg app-shell">
+      <nav className="nav">
+        <div className="nav__logo">
+          Rythu <span>Mitra</span>
         </div>
-        <div className="nav-strip__tag">Risk-aware district decision desk</div>
+        <div className="nav__tag">// district decision desk</div>
       </nav>
 
-      <header className="hero-shell hero-shell--wide">
-        <section className="panel hero-story hero-story--editorial">
-          <span className="eyebrow">Interactive dashboard · Live engine underneath</span>
-          <h1>
-            Which crop survives
-            <br />
-            <em>when the forecast</em>
-            <br />
-            is wrong?
-          </h1>
-          <p className="hero-story__lede">
-            This is not a static showcase. The dashboard now combines the real
-            crop engine, district cap logic, price board, weather feed, and
-            WhatsApp reply layer into one inspectable field desk for Nizamabad.
-          </p>
+      <section className="hero">
+        <div className="hero-layout">
+          <div className="hero-copy">
+            <div className="eyebrow-row">
+              <span className="eyebrow">Rythu Mitra</span>
+              <span className="eyebrow soft">Risk-aware decision engine</span>
+            </div>
 
-          <div className="hero-cta-row">
-            <a className="studio-link studio-link--primary" href="#decision-studio">
-              Open live decision studio
-            </a>
-            <a className="studio-link studio-link--ghost" href="#bot-walkthrough">
-              Inspect WhatsApp reasoning
-            </a>
+            <h1 className="hero__title">
+              Most dashboards show data.
+              <br />
+              This one shows <em>what survives</em>.
+            </h1>
+            <p className="hero__sub">
+              The codex UI language is now the main design system here, but the
+              center of the product stays yours: district state, crowding alerts,
+              open lanes, the district pressure ledger, the trade board and
+              district weather stream, plus the WhatsApp reasoning trail.
+            </p>
+
+            <div className="hero-actions">
+              <a href="#decision-studio" className="btn btn--green btn--lg">
+                Open decision studio
+              </a>
+              <a href="#district-system" className="btn btn--ghost btn--lg">
+                Explore district state
+              </a>
+            </div>
+
+            <div className="hero-metrics">
+              <div className="metric-tile">
+                <span className="metric-value">{summary.mandalCount}</span>
+                <span className="metric-label">District state</span>
+                <p>{formatSeason(summary.currentSeason)} modeled across all mandals.</p>
+              </div>
+              <div className="metric-tile">
+                <span className="metric-value">{crowdedCrops.length}</span>
+                <span className="metric-label">Crowding alerts</span>
+                <p>Overfilled or risky crop lanes surfaced before advice goes out.</p>
+              </div>
+              <div className="metric-tile">
+                <span className="metric-value">{openLanes.length}</span>
+                <span className="metric-label">Open lanes</span>
+                <p>Lower-pressure crops where the district still has room to move.</p>
+              </div>
+            </div>
           </div>
 
-          <div className="hero-story__ledger">
-            <article className="ledger-card">
-              <span className="micro-label">Best known case</span>
-              <h2>{featuredScenario.title}</h2>
-              <div className="ledger-grid">
-                <div>
-                  <span className="micro-label">Mandal</span>
-                  <strong>{featuredScenario.profile.mandal}</strong>
-                </div>
-                <div>
-                  <span className="micro-label">Land</span>
-                  <strong>{featuredScenario.profile.acres} acres</strong>
-                </div>
-                <div>
-                  <span className="micro-label">Soil</span>
-                  <strong>{featuredScenario.profile.soilZone}</strong>
-                </div>
-                <div>
-                  <span className="micro-label">Water</span>
-                  <strong>{featuredScenario.profile.waterSource}</strong>
-                </div>
-                <div>
-                  <span className="micro-label">Loan</span>
-                  <strong>{formatMoney(featuredScenario.profile.loanBurden)}</strong>
-                </div>
-                <div>
-                  <span className="micro-label">Last crops</span>
-                  <strong>{featuredScenario.profile.lastCrops.join(", ")}</strong>
-                </div>
+          <div className="hero-preview">
+            <div className="preview-shell">
+              <div className="preview-topbar">
+                <span>{featuredScenario.title}</span>
+                <span className="status-dot">Live engine snapshot</span>
               </div>
-            </article>
 
-            <article className="ledger-card ledger-card--verdict">
-              <span className="micro-label">Current engine verdict</span>
-              <div className="verdict-lockup">
-                <div>
-                  <span className="micro-label">Top pick</span>
+              <div className="preview-summary">
+                <p className="preview-label">Featured decision</p>
+                <div className="preview-choice recommend">
+                  <span>TOP PICK</span>
                   <strong>{featuredScenario.topPick?.name ?? "No safe pick"}</strong>
-                  <small>{featuredScenario.topPick?.teluguName ?? "—"}</small>
+                  <p>{featuredScenario.topPick?.teluguName ?? "—"} with floor-profit protection.</p>
                 </div>
-                <div>
-                  <span className="micro-label">Second lane</span>
+                <div className="preview-choice try-small">
+                  <span>SECOND LANE</span>
                   <strong>{featuredScenario.secondPick?.name ?? "No second lane"}</strong>
-                  <small>{featuredScenario.secondPick?.teluguName ?? "—"}</small>
+                  <p>Alternative lane kept visible, but only after floor safety survives.</p>
+                </div>
+                <div className="preview-choice reject">
+                  <span>REJECTED</span>
+                  <strong>{featuredScenario.rejected.slice(0, 2).map((item) => item.crop).join(", ")}</strong>
+                  <p>Blocked by local mismatch, crowding, or downside fragility.</p>
                 </div>
               </div>
-              <p className="verdict-note">
-                The decision engine runs through soil, water, district crowding,
-                price ranges, and floor-profit survivability before anything gets
-                back to the farmer.
-              </p>
-            </article>
-          </div>
-        </section>
 
-        <aside className="hero-rail">
-          <article className="panel rail-panel rail-panel--highlight">
-            <span className="micro-label">District state</span>
-            <div className="rail-metric">
-              <strong>{summary.mandalCount}</strong>
-              <span>mandals modeled</span>
+              <div className="preview-footer">
+                <div>
+                  <span className="preview-kicker">Last export</span>
+                  <strong>{formatUtcStamp(summary.generatedAtUtc)}</strong>
+                </div>
+                <a href="#bot-walkthrough" className="inline-link">
+                  Inspect WhatsApp trace
+                </a>
+              </div>
             </div>
-            <div className="rail-metric">
-              <strong>{summary.activeRecommendationCrops}</strong>
-              <span>active crops scored</span>
+
+            <div className="preset-stack">
+              <div className="preset-mini">
+                <strong>District pressure ledger</strong>
+                <span>The cap tracker still sits at the center of the advice loop.</span>
+              </div>
+              <div className="preset-mini">
+                <strong>Trade board + weather stream</strong>
+                <span>Market and forecast remain visible together, not in separate silos.</span>
+              </div>
+              <div className="preset-mini">
+                <strong>Bot walkthrough</strong>
+                <span>The Telugu reply and filter trail remain auditable end to end.</span>
+              </div>
             </div>
-            <div className="rail-metric">
-              <strong>{summary.priceRowCount}</strong>
-              <span>price rows on board</span>
-            </div>
-            <p className="rail-footnote">
-              {formatSeason(summary.currentSeason)} · refreshed{" "}
-              {formatUtcStamp(summary.generatedAtUtc)}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-band section-band--white">
+        <div className="container landing-grid">
+          <article className="landing-feature">
+            <div className="landing-feature__tag">District state</div>
+            <h2 className="landing-feature__title">See where the engine will still send farmers</h2>
+            <p className="landing-feature__desc">
+              The district atlas remains a system view, not a decorative map:
+              each mandal still shows a representative 5-acre outcome.
             </p>
           </article>
-
-          <article className="panel rail-panel">
-            <span className="micro-label">Crowding alerts</span>
-            <div className="rail-list">
-              {crowdedCrops.map((item) => (
-                <div className="rail-list__item rail-list__item--hot" key={item.slug}>
-                  <strong>{item.name}</strong>
-                  <span>{item.statusLabel}</span>
-                </div>
-              ))}
-            </div>
+          <article className="landing-feature">
+            <div className="landing-feature__tag">Crowding alerts + open lanes</div>
+            <h2 className="landing-feature__title">Keep anti-rat-race logic visible</h2>
+            <p className="landing-feature__desc">
+              Oversupply warnings and low-pressure opportunities stay explicit,
+              because cap logic is one of the most important ideas in the repo.
+            </p>
           </article>
-
-          <article className="panel rail-panel">
-            <span className="micro-label">Open lanes</span>
-            <div className="rail-list">
-              {openLanes.map((item) => (
-                <div className="rail-list__item rail-list__item--cool" key={item.slug}>
-                  <strong>{item.name}</strong>
-                  <span>{item.pctFilled}% of safe cap</span>
-                </div>
-              ))}
-            </div>
+          <article className="landing-feature">
+            <div className="landing-feature__tag">Trade board and weather stream</div>
+            <h2 className="landing-feature__title">Put price context beside field reality</h2>
+            <p className="landing-feature__desc">
+              Mandi prices, weather outlook, and final bot output all remain
+              inspectable in the same flow instead of being hidden behind chat.
+            </p>
           </article>
-        </aside>
-      </header>
-
-      <section className="signal-ribbon">
-        <article className="signal-panel">
-          <span className="micro-label">Decision studio</span>
-          <strong>Live</strong>
-          <p>custom profiles now call the real engine through FastAPI</p>
-        </article>
-        <article className="signal-panel">
-          <span className="micro-label">Market feed</span>
-          <strong>{summary.priceRowCount}</strong>
-          <p>district mandi rows with fallback honesty preserved</p>
-        </article>
-        <article className="signal-panel">
-          <span className="micro-label">Weather stream</span>
-          <strong>{weatherDaily.length} days</strong>
-          <p>same forecast powering alerts, drying, and crop filters</p>
-        </article>
-        <article className="signal-panel">
-          <span className="micro-label">Bot walkthrough</span>
-          <strong>{demoScenarios.length}</strong>
-          <p>auditable WhatsApp scenarios with filter trace</p>
-        </article>
+        </div>
       </section>
 
-      <DecisionStudio scenarios={demoScenarios} mandals={mandals} cropCaps={cropCaps} />
-      <DistrictMap summary={summary} cropCaps={cropCaps} mandals={mandals} />
-      <MandiPrices priceRows={priceRows} weatherDaily={weatherDaily} />
+      <div className="container">
+        <DecisionStudio scenarios={demoScenarios} mandals={mandals} cropCaps={cropCaps} />
+      </div>
 
-      <section id="bot-walkthrough">
-        <BotDemo scenarios={demoScenarios} />
+      <div className="container" id="district-system">
+        <DistrictMap summary={summary} cropCaps={cropCaps} mandals={mandals} />
+        <MandiPrices priceRows={priceRows} weatherDaily={weatherDaily} />
+        <section id="bot-walkthrough">
+          <BotDemo scenarios={demoScenarios} />
+        </section>
+      </div>
+
+      <section className="section-band">
+        <div className="container comparison-card">
+          <div className="micro-eyebrow">System note</div>
+          <h2 className="comparison-card__title">Codex visuals, Rythu Mitra logic.</h2>
+          <p className="comparison-card__copy">
+            The interface now follows the codex product language, but the
+            content hierarchy still protects your core ideas: live decision
+            analysis, district pressure ledger, trade board, weather stream,
+            crowding alerts, open lanes, and the Telugu WhatsApp reasoning path.
+          </p>
+        </div>
       </section>
-
-      <footer className="page-footer">
-        <p>
-          The dashboard now mixes static district exports with a live analysis
-          endpoint, so someone can inspect both the stable system view and a
-          fresh recommendation in the same interface.
-        </p>
-      </footer>
     </main>
   );
 }
