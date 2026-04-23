@@ -1,3 +1,4 @@
+import DecisionStudio from "./components/DecisionStudio";
 import DistrictMap from "./components/DistrictMap";
 import MandiPrices from "./components/MandiPrices";
 import BotDemo from "./components/BotDemo";
@@ -26,63 +27,57 @@ function formatSeason(value) {
   return value.replaceAll("_", " ");
 }
 
-function parseRupees(reply, label) {
-  const pattern = new RegExp(`${label}:\\s*₹([\\d,]+)`, "i");
-  const match = reply.match(pattern);
-  if (!match) {
-    return null;
-  }
-  return Number(match[1].replaceAll(",", ""));
-}
-
 export default function App() {
   const { summary, cropCaps, mandals, priceRows, weatherDaily, demoScenarios } =
     dashboardData;
 
   const featuredScenario =
     demoScenarios.find((item) => item.id === "annaram-family") ?? demoScenarios[0];
-
   const crowdedCrops = cropCaps
     .filter((item) => item.status === "REJECT" || item.status === "OVERSUPPLY")
     .slice(0, 4);
   const openLanes = cropCaps.filter((item) => item.status === "LOW").slice(0, 4);
-  const frontlineMandals = [...mandals]
-    .filter((item) => item.topPickExpectedProfit)
-    .sort(
-      (left, right) => right.topPickExpectedProfit - left.topPickExpectedProfit,
-    )
-    .slice(0, 3);
-  const featuredExpected = parseRupees(
-    featuredScenario.teluguReply,
-    "expected profit",
-  );
-  const featuredWorst = parseRupees(
-    featuredScenario.teluguReply,
-    "Worst case profit",
-  );
-  const rejectionCopy = featuredScenario.rejected
-    .slice(0, 3)
-    .map((item) => item.crop.toLowerCase())
-    .join(", ");
 
   return (
-    <main className="page-shell">
+    <main className="page-shell topo-backdrop">
       <div className="page-glow page-glow--green" />
       <div className="page-glow page-glow--amber" />
 
-      <header className="hero-shell">
-        <section className="panel hero-story">
-          <span className="eyebrow">District decision room</span>
-          <h1>A field desk for crop decisions under uncertainty.</h1>
+      <nav className="nav-strip">
+        <div className="nav-strip__logo">
+          <span>Rythu</span> Mitra
+        </div>
+        <div className="nav-strip__tag">Risk-aware district decision desk</div>
+      </nav>
+
+      <header className="hero-shell hero-shell--wide">
+        <section className="panel hero-story hero-story--editorial">
+          <span className="eyebrow">Interactive dashboard · Live engine underneath</span>
+          <h1>
+            Which crop survives
+            <br />
+            <em>when the forecast</em>
+            <br />
+            is wrong?
+          </h1>
           <p className="hero-story__lede">
-            This dashboard is not here to decorate the project. It exposes the
-            engine that matters: soil fit, water reality, district crowding,
-            price ranges, and downside safety for a real farmer in Nizamabad.
+            This is not a static showcase. The dashboard now combines the real
+            crop engine, district cap logic, price board, weather feed, and
+            WhatsApp reply layer into one inspectable field desk for Nizamabad.
           </p>
+
+          <div className="hero-cta-row">
+            <a className="studio-link studio-link--primary" href="#decision-studio">
+              Open live decision studio
+            </a>
+            <a className="studio-link studio-link--ghost" href="#bot-walkthrough">
+              Inspect WhatsApp reasoning
+            </a>
+          </div>
 
           <div className="hero-story__ledger">
             <article className="ledger-card">
-              <span className="micro-label">Example input</span>
+              <span className="micro-label">Best known case</span>
               <h2>{featuredScenario.title}</h2>
               <div className="ledger-grid">
                 <div>
@@ -106,14 +101,14 @@ export default function App() {
                   <strong>{formatMoney(featuredScenario.profile.loanBurden)}</strong>
                 </div>
                 <div>
-                  <span className="micro-label">History</span>
+                  <span className="micro-label">Last crops</span>
                   <strong>{featuredScenario.profile.lastCrops.join(", ")}</strong>
                 </div>
               </div>
             </article>
 
             <article className="ledger-card ledger-card--verdict">
-              <span className="micro-label">Engine output</span>
+              <span className="micro-label">Current engine verdict</span>
               <div className="verdict-lockup">
                 <div>
                   <span className="micro-label">Top pick</span>
@@ -122,38 +117,22 @@ export default function App() {
                 </div>
                 <div>
                   <span className="micro-label">Second lane</span>
-                  <strong>
-                    {featuredScenario.secondPick?.name ?? "No second option"}
-                  </strong>
+                  <strong>{featuredScenario.secondPick?.name ?? "No second lane"}</strong>
                   <small>{featuredScenario.secondPick?.teluguName ?? "—"}</small>
                 </div>
               </div>
-              <div className="verdict-metrics">
-                <div>
-                  <span className="micro-label">Expected</span>
-                  <strong>{formatMoney(featuredExpected)}</strong>
-                </div>
-                <div>
-                  <span className="micro-label">Worst case</span>
-                  <strong>{formatMoney(featuredWorst)}</strong>
-                </div>
-              </div>
               <p className="verdict-note">
-                Rejected crops in this example include {rejectionCopy}. The
-                shortlist only survives if it stays profitable at conservative
-                floor prices.
+                The decision engine runs through soil, water, district crowding,
+                price ranges, and floor-profit survivability before anything gets
+                back to the farmer.
               </p>
             </article>
           </div>
         </section>
 
         <aside className="hero-rail">
-          <article className="panel rail-panel">
-            <span className="micro-label">Live district state</span>
-            <div className="rail-metric">
-              <strong>{formatSeason(summary.currentSeason)}</strong>
-              <span>season in view</span>
-            </div>
+          <article className="panel rail-panel rail-panel--highlight">
+            <span className="micro-label">District state</span>
             <div className="rail-metric">
               <strong>{summary.mandalCount}</strong>
               <span>mandals modeled</span>
@@ -162,8 +141,13 @@ export default function App() {
               <strong>{summary.activeRecommendationCrops}</strong>
               <span>active crops scored</span>
             </div>
+            <div className="rail-metric">
+              <strong>{summary.priceRowCount}</strong>
+              <span>price rows on board</span>
+            </div>
             <p className="rail-footnote">
-              Refreshed {formatUtcStamp(summary.generatedAtUtc)}
+              {formatSeason(summary.currentSeason)} · refreshed{" "}
+              {formatUtcStamp(summary.generatedAtUtc)}
             </p>
           </article>
 
@@ -190,56 +174,45 @@ export default function App() {
               ))}
             </div>
           </article>
-
-          <article className="panel rail-panel">
-            <span className="micro-label">Frontline mandals</span>
-            <div className="frontline-stack">
-              {frontlineMandals.map((mandal) => (
-                <div className="frontline-row" key={mandal.slug}>
-                  <div>
-                    <strong>{mandal.name}</strong>
-                    <span>{mandal.topPick?.name ?? "No pick"}</span>
-                  </div>
-                  <em>{formatMoney(mandal.topPickExpectedProfit)}</em>
-                </div>
-              ))}
-            </div>
-          </article>
         </aside>
       </header>
 
       <section className="signal-ribbon">
         <article className="signal-panel">
-          <span className="micro-label">Decision coverage</span>
-          <strong>{summary.mandalTopPickCount}</strong>
-          <p>mandals currently return a safe top pick</p>
+          <span className="micro-label">Decision studio</span>
+          <strong>Live</strong>
+          <p>custom profiles now call the real engine through FastAPI</p>
         </article>
         <article className="signal-panel">
-          <span className="micro-label">Market board</span>
+          <span className="micro-label">Market feed</span>
           <strong>{summary.priceRowCount}</strong>
-          <p>price rows available across district mandis</p>
-        </article>
-        <article className="signal-panel">
-          <span className="micro-label">Crowding pressure</span>
-          <strong>{summary.oversuppliedCropCount}</strong>
-          <p>crops are currently flagged as crowded or blocked</p>
+          <p>district mandi rows with fallback honesty preserved</p>
         </article>
         <article className="signal-panel">
           <span className="micro-label">Weather stream</span>
           <strong>{weatherDaily.length} days</strong>
-          <p>district forecast feeding risk filters and alerts</p>
+          <p>same forecast powering alerts, drying, and crop filters</p>
+        </article>
+        <article className="signal-panel">
+          <span className="micro-label">Bot walkthrough</span>
+          <strong>{demoScenarios.length}</strong>
+          <p>auditable WhatsApp scenarios with filter trace</p>
         </article>
       </section>
 
+      <DecisionStudio scenarios={demoScenarios} mandals={mandals} cropCaps={cropCaps} />
       <DistrictMap summary={summary} cropCaps={cropCaps} mandals={mandals} />
       <MandiPrices priceRows={priceRows} weatherDaily={weatherDaily} />
-      <BotDemo scenarios={demoScenarios} />
+
+      <section id="bot-walkthrough">
+        <BotDemo scenarios={demoScenarios} />
+      </section>
 
       <footer className="page-footer">
         <p>
-          The interface is stylized, but the numbers come from the same Python
-          backend export that powers the bot, the cap tracker, and the scenario
-          walkthrough.
+          The dashboard now mixes static district exports with a live analysis
+          endpoint, so someone can inspect both the stable system view and a
+          fresh recommendation in the same interface.
         </p>
       </footer>
     </main>

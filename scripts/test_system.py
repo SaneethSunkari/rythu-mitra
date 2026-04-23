@@ -67,11 +67,23 @@ def run_route_checks() -> dict:
         root = client.get("/")
         health = client.get("/health")
         dashboard = client.get("/dashboard")
+        analyze = client.post(
+            "/api/dashboard/analyze",
+            json={
+                "mandal": "nandipet",
+                "acres": 10,
+                "soilZone": "deep_calcareous",
+                "waterSource": "mixed",
+                "loanBurdenRs": 200000,
+                "lastCrops": ["paddy"],
+            },
+        )
 
     return {
         "root_status": root.status_code,
         "health_status": health.status_code,
         "dashboard_status": dashboard.status_code,
+        "dashboard_api_status": analyze.status_code,
     }
 
 

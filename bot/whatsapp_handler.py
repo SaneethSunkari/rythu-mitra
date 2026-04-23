@@ -15,6 +15,7 @@ import requests
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
 from twilio.rest import Client
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -31,6 +32,7 @@ from bot.telugu_voice import (
 )
 from disease.inference import diagnose_disease_image
 from data.nizamabad_district import CROPS, SCHEMES
+from engine.dashboard_payload import build_dashboard_analysis
 from engine.district_cap import DistrictCapTracker
 from engine.crop_engine import (
     FarmerProfile as EngineFarmerProfile,
@@ -68,6 +70,15 @@ DASHBOARD_DIST_DIR = ROOT / "dashboard" / "dist"
 DASHBOARD_INDEX = DASHBOARD_DIST_DIR / "index.html"
 DASHBOARD_ASSETS_DIR = DASHBOARD_DIST_DIR / "assets"
 
+
+class DashboardAnalyzeRequest(BaseModel):
+    mandal: str
+    acres: float = Field(default=5, ge=0.5, le=1000)
+    soilZone: str | None = None
+    waterSource: str | None = None
+    loanBurdenRs: int = Field(default=0, ge=0)
+    lastCrops: list[str] = Field(default_factory=list)
+
 if DASHBOARD_ASSETS_DIR.exists():
     app.mount(
         "/dashboard/assets",
@@ -95,6 +106,34 @@ async def health() -> dict:
     """Simple health route for local and Railway checks."""
 
     return {"status": "ok", "service": "rythu-mitra"}
+
+
+@app.post("/api/dashboard/analyze")
+async def dashboard_analyze(payload: DashboardAnalyzeRequest) -> dict:
+    """Run a live dashboard analysis against the real crop engine."""
+
+    try:
+        mandal = payload.mandal.strip().lower()
+        soil_zone = payload.soilZone.strip().lower() if payload.soilZone else None
+        water_source = payload.waterSource.strip().lower() if payload.waterSource else None
+        last_crops = [
+            item.strip().lower().replace(" ", "_")
+            for item in payload.lastCrops
+            if item and item.strip()
+        ]
+        farmer = EngineFarmerProfile(
+            mandal=mandal,
+            acres=float(payload.acres),
+            soil_zone=soil_zone,
+            water_source=water_source,
+            loan_burden_rs=int(payload.loanBurdenRs),
+            last_crops=last_crops,
+            farmer_id="dashboard-live",
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return build_dashboard_analysis(farmer)
 
 
 @app.get("/dashboard")
