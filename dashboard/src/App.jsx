@@ -278,6 +278,25 @@ export default function App() {
 
       <section className="website-desk" id="website-desk">
         <div className="container">
+          <div className="website-promise">
+            <article className="website-promise__card website-promise__card--action">
+              <span className="micro-label">Field action</span>
+              <strong>Farmers never need this website to get value.</strong>
+              <p>
+                They use WhatsApp in Telugu. The bot remains the farmer-facing
+                product.
+              </p>
+            </article>
+            <article className="website-promise__card website-promise__card--proof">
+              <span className="micro-label">Public inspection</span>
+              <strong>This website exists to make the logic visible.</strong>
+              <p>
+                It turns a hidden bot answer into something auditable, premium,
+                and easy to trust.
+              </p>
+            </article>
+          </div>
+
           <div className="workspace-shell">
             <div className="workspace-header">
               <div>
@@ -285,46 +304,69 @@ export default function App() {
                 <h2>{activeViewMeta.title}</h2>
                 <p>{activeViewMeta.copy}</p>
               </div>
-              <div className="workspace-nav">
-                {views.map((view) => (
-                  <button
-                    type="button"
-                    key={view.id}
-                    className={`workspace-tab ${activeView === view.id ? "workspace-tab--active" : ""}`}
-                    onClick={() => setActiveView(view.id)}
-                  >
-                    {view.label}
-                  </button>
-                ))}
-              </div>
             </div>
 
-            <div className="workspace-canvas">
-              {activeView === "analyze" ? (
-                <DecisionStudio scenarios={demoScenarios} mandals={mandals} cropCaps={cropCaps} />
-              ) : null}
-              {activeView === "district" ? (
-                <DistrictMap summary={summary} cropCaps={cropCaps} mandals={mandals} />
-              ) : null}
-              {activeView === "markets" ? (
-                <MandiPrices priceRows={priceRows} weatherDaily={weatherDaily} />
-              ) : null}
-              {activeView === "bot" ? <BotDemo scenarios={demoScenarios} /> : null}
+            <div className="workspace-layout">
+              <aside className="workspace-sidebar">
+                <div className="workspace-sidebar__intro">
+                  <span className="micro-label">Switchboard</span>
+                  <strong>Choose the lens</strong>
+                  <p>
+                    Same system, four different ways to inspect it.
+                  </p>
+                </div>
+
+                <div className="workspace-nav">
+                  {views.map((view, index) => (
+                    <button
+                      type="button"
+                      key={view.id}
+                      className={`workspace-tab ${activeView === view.id ? "workspace-tab--active" : ""}`}
+                      onClick={() => setActiveView(view.id)}
+                    >
+                      <span className="workspace-tab__index">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="workspace-tab__body">
+                        <strong>{view.label}</strong>
+                        <small>{view.copy}</small>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </aside>
+
+              <div className="workspace-canvas">
+                {activeView === "analyze" ? (
+                  <DecisionStudio scenarios={demoScenarios} mandals={mandals} cropCaps={cropCaps} />
+                ) : null}
+                {activeView === "district" ? (
+                  <DistrictMap summary={summary} cropCaps={cropCaps} mandals={mandals} />
+                ) : null}
+                {activeView === "markets" ? (
+                  <MandiPrices priceRows={priceRows} weatherDaily={weatherDaily} />
+                ) : null}
+                {activeView === "bot" ? <BotDemo scenarios={demoScenarios} /> : null}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <section className="section-band">
-        <div className="container comparison-card">
-          <div className="micro-eyebrow">System note</div>
-          <h2 className="comparison-card__title">A public website, not a long internal dashboard.</h2>
-          <p className="comparison-card__copy">
-            The farmer experience still lives in WhatsApp. This website is the
-            premium public surface where anyone can explore the same logic
-            through district state, pressure rails, trade context, and the
-            auditable reasoning path behind the final answer.
-          </p>
+        <div className="container closing-essay">
+          <div className="closing-essay__lead">
+            <span className="micro-eyebrow">System note</span>
+            <h2 className="comparison-card__title">Not a brochure. Not a back office. A trust layer.</h2>
+          </div>
+          <div className="closing-essay__body">
+            <p className="comparison-card__copy">
+              The farmer experience still lives in WhatsApp. This website is the
+              premium public surface where anyone can explore the same logic
+              through district state, pressure rails, trade context, and the
+              auditable reasoning path behind the final answer.
+            </p>
+          </div>
         </div>
       </section>
     </main>
