@@ -17,7 +17,7 @@ export default function BotDemo({ scenarios }) {
       <div className="section-heading">
         <div>
           <span className="eyebrow eyebrow--soft">Bot walkthrough</span>
-          <h2>The WhatsApp assistant, opened up for inspection</h2>
+          <h2>The field conversation, opened up for inspection</h2>
           <p>
             The voice and chat interface is only useful if the hidden reasoning
             stays auditable. This panel lets someone inspect the farmer
@@ -81,7 +81,7 @@ export default function BotDemo({ scenarios }) {
           <article className="panel decision-panel">
             <div className="decision-panel__top">
               <div>
-                <span className="micro-label">Final shortlist</span>
+                <span className="micro-label">Decision answer</span>
                 <h3>
                   {scenario.topPick?.name ?? "No safe pick"} over{" "}
                   {scenario.secondPick?.name ?? "no second option"}
@@ -96,6 +96,25 @@ export default function BotDemo({ scenarios }) {
                   <span className="micro-label">Loan burden</span>
                   <strong>{money(scenario.profile.loanBurden)}</strong>
                 </div>
+              </div>
+            </div>
+
+            <div className="decision-story">
+              <div className="decision-story__card decision-story__card--primary">
+                <span className="micro-label">Why this survives</span>
+                <strong>{scenario.topPick?.name ?? "No safe crop"}</strong>
+                <p>
+                  The top lane survives soil fit, water reality, district pressure,
+                  and floor-price safety in the same pass.
+                </p>
+              </div>
+              <div className="decision-story__card decision-story__card--secondary">
+                <span className="micro-label">What stays visible</span>
+                <strong>{scenario.secondPick?.name ?? "No second lane"}</strong>
+                <p>
+                  The second lane stays on the table as an alternate, not as a
+                  false tie with the strongest answer.
+                </p>
               </div>
             </div>
 

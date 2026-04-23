@@ -70,18 +70,23 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
 
   const capRows = [...cropCaps]
     .sort((left, right) => (right.pctFilled ?? 0) - (left.pctFilled ?? 0))
-    .slice(0, 8);
+    .slice(0, 6);
+  const openRows = [...cropCaps]
+    .filter((item) => item.status === "LOW")
+    .sort((left, right) => (left.pctFilled ?? 0) - (right.pctFilled ?? 0))
+    .slice(0, 4);
 
   return (
     <section className="section-shell">
       <div className="section-heading">
         <div>
           <span className="eyebrow eyebrow--soft">District atlas</span>
-          <h2>Where the engine is willing to send farmers</h2>
+          <h2>District state, pressure rails, and open lanes</h2>
           <p>
             Each tile is a representative 5-acre farmer in that mandal. This
-            is not a decorative map. It is a visual index of where the
-            recommendation logic still sees safe room to move.
+            is not a decorative map. It is a live district surface showing
+            where the recommendation engine still sees room to move and where
+            it is already pulling back.
           </p>
         </div>
         <div className="section-kickers">
@@ -94,6 +99,19 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
             <span>mandals visible after filtering</span>
           </div>
         </div>
+      </div>
+
+      <div className="pressure-banner">
+        <article className="pressure-banner__card pressure-banner__card--hot">
+          <span className="micro-label">Crowding alerts</span>
+          <strong>{summary.oversuppliedCropCount}</strong>
+          <p>District lanes where crowding or oversupply should slow fresh recommendations.</p>
+        </article>
+        <article className="pressure-banner__card pressure-banner__card--cool">
+          <span className="micro-label">Open lanes</span>
+          <strong>{openRows.length}</strong>
+          <p>Crop lanes where pressure is still low enough for expansion.</p>
+        </article>
       </div>
 
       <div className="filter-bar">
@@ -191,7 +209,7 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
         <aside className="panel cap-panel">
           <div className="cap-panel__heading">
             <span className="micro-label">District pressure ledger</span>
-            <h3>Cap tracker</h3>
+            <h3>Pressure rails</h3>
             <p>
               The bot tracks supply pressure before it hands out advice. That is
               the anti-rat-race layer that makes this system materially
@@ -201,7 +219,7 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
 
           <div className="cap-ledger">
             {capRows.map((item) => (
-              <article className="cap-ledger__row" key={item.slug}>
+              <article className={`cap-ledger__row cap-ledger__row--${item.status.toLowerCase()}`} key={item.slug}>
                 <div className="cap-ledger__row-top">
                   <div>
                     <strong>{item.name}</strong>
@@ -223,6 +241,27 @@ export default function DistrictMap({ summary, cropCaps, mandals }) {
                 </div>
               </article>
             ))}
+          </div>
+
+          <div className="open-lanes-panel">
+            <div className="open-lanes-panel__header">
+              <span className="micro-label">Open lanes</span>
+              <strong>Where the district still has room</strong>
+            </div>
+            <div className="open-lanes-list">
+              {openRows.map((item) => (
+                <article className="open-lane-row" key={item.slug}>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>{item.teluguName}</span>
+                  </div>
+                  <div className="open-lane-row__meta">
+                    <span>{item.pctFilled ?? "—"}%</span>
+                    <small>safe cap used</small>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </aside>
       </div>

@@ -16,6 +16,17 @@ function formatSeason(value) {
   return value.replaceAll("_", " ");
 }
 
+function formatMoney(value) {
+  if (value === null || value === undefined) {
+    return "—";
+  }
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export default function App() {
   const { summary, cropCaps, mandals, priceRows, weatherDaily, demoScenarios } =
     dashboardData;
@@ -26,6 +37,7 @@ export default function App() {
     .filter((item) => item.status === "REJECT" || item.status === "OVERSUPPLY")
     .slice(0, 3);
   const openLanes = cropCaps.filter((item) => item.status === "LOW").slice(0, 3);
+  const featuredRejected = featuredScenario.rejected.slice(0, 3);
 
   return (
     <main className="topo-bg app-shell">
@@ -50,10 +62,10 @@ export default function App() {
               This one shows <em>what survives</em>.
             </h1>
             <p className="hero__sub">
-              The codex UI language is now the main design system here, but the
-              center of the product stays yours: district state, crowding alerts,
-              open lanes, the district pressure ledger, the trade board and
-              district weather stream, plus the WhatsApp reasoning trail.
+              Rythu Mitra is now staged like a decision room, not a report page:
+              one dominant crop verdict first, then district state, crowding
+              alerts, open lanes, the pressure ledger, the trade board, the
+              weather stream, and the WhatsApp reasoning trail.
             </p>
 
             <div className="hero-actions">
@@ -74,7 +86,7 @@ export default function App() {
               <div className="metric-tile">
                 <span className="metric-value">{crowdedCrops.length}</span>
                 <span className="metric-label">Crowding alerts</span>
-                <p>Overfilled or risky crop lanes surfaced before advice goes out.</p>
+                <p>Overfilled or risky lanes surfaced before any advice goes out.</p>
               </div>
               <div className="metric-tile">
                 <span className="metric-value">{openLanes.length}</span>
@@ -85,54 +97,86 @@ export default function App() {
           </div>
 
           <div className="hero-preview">
-            <div className="preview-shell">
-              <div className="preview-topbar">
+            <div className="command-board">
+              <div className="command-board__topbar">
                 <span>{featuredScenario.title}</span>
                 <span className="status-dot">Live engine snapshot</span>
               </div>
 
-              <div className="preview-summary">
-                <p className="preview-label">Featured decision</p>
-                <div className="preview-choice recommend">
-                  <span>TOP PICK</span>
+              <div className="command-board__scenario">
+                <div className="command-board__scenario-meta">
+                  <span className="preview-kicker">Input</span>
+                  <strong>
+                    {featuredScenario.profile.mandal} · {featuredScenario.profile.acres} acres
+                  </strong>
+                  <span>
+                    {featuredScenario.profile.soilZone} soil ·{" "}
+                    {featuredScenario.profile.waterSource} water · loan{" "}
+                    {formatMoney(featuredScenario.profile.loanBurden)}
+                  </span>
+                </div>
+                <div className="command-board__scenario-tags">
+                  {featuredScenario.profile.lastCrops.map((crop) => (
+                    <span key={crop} className="scenario-tag">
+                      {crop}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="verdict-marquee">
+                <div className="verdict-marquee__lane verdict-marquee__lane--top">
+                  <span className="preview-label">Top pick</span>
                   <strong>{featuredScenario.topPick?.name ?? "No safe pick"}</strong>
-                  <p>{featuredScenario.topPick?.teluguName ?? "—"} with floor-profit protection.</p>
+                  <p>{featuredScenario.topPick?.teluguName ?? "—"} survives the full filter stack.</p>
                 </div>
-                <div className="preview-choice try-small">
-                  <span>SECOND LANE</span>
-                  <strong>{featuredScenario.secondPick?.name ?? "No second lane"}</strong>
-                  <p>Alternative lane kept visible, but only after floor safety survives.</p>
-                </div>
-                <div className="preview-choice reject">
-                  <span>REJECTED</span>
-                  <strong>{featuredScenario.rejected.slice(0, 2).map((item) => item.crop).join(", ")}</strong>
-                  <p>Blocked by local mismatch, crowding, or downside fragility.</p>
+                <div className="verdict-marquee__numbers">
+                  <div>
+                    <span className="preview-kicker">Expected</span>
+                    <strong>{formatMoney(featuredScenario.topPick?.expectedProfit)}</strong>
+                  </div>
+                  <div>
+                    <span className="preview-kicker">Worst</span>
+                    <strong>{formatMoney(featuredScenario.topPick?.worstProfit)}</strong>
+                  </div>
+                  <div>
+                    <span className="preview-kicker">Second lane</span>
+                    <strong>{featuredScenario.secondPick?.name ?? "—"}</strong>
+                  </div>
                 </div>
               </div>
 
-              <div className="preview-footer">
-                <div>
-                  <span className="preview-kicker">Last export</span>
-                  <strong>{formatUtcStamp(summary.generatedAtUtc)}</strong>
+              <div className="decision-rails">
+                <div className="decision-rail decision-rail--safe">
+                  <span>Open lane</span>
+                  <strong>{openLanes.map((item) => item.name).join(" · ")}</strong>
                 </div>
-                <a href="#bot-walkthrough" className="inline-link">
-                  Inspect WhatsApp trace
-                </a>
+                <div className="decision-rail decision-rail--warn">
+                  <span>Crowding alert</span>
+                  <strong>{crowdedCrops.map((item) => item.name).join(" · ")}</strong>
+                </div>
               </div>
-            </div>
 
-            <div className="preset-stack">
-              <div className="preset-mini">
-                <strong>District pressure ledger</strong>
-                <span>The cap tracker still sits at the center of the advice loop.</span>
-              </div>
-              <div className="preset-mini">
-                <strong>Trade board + weather stream</strong>
-                <span>Market and forecast remain visible together, not in separate silos.</span>
-              </div>
-              <div className="preset-mini">
-                <strong>Bot walkthrough</strong>
-                <span>The Telugu reply and filter trail remain auditable end to end.</span>
+              <div className="command-board__footer">
+                <div className="blocked-strip">
+                  <span className="preview-kicker">Blocked now</span>
+                  <div className="blocked-strip__items">
+                    {featuredRejected.map((item) => (
+                      <span key={`${item.crop}-${item.reason}`} className="blocked-pill">
+                        {item.crop}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="command-board__links">
+                  <div>
+                    <span className="preview-kicker">Last export</span>
+                    <strong>{formatUtcStamp(summary.generatedAtUtc)}</strong>
+                  </div>
+                  <a href="#bot-walkthrough" className="inline-link">
+                    Inspect WhatsApp trace
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -140,30 +184,21 @@ export default function App() {
       </section>
 
       <section className="section-band section-band--white">
-        <div className="container landing-grid">
-          <article className="landing-feature">
-            <div className="landing-feature__tag">District state</div>
-            <h2 className="landing-feature__title">See where the engine will still send farmers</h2>
-            <p className="landing-feature__desc">
-              The district atlas remains a system view, not a decorative map:
-              each mandal still shows a representative 5-acre outcome.
-            </p>
+        <div className="container signal-ribbon signal-ribbon--premium">
+          <article className="signal-panel">
+            <span className="micro-label">District state</span>
+            <strong>{summary.mandalTopPickCount}/{summary.mandalCount}</strong>
+            <p>Mandals currently yield a safe top pick under the district model.</p>
           </article>
-          <article className="landing-feature">
-            <div className="landing-feature__tag">Crowding alerts + open lanes</div>
-            <h2 className="landing-feature__title">Keep anti-rat-race logic visible</h2>
-            <p className="landing-feature__desc">
-              Oversupply warnings and low-pressure opportunities stay explicit,
-              because cap logic is one of the most important ideas in the repo.
-            </p>
+          <article className="signal-panel">
+            <span className="micro-label">Pressure ledger</span>
+            <strong>{summary.oversuppliedCropCount}</strong>
+            <p>Crop lanes are already under crowding stress and must be watched.</p>
           </article>
-          <article className="landing-feature">
-            <div className="landing-feature__tag">Trade board and weather stream</div>
-            <h2 className="landing-feature__title">Put price context beside field reality</h2>
-            <p className="landing-feature__desc">
-              Mandi prices, weather outlook, and final bot output all remain
-              inspectable in the same flow instead of being hidden behind chat.
-            </p>
+          <article className="signal-panel">
+            <span className="micro-label">Trade + weather</span>
+            <strong>{summary.priceRowCount + summary.weatherDayCount}</strong>
+            <p>Fresh market rows and forecast windows are visible in the same surface.</p>
           </article>
         </div>
       </section>
@@ -183,12 +218,12 @@ export default function App() {
       <section className="section-band">
         <div className="container comparison-card">
           <div className="micro-eyebrow">System note</div>
-          <h2 className="comparison-card__title">Codex visuals, Rythu Mitra logic.</h2>
+          <h2 className="comparison-card__title">Codex sharpness, Rythu Mitra truth.</h2>
           <p className="comparison-card__copy">
-            The interface now follows the codex product language, but the
-            content hierarchy still protects your core ideas: live decision
-            analysis, district pressure ledger, trade board, weather stream,
-            crowding alerts, open lanes, and the Telugu WhatsApp reasoning path.
+            The UI now commits harder to a premium product story, but it still
+            protects your core concepts: one dominant decision answer, visible
+            crowding risk, open lanes, district pressure rails, the trade board,
+            the weather stream, and the Telugu WhatsApp reasoning path.
           </p>
         </div>
       </section>

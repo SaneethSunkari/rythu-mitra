@@ -51,6 +51,19 @@ export default function MandiPrices({ priceRows, weatherDaily }) {
         </div>
       </div>
 
+      <div className="trade-ribbon">
+        <article className="trade-ribbon__card">
+          <span className="micro-label">Trade board</span>
+          <strong>{prettyLabel(selectedCrop)}</strong>
+          <p>The active crop lane in focus across the district mandis.</p>
+        </article>
+        <article className="trade-ribbon__card">
+          <span className="micro-label">Weather stream</span>
+          <strong>{forecastSlice.length} day pulse</strong>
+          <p>Forecast context sits next to price action, not in a separate tab.</p>
+        </article>
+      </div>
+
       <div className="market-stage">
         <article className="panel market-panel">
           <div className="filter-group">
@@ -70,7 +83,7 @@ export default function MandiPrices({ priceRows, weatherDaily }) {
           </div>
 
           <div className="market-callouts">
-            <article className="market-callout">
+            <article className="market-callout market-callout--best">
               <span className="micro-label">Best modal today</span>
               <strong>{money(topMarket?.modal_price_rs_per_qtl ?? 0)}</strong>
               <p>{topMarket?.mandi_name ?? "—"}</p>
