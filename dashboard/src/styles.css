@@ -248,6 +248,65 @@ a {
   margin-top: 34px;
 }
 
+.hero-trustbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.hero-trustbar span {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.72);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--charcoal-soft);
+}
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.audience-card {
+  padding: 18px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background: white;
+  box-shadow: var(--shadow-card);
+}
+
+.audience-card strong {
+  display: block;
+  margin: 8px 0 6px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.05;
+}
+
+.audience-card p {
+  margin: 0;
+  color: var(--charcoal-soft);
+}
+
+.audience-card--farmer {
+  background: linear-gradient(180deg, rgba(235, 245, 238, 0.88), white);
+  border-color: rgba(42, 110, 63, 0.14);
+}
+
+.audience-card--website {
+  background: linear-gradient(180deg, rgba(253, 243, 227, 0.78), white);
+  border-color: rgba(139, 94, 26, 0.14);
+}
+
 .btn,
 .studio-button {
   display: inline-flex;
@@ -500,6 +559,12 @@ a {
   font-weight: 600;
 }
 
+.inline-link--button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
 .preset-stack {
   display: grid;
   gap: 12px;
@@ -516,6 +581,70 @@ a {
 
 .section-band {
   padding: 42px 0;
+}
+
+.website-desk {
+  padding: 46px 0 24px;
+}
+
+.workspace-shell {
+  display: grid;
+  gap: 22px;
+}
+
+.workspace-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.workspace-header h2 {
+  margin: 10px 0 8px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(30px, 3.8vw, 48px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+.workspace-header p {
+  margin: 0;
+  max-width: 64ch;
+  color: var(--charcoal-soft);
+}
+
+.workspace-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.workspace-tab {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--charcoal);
+  font-weight: 600;
+}
+
+.workspace-tab--active {
+  background: var(--charcoal);
+  color: var(--cream);
+  border-color: var(--charcoal);
+  box-shadow: var(--shadow-card);
+}
+
+.workspace-canvas {
+  min-height: 520px;
+}
+
+.workspace-canvas .section-shell:first-child {
+  padding-top: 0;
 }
 
 .section-band--white {
@@ -1508,13 +1637,15 @@ a {
   .decision-rails,
   .pressure-banner,
   .trade-ribbon,
-  .decision-story {
+  .decision-story,
+  .audience-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 780px) {
   .nav,
+  .workspace-header,
   .section-heading,
   .spotlight-panel__top,
   .cap-ledger__row-top,
@@ -1550,6 +1681,7 @@ a {
   .pressure-banner,
   .trade-ribbon,
   .decision-story,
+  .audience-grid,
   .ledger-grid,
   .verdict-lockup,
   .studio-result-card__meta,
