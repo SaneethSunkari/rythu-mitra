@@ -182,12 +182,12 @@ export default function App() {
 
             <div className="hero-facts">
               <article className="hero-facts__card">
-                <span className="micro-label">Primary audience</span>
-                <strong>Small farmers in Nizamabad, via WhatsApp voice</strong>
+                <span className="micro-label">Coverage</span>
+                <strong>36 mandals · 6 mandis · 15 crops — Nizamabad district</strong>
               </article>
               <article className="hero-facts__card">
-                <span className="micro-label">Website goal</span>
-                <strong>Convince a visitor to trust and try the live decision desk</strong>
+                <span className="micro-label">How it works</span>
+                <strong>5-filter constraint engine — soil, water, supply, price, risk</strong>
               </article>
             </div>
           </div>
@@ -264,7 +264,7 @@ export default function App() {
       <section className="section-band section-band--white">
         <div className="container proof-strip">
           <article className="proof-card">
-            <span className="micro-label">Core problem</span>
+            <span className="micro-label">The problem</span>
             <strong>Farmers commit before certainty exists.</strong>
             <p>
               Soil, water, debt, weather, and district crowding all matter before harvest,
@@ -272,7 +272,7 @@ export default function App() {
             </p>
           </article>
           <article className="proof-card">
-            <span className="micro-label">What this site solves</span>
+            <span className="micro-label">The solution</span>
             <strong>One place to inspect the actual decision.</strong>
             <p>
               It shows what the bot would say, why it said it, and what the district conditions
@@ -280,8 +280,8 @@ export default function App() {
             </p>
           </article>
           <article className="proof-card">
-            <span className="micro-label">Primary conversion</span>
-            <strong>Get a visitor to open the live desk and test the system.</strong>
+            <span className="micro-label">The advantage</span>
+            <strong>Constraint-first, not price-first.</strong>
             <p>
               The website is not the farmer workflow. It is the trust layer that turns curiosity
               into a real product trial.
@@ -446,7 +446,6 @@ export default function App() {
       <section className="section-band">
         <div className="container closing-cta">
           <div className="closing-cta__copy">
-            <span className="micro-eyebrow">Final CTA</span>
             <h2>See the actual answer, not just the pitch.</h2>
             <p>
               Open the live desk, switch between the district ledger, the trade board, and the
@@ -466,6 +465,16 @@ export default function App() {
           </div>
         </div>
       </section>
+      <footer className="site-footer">
+        <div className="site-footer__inner">
+          <span className="site-footer__logo">
+            Rythu <span>Mitra</span>
+          </span>
+          <span className="site-footer__meta">
+            Nizamabad · Telangana · Risk-aware crop decisions
+          </span>
+        </div>
+      </footer>
     </main>
   );
 }
