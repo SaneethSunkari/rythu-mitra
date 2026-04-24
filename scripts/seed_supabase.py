@@ -29,6 +29,7 @@ import psycopg2
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from engine.price_pipeline import DEFAULT_HISTORY_CSV_PATH, PricePipeline
+from engine.district_cap import DistrictCapTracker
 from engine.weather_pipeline import WeatherPipeline
 
 
@@ -37,6 +38,7 @@ SQL_FILES = [
     ROOT / "scripts" / "create_mandi_prices_table.sql",
     ROOT / "scripts" / "create_weather_forecast_tables.sql",
     ROOT / "scripts" / "create_farmer_profiles_table.sql",
+    ROOT / "scripts" / "create_recommendation_log_table.sql",
 ]
 
 
@@ -119,6 +121,7 @@ def main() -> None:
     )
     daily_price_result = price_pipeline.run(persist=True)
     weather_result = WeatherPipeline().run(persist=True)
+    recommendation_log_sync = DistrictCapTracker().sync_local_to_supabase()
 
     summary = {
         "schema": schema_result,
@@ -126,6 +129,7 @@ def main() -> None:
         "historical_seed": historical_seed_result,
         "daily_prices": daily_price_result,
         "weather": weather_result,
+        "recommendation_log_sync": recommendation_log_sync,
     }
     print(json.dumps(summary, indent=2, ensure_ascii=False))
 

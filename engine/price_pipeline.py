@@ -29,6 +29,7 @@ from data.nizamabad_district import CROPS, MANDIS
 
 DATA_GOV_RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070"
 DATA_GOV_BASE_URL = "https://api.data.gov.in/resource"
+DEFAULT_DATA_GOV_API_KEY = "579b464db66ec23bdd000001d9143fc81ac74bce7ad727abc2705a8a"
 SUPABASE_TABLE = "mandi_prices"
 DEFAULT_HISTORY_CSV_PATH = "data/price_history.csv"
 LOCAL_PRICE_CACHE_PATH = "data/cache/mandi_prices_latest.json"
@@ -68,7 +69,38 @@ CROP_ALIASES = {
     "greengram": "green_gram",
     "moong whole": "green_gram",
     "moong": "green_gram",
+    "bengal gram": "bengal_gram",
+    "gram": "bengal_gram",
+    "gram whole": "bengal_gram",
+    "chana": "bengal_gram",
+    "black gram": "black_gram",
+    "urad": "black_gram",
+    "urad whole": "black_gram",
+    "sesame": "sesame",
+    "sesamum sesame": "sesame",
+    "sesamum": "sesame",
+    "til": "sesame",
+    "jowar": "jowar",
+    "jowar sorghum": "jowar",
     "sugarcane": "sugarcane",
+}
+
+MARKET_SCOPE_STATE = "Telangana"
+NEARBY_MARKET_STATES = ["Karnataka", "Maharashtra", "Andhra Pradesh"]
+LIVE_MARKET_CONFIG: dict[str, dict[str, str]] = {
+    "maize": {"commodity": "Maize", "state": MARKET_SCOPE_STATE},
+    "paddy": {"commodity": "Paddy(Common)", "state": MARKET_SCOPE_STATE},
+    "turmeric": {"commodity": "Turmeric", "state": MARKET_SCOPE_STATE},
+    "soybean": {"commodity": "Soyabean", "state": MARKET_SCOPE_STATE},
+    "cotton": {"commodity": "Cotton", "state": MARKET_SCOPE_STATE},
+    "red_gram": {"commodity": "Arhar(Tur/Red Gram)(Whole)", "state": MARKET_SCOPE_STATE},
+    "sunflower": {"commodity": "Sunflower/Sunflower Seed", "state": MARKET_SCOPE_STATE},
+    "green_gram": {"commodity": "Moong(Whole)", "state": MARKET_SCOPE_STATE},
+    "groundnut": {"commodity": "Groundnut", "state": MARKET_SCOPE_STATE},
+    "bengal_gram": {"commodity": "Gram", "state": MARKET_SCOPE_STATE},
+    "black_gram": {"commodity": "Urad", "state": MARKET_SCOPE_STATE},
+    "sesame": {"commodity": "Sesamum/Sesame", "state": MARKET_SCOPE_STATE},
+    "jowar": {"commodity": "Jowar(Sorghum)", "state": MARKET_SCOPE_STATE},
 }
 
 
@@ -156,6 +188,16 @@ def _parse_price_date(value: Any) -> str:
     return date.today().isoformat()
 
 
+def _parse_price_timestamp(value: Any) -> float:
+    text = str(value or "").strip()
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y", "%d %b %Y", "%d %B %Y"):
+        try:
+            return datetime.strptime(text, fmt).timestamp()
+        except ValueError:
+            continue
+    return float("-inf")
+
+
 def _parse_historical_date(record: dict[str, Any]) -> str:
     explicit = _pick(
         record,
@@ -220,7 +262,7 @@ class PricePipeline:
     ) -> None:
         _load_local_env()
 
-        self.api_key = api_key or os.getenv("DATA_GOV_API_KEY", "")
+        self.api_key = api_key or os.getenv("DATA_GOV_API_KEY", "") or DEFAULT_DATA_GOV_API_KEY
         self.supabase_url = (supabase_url or os.getenv("SUPABASE_URL", "")).rstrip("/")
         self.supabase_key = _resolve_supabase_key(supabase_key)
         self.resource_id = resource_id
@@ -239,27 +281,17 @@ class PricePipeline:
             "local_cache_path": str(self.local_cache_path),
         }
 
-    def _build_query_urls(self) -> list[str]:
-        if not self.api_key:
-            return []
-
-        query_variants = [
-            {"filters[State]": "Telangana", "filters[District]": "Nizamabad"},
-            {"filters[state]": "Telangana", "filters[district]": "Nizamabad"},
-            {"filters[State Name]": "Telangana", "filters[District Name]": "Nizamabad"},
-        ]
-
-        urls = []
-        for extra_filters in query_variants:
-            params = {
-                "api-key": self.api_key,
-                "format": "json",
-                "limit": 1000,
-                "offset": 0,
-            }
-            params.update(extra_filters)
-            urls.append(f"{DATA_GOV_BASE_URL}/{self.resource_id}?{parse.urlencode(params)}")
-        return urls
+    def _build_query_url(self, commodity: str, state: str | None = None) -> str:
+        params = {
+            "api-key": self.api_key,
+            "format": "json",
+            "limit": 100,
+            "offset": 0,
+            "filters[commodity]": commodity,
+        }
+        if state:
+            params["filters[state]"] = state
+        return f"{DATA_GOV_BASE_URL}/{self.resource_id}?{parse.urlencode(params)}"
 
     def _fetch_json(self, url: str) -> dict[str, Any]:
         req = request.Request(
@@ -273,6 +305,244 @@ class PricePipeline:
             body = response.read().decode("utf-8")
         return json.loads(body)
 
+    def _attempt_queries_for_crop(self, crop_slug: str, config: dict[str, str]) -> list[tuple[str, str | None]]:
+        fallback = config.get("fallbackCommodity")
+        attempts: list[tuple[str, str | None]] = [(config["commodity"], MARKET_SCOPE_STATE)]
+        if fallback:
+            attempts.append((fallback, MARKET_SCOPE_STATE))
+        for state in NEARBY_MARKET_STATES:
+            attempts.append((config["commodity"], state))
+            if fallback:
+                attempts.append((fallback, state))
+        attempts.append((fallback or config["commodity"], None))
+
+        ordered: list[tuple[str, str | None]] = []
+        seen: set[tuple[str, str | None]] = set()
+        for attempt in attempts:
+            if attempt in seen:
+                continue
+            seen.add(attempt)
+            ordered.append(attempt)
+        return ordered
+
+    def _choose_live_records(
+        self,
+        crop_slug: str,
+        config: dict[str, str],
+    ) -> tuple[list[dict[str, Any]], str, str, list[str]]:
+        notes: list[str] = []
+        chosen_records: list[dict[str, Any]] = []
+        chosen_scope = ""
+        chosen_commodity = config["commodity"]
+
+        for commodity, state in self._attempt_queries_for_crop(crop_slug, config):
+            scope = state or "India"
+            try:
+                payload = self._fetch_json(self._build_query_url(commodity, state))
+            except error.HTTPError as exc:
+                notes.append(f"{crop_slug}: data.gov.in HTTP {exc.code} for {commodity} ({scope}).")
+                continue
+            except error.URLError as exc:
+                notes.append(f"{crop_slug}: data.gov.in request failed for {commodity} ({scope}): {exc.reason}.")
+                continue
+            except TimeoutError:
+                notes.append(f"{crop_slug}: data.gov.in timed out for {commodity} ({scope}).")
+                continue
+            except json.JSONDecodeError:
+                notes.append(f"{crop_slug}: data.gov.in returned non-JSON content for {commodity} ({scope}).")
+                continue
+
+            chosen_records = self._normalize_spot_records(payload.get("records") or [])
+            if chosen_records:
+                chosen_scope = scope
+                chosen_commodity = commodity
+                break
+
+            notes.append(
+                f"{crop_slug}: no rows from {commodity} ({scope}); payload count={payload.get('count') or 0}."
+            )
+
+        return chosen_records, chosen_scope, chosen_commodity, notes
+
+    def _normalize_spot_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        normalized: list[dict[str, Any]] = []
+        for record in records:
+            min_price = _as_int(_pick(record, "Min Price", "Min_Price"))
+            max_price = _as_int(_pick(record, "Max Price", "Max_Price"))
+            modal_price = _as_int(_pick(record, "Modal Price", "Modal_Price"))
+            if min_price is None and max_price is None and modal_price is None:
+                continue
+
+            normalized.append(
+                {
+                    "state": _pick(record, "State") or "Unknown",
+                    "district": _pick(record, "District") or "Unknown",
+                    "market": _pick(record, "Market", "Market Name") or "Unknown",
+                    "commodity": _pick(record, "Commodity", "Commodity Name") or "Unknown",
+                    "arrival_date": _pick(record, "Arrival Date", "Arrival_Date", "Price Date") or "",
+                    "min_price": min_price,
+                    "max_price": max_price,
+                    "modal_price": modal_price,
+                }
+            )
+        return normalized
+
+    def fetch_live_spot_snapshots(self) -> tuple[dict[str, dict[str, Any]], list[str]]:
+        if not self.api_key:
+            return {}, ["DATA_GOV_API_KEY missing; no live spot board available."]
+
+        snapshots: dict[str, dict[str, Any]] = {}
+        notes: list[str] = []
+
+        for crop_slug, config in LIVE_MARKET_CONFIG.items():
+            chosen_records, chosen_scope, chosen_commodity, crop_notes = self._choose_live_records(
+                crop_slug,
+                config,
+            )
+            notes.extend(crop_notes)
+
+            if not chosen_records:
+                continue
+
+            latest_ts = max(_parse_price_timestamp(record["arrival_date"]) for record in chosen_records)
+            latest_rows = [
+                record for record in chosen_records
+                if _parse_price_timestamp(record["arrival_date"]) == latest_ts
+            ]
+            modal_values = [record["modal_price"] for record in latest_rows if record.get("modal_price") is not None]
+            if not modal_values:
+                continue
+            modal_average = round(sum(modal_values) / len(modal_values))
+            representative = min(
+                latest_rows,
+                key=lambda record: abs((record.get("modal_price") or modal_average) - modal_average),
+            )
+
+            if chosen_scope == "India":
+                notes.append(f"{crop_slug}: using latest India mandi snapshot because nearby-state rows were unavailable.")
+            elif chosen_scope != MARKET_SCOPE_STATE:
+                notes.append(f"{crop_slug}: using latest {chosen_scope} mandi snapshot because Telangana rows were unavailable.")
+
+            snapshots[crop_slug] = {
+                "cropSlug": crop_slug,
+                "commodityName": representative["commodity"],
+                "modalPriceRsPerQtl": modal_average,
+                "floorPriceRsPerQtl": min(record["min_price"] for record in latest_rows if record.get("min_price") is not None),
+                "ceilingPriceRsPerQtl": max(record["max_price"] for record in latest_rows if record.get("max_price") is not None),
+                "arrivalDate": _parse_price_date(representative["arrival_date"]),
+                "representativeMarket": representative["market"],
+                "representativeDistrict": representative["district"],
+                "representativeState": representative["state"],
+                "marketCount": len(latest_rows),
+                "scopeLabel": f"{chosen_scope} mandi rows",
+                "commodityQuery": chosen_commodity,
+                "source": "data_gov_in_live_spot",
+            }
+
+        return snapshots, notes
+
+    def fetch_live_market_board(self) -> tuple[dict[str, list[dict[str, Any]]], list[str]]:
+        if not self.api_key:
+            return {}, ["DATA_GOV_API_KEY missing; no live mandi board available."]
+
+        board: dict[str, list[dict[str, Any]]] = {}
+        notes: list[str] = []
+
+        for crop_slug, config in LIVE_MARKET_CONFIG.items():
+            chosen_records, chosen_scope, chosen_commodity, crop_notes = self._choose_live_records(
+                crop_slug,
+                config,
+            )
+            notes.extend(crop_notes)
+            if not chosen_records:
+                continue
+
+            latest_ts = max(_parse_price_timestamp(record["arrival_date"]) for record in chosen_records)
+            latest_rows = [
+                record for record in chosen_records
+                if _parse_price_timestamp(record["arrival_date"]) == latest_ts
+            ]
+            latest_rows.sort(key=lambda record: (record.get("modal_price") or 0), reverse=True)
+
+            if chosen_scope == "India":
+                notes.append(f"{crop_slug}: using live India mandi rows because nearby-state rows were unavailable.")
+            elif chosen_scope != MARKET_SCOPE_STATE:
+                notes.append(f"{crop_slug}: using live {chosen_scope} mandi rows because Telangana rows were unavailable.")
+
+            board[crop_slug] = [
+                {
+                    "cropSlug": crop_slug,
+                    "commodityName": row["commodity"],
+                    "marketName": row["market"],
+                    "district": row["district"],
+                    "state": row["state"],
+                    "arrivalDate": _parse_price_date(row["arrival_date"]),
+                    "modalPriceRsPerQtl": row["modal_price"],
+                    "floorPriceRsPerQtl": row["min_price"],
+                    "ceilingPriceRsPerQtl": row["max_price"],
+                    "scopeLabel": f"{chosen_scope} mandi rows",
+                    "commodityQuery": chosen_commodity,
+                    "source": "data_gov_in_live_market",
+                }
+                for row in latest_rows[:8]
+            ]
+
+        return board, notes
+
+    def fetch_live_market_rows_for_crop(
+        self,
+        crop_slug: str,
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        config = LIVE_MARKET_CONFIG.get(crop_slug)
+        if not config:
+            return [], {"mode": "unsupported", "notes": [f"{crop_slug}: no live market config."]}
+        if not self.api_key:
+            return [], {"mode": "unavailable", "notes": ["DATA_GOV_API_KEY missing; no live mandi rows available."]}
+
+        chosen_records, chosen_scope, chosen_commodity, notes = self._choose_live_records(
+            crop_slug,
+            config,
+        )
+        if not chosen_records:
+            return [], {
+                "mode": "unavailable",
+                "notes": notes,
+                "marketFreshnessUtc": None,
+                "cropCount": 0,
+            }
+
+        latest_ts = max(_parse_price_timestamp(record["arrival_date"]) for record in chosen_records)
+        latest_rows = [
+            record for record in chosen_records
+            if _parse_price_timestamp(record["arrival_date"]) == latest_ts
+        ]
+        latest_rows.sort(key=lambda record: (record.get("modal_price") or 0), reverse=True)
+
+        rows = [
+            {
+                "cropSlug": crop_slug,
+                "commodityName": row["commodity"],
+                "marketName": row["market"],
+                "district": row["district"],
+                "state": row["state"],
+                "arrivalDate": _parse_price_date(row["arrival_date"]),
+                "modalPriceRsPerQtl": row["modal_price"],
+                "floorPriceRsPerQtl": row["min_price"],
+                "ceilingPriceRsPerQtl": row["max_price"],
+                "scopeLabel": f"{chosen_scope} mandi rows",
+                "commodityQuery": chosen_commodity,
+                "source": "data_gov_in_live_market",
+            }
+            for row in latest_rows[:8]
+        ]
+        return rows, {
+            "mode": "live",
+            "notes": notes,
+            "marketFreshnessUtc": rows[0]["arrivalDate"] if rows else None,
+            "cropCount": len(rows),
+            "scopeLabel": f"{chosen_scope} mandi rows",
+        }
+
     def fetch_live_rows(self) -> tuple[list[dict[str, Any]], list[str]]:
         """
         Fetch and normalize live mandi price rows from data.gov.in.
@@ -285,28 +555,58 @@ class PricePipeline:
             return [], ["DATA_GOV_API_KEY missing; using fallback price history."]
 
         notes: list[str] = []
-        for url in self._build_query_urls():
-            try:
-                payload = self._fetch_json(url)
-            except error.HTTPError as exc:
-                notes.append(f"data.gov.in HTTP {exc.code}; trying next query variant.")
-                continue
-            except error.URLError as exc:
-                notes.append(f"data.gov.in request failed: {exc.reason}.")
-                continue
-            except json.JSONDecodeError:
-                notes.append("data.gov.in returned non-JSON content.")
-                continue
+        rows: list[dict[str, Any]] = []
+        seen: set[tuple[str, str, str, str]] = set()
 
-            records = payload.get("records") or []
-            normalized_rows = self._normalize_live_records(records)
-            if normalized_rows:
-                return normalized_rows, notes
+        for crop_slug, config in LIVE_MARKET_CONFIG.items():
+            attempts: list[tuple[str, str | None]] = [(config["commodity"], config.get("state"))]
+            fallback = config.get("fallbackCommodity")
+            if fallback:
+                attempts.append((fallback, config.get("state")))
+            attempts.append((fallback or config["commodity"], None))
 
-            count = payload.get("count")
-            notes.append(f"data.gov.in returned {count or 0} records, none matched supported mandis/crops.")
+            crop_rows: list[dict[str, Any]] = []
+            for commodity, state in attempts:
+                scope = state or "India"
+                try:
+                    payload = self._fetch_json(self._build_query_url(commodity, state))
+                except error.HTTPError as exc:
+                    notes.append(f"{crop_slug}: data.gov.in HTTP {exc.code} for {commodity} ({scope}).")
+                    continue
+                except error.URLError as exc:
+                    notes.append(f"{crop_slug}: data.gov.in request failed for {commodity} ({scope}): {exc.reason}.")
+                    continue
+                except TimeoutError:
+                    notes.append(f"{crop_slug}: data.gov.in timed out for {commodity} ({scope}).")
+                    continue
+                except json.JSONDecodeError:
+                    notes.append(f"{crop_slug}: data.gov.in returned non-JSON content for {commodity} ({scope}).")
+                    continue
 
-        return [], notes or ["data.gov.in returned no usable rows."]
+                records = payload.get("records") or []
+                crop_rows = self._normalize_live_records(records)
+                if crop_rows:
+                    if scope == "India":
+                        notes.append(f"{crop_slug}: using latest India rows because Telangana rows for supported mandis were missing.")
+                    break
+
+                notes.append(
+                    f"{crop_slug}: no supported mandi rows from {commodity} ({scope}); payload count={payload.get('count') or 0}."
+                )
+
+            for row in crop_rows:
+                key = (
+                    row["price_date"],
+                    row["mandi_slug"],
+                    row["crop_slug"],
+                    str(row.get("variety") or ""),
+                )
+                if key in seen:
+                    continue
+                seen.add(key)
+                rows.append(row)
+
+        return rows, notes or (["data.gov.in returned no usable rows."] if not rows else [])
 
     def _normalize_live_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         rows: list[dict[str, Any]] = []

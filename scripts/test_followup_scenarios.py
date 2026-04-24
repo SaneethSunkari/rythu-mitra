@@ -70,7 +70,7 @@ def main() -> None:
                 ),
                 "c1_best_market": (
                     "anna paddy ekkada ammalani",
-                    ["Best reachable mandi", "net"],
+                    ["live market signal", "Government of India live mandi rows"],
                 ),
                 "c2_trader_offer": (
                     "trader 1750 istunnadu teesukovala",

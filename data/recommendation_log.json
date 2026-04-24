@@ -12,7 +12,7 @@
       "primary_crop": "maize",
       "secondary_crop": "soybean",
       "source": "whatsapp",
-      "logged_at_utc": "2026-04-20T02:56:14.932946+00:00"
+      "logged_at_utc": "2026-04-24T01:13:30.279365+00:00"
     },
     {
       "season": "kharif_2025",
@@ -26,7 +26,7 @@
       "primary_crop": "maize",
       "secondary_crop": "soybean",
       "source": "whatsapp",
-      "logged_at_utc": "2026-04-20T02:56:16.538219+00:00"
+      "logged_at_utc": "2026-04-24T01:13:36.644402+00:00"
     },
     {
       "season": "kharif_2025",
@@ -41,6 +41,48 @@
       "secondary_crop": "soybean",
       "source": "whatsapp",
       "logged_at_utc": "2026-04-20T02:56:26.898614+00:00"
+    },
+    {
+      "season": "kharif_2025",
+      "farmer_key": "whatsapp:+919900000124",
+      "farmer_id": "whatsapp:+919900000124",
+      "survey_number": null,
+      "mandal": "nandipet",
+      "soil_zone": "black_cotton",
+      "water_source": "borewell",
+      "acres": 34.0,
+      "primary_crop": "soybean",
+      "secondary_crop": "black_gram",
+      "source": "whatsapp",
+      "logged_at_utc": "2026-04-24T01:13:31.522737+00:00"
+    },
+    {
+      "season": "kharif_2025",
+      "farmer_key": "whatsapp:+919900000126",
+      "farmer_id": "whatsapp:+919900000126",
+      "survey_number": null,
+      "mandal": "nandipet",
+      "soil_zone": "black_cotton",
+      "water_source": "borewell",
+      "acres": 34.0,
+      "primary_crop": "soybean",
+      "secondary_crop": "black_gram",
+      "source": "whatsapp",
+      "logged_at_utc": "2026-04-24T01:13:33.620778+00:00"
+    },
+    {
+      "season": "kharif_2025",
+      "farmer_key": "whatsapp:+919986149508",
+      "farmer_id": "whatsapp:+919986149508",
+      "survey_number": null,
+      "mandal": "nandipet",
+      "soil_zone": "deep_calcareous",
+      "water_source": "mixed",
+      "acres": 10.0,
+      "primary_crop": "maize",
+      "secondary_crop": "soybean",
+      "source": "whatsapp",
+      "logged_at_utc": "2026-04-23T15:54:52.098954+00:00"
     }
   ]
 }

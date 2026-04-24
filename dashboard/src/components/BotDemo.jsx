@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FilterStepper from "./FilterStepper";
 
 function money(value) {
   return new Intl.NumberFormat("en-IN", {
@@ -146,47 +147,24 @@ export default function BotDemo({ scenarios }) {
               ))}
             </div>
           </article>
-
-          <article className="panel trace-panel">
-            <div className="trace-panel__header">
-              <span className="micro-label">Filter trail</span>
-              <h3>How the shortlist shrank</h3>
-            </div>
-
-            <div className="trace-timeline">
-              {scenario.filterTrace.map((step, index) => (
-                <article className="trace-step" key={step.id}>
-                  <div className="trace-step__rail">
-                    <span>{index + 1}</span>
-                  </div>
-                  <div className="trace-step__body">
-                    <div className="trace-step__top">
-                      <strong>{step.title}</strong>
-                      <span>
-                        kept {step.kept} • removed {step.removed}
-                      </span>
-                    </div>
-                    <p>{step.note}</p>
-                    <div className="mini-chip-row">
-                      {step.highlights.map((item) => (
-                        <span className="mini-chip" key={item}>
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </article>
-
-          <article className="panel telugu-panel">
-            <span className="micro-label">Reply that goes back to the farmer</span>
-            <h3>Final Telugu response</h3>
-            <pre>{scenario.teluguReply}</pre>
-          </article>
         </div>
       </div>
+
+      {/* ── Filter trail — full width ── */}
+      <article className="panel trace-panel trace-panel--full">
+        <div className="trace-panel__header">
+          <span className="micro-label">Filter trail</span>
+          <h3>How the shortlist shrank</h3>
+        </div>
+        <FilterStepper steps={scenario.filterTrace} />
+      </article>
+
+      {/* ── Telugu reply — full width ── */}
+      <article className="panel telugu-panel telugu-panel--full">
+        <span className="micro-label">Reply that goes back to the farmer</span>
+        <h3>Final Telugu response</h3>
+        <pre>{scenario.teluguReply}</pre>
+      </article>
     </section>
   );
 }

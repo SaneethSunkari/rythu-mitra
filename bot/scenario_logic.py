@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import json
 import re
 from datetime import date, timedelta
-from pathlib import Path
 from typing import Any
 
 from bot.canal_alerts import CanalAlertService
@@ -36,8 +34,17 @@ from engine.crop_engine import (
     recommend,
 )
 from engine.district_cap import DistrictCapTracker
+from engine.dashboard_payload import (
+    build_accountability_trail,
+    build_fairness_summary,
+    build_trade_signal_for_crop,
+    build_market_options_for_farmer,
+    build_seed_guidance_for_crop,
+    load_live_market_board,
+    load_live_spot_board,
+    load_current_price_rows,
+)
 from engine.long_cycle_outlook import LongCycleOutlookService, render_long_cycle_reply
-from engine.price_pipeline import LOCAL_PRICE_CACHE_PATH, PricePipeline
 from engine.weather_pipeline import WeatherPipeline
 
 
@@ -189,15 +196,8 @@ def _money(value: int | float | None) -> str:
 
 
 def _load_current_price_rows() -> list[dict[str, Any]]:
-    cache_path = Path(LOCAL_PRICE_CACHE_PATH)
-    if cache_path.exists():
-        try:
-            payload = json.loads(cache_path.read_text(encoding="utf-8"))
-            if isinstance(payload, list) and payload:
-                return payload
-        except json.JSONDecodeError:
-            pass
-    return PricePipeline().build_fallback_rows()
+    rows, _meta = load_current_price_rows(prefer_live=False)
+    return rows
 
 
 def _extract_supported_crop(normalized_text: str, profile: StoredFarmerProfile | None = None) -> str | None:
@@ -332,43 +332,41 @@ def _build_crop_snapshot(profile: StoredFarmerProfile, crop_slug: str) -> dict[s
 
 
 def _best_market_options(profile: StoredFarmerProfile, crop_slug: str) -> list[dict[str, Any]]:
-    price_rows = [row for row in _load_current_price_rows() if row.get("crop_slug") == crop_slug]
-    distance_map = {
-        item["name"]: float(item["distance_km"])
-        for item in MANDALS[profile.mandal].get("nearest_mandis", [])
-    }
-
-    crop_data = CROPS[crop_slug]
-    yield_key = "canal_irrigated" if "canal" in (profile.water_source or "") else "rainfed"
-    yield_data = crop_data.get("yield_qtl_per_acre", {})
-    yield_row = yield_data.get(yield_key) or yield_data.get("rainfed") or yield_data.get("canal_irrigated") or {"avg": 10}
-    estimated_total_qtl = max(1.0, float(yield_row["avg"]) * float(profile.acres or 1))
-
-    options: list[dict[str, Any]] = []
-    for row in price_rows:
-        mandi_name = row["mandi_name"]
-        if mandi_name not in distance_map:
-            continue
-        modal = float(row.get("modal_price_rs_per_qtl") or 0)
-        distance_km = distance_map[mandi_name]
-        transport_total = max(250.0, distance_km * 35.0)
-        transport_per_qtl = transport_total / estimated_total_qtl
-        commission_per_qtl = modal * 0.02
-        net_per_qtl = modal - transport_per_qtl - commission_per_qtl
-        options.append(
+    price_rows, price_meta = load_current_price_rows(prefer_live=False)
+    live_market_board, live_market_meta = load_live_market_board()
+    live_spot_board, live_spot_meta = load_live_spot_board()
+    signal = build_trade_signal_for_crop(
+        mandal_slug=profile.mandal,
+        water_source=profile.water_source,
+        acres=profile.acres or 1,
+        crop_slug=crop_slug,
+        current_price_rows=price_rows,
+        current_price_meta=price_meta,
+        live_market_board=live_market_board,
+        live_market_meta=live_market_meta,
+        live_spot_board=live_spot_board,
+        live_spot_meta=live_spot_meta,
+    )
+    if signal["primaryOptions"]:
+        return [
             {
-                "mandi_name": mandi_name,
-                "distance_km": distance_km,
-                "modal_price": int(round(modal)),
-                "transport_total": int(round(transport_total)),
-                "transport_per_qtl": int(round(transport_per_qtl)),
-                "commission_per_qtl": int(round(commission_per_qtl)),
-                "net_per_qtl": int(round(net_per_qtl)),
+                "mandi_name": item["mandiName"],
+                "district": item.get("district"),
+                "state": item.get("state"),
+                "scope_label": item.get("scopeLabel"),
+                "distance_km": item.get("distanceKm"),
+                "modal_price": item.get("modalPriceRsPerQtl"),
+                "transport_total": item.get("transportTotalRs"),
+                "transport_per_qtl": item.get("transportPerQtlRs"),
+                "commission_per_qtl": item.get("commissionPerQtlRs"),
+                "net_per_qtl": item.get("netPerQtlRs") or item.get("modalPriceRsPerQtl"),
+                "price_date": item.get("priceDate"),
+                "source": item.get("source"),
+                "trade_mode": signal["mode"],
             }
-        )
-
-    options.sort(key=lambda item: item["net_per_qtl"], reverse=True)
-    return options
+            for item in signal["primaryOptions"]
+        ]
+    return []
 
 
 def _recommendation_bundle(profile: StoredFarmerProfile) -> tuple[EngineFarmerProfile, dict[str, Any]]:
@@ -806,6 +804,10 @@ def _crop_pressure_reply(profile: StoredFarmerProfile, normalized_text: str) -> 
         if pct is not None
         else f"Naanna, {telugu_crop} ki district pressure check chesanu."
     ]
+    if supply.get("status") == "APPROACHING":
+        lines.append("Ippudu reject kaaledu, kani cap daggara ki fast ga veltundi.")
+    elif supply.get("status") == "OVERSUPPLY":
+        lines.append("Ee lane already hot ga undi. Fresh recommendation ivvadam lo nenu careful ga unta.")
 
     profit = snapshot["profitability"]
     if profit:
@@ -823,7 +825,7 @@ def _crop_pressure_reply(profile: StoredFarmerProfile, normalized_text: str) -> 
                 f"{top_telugu} floor lo {_money(top_snapshot['profitability']['net_floor'])} varaku safer ga undi."
             )
 
-    if snapshot["rejection_reason"] or supply.get("status") in {"OVERSUPPLY", "REJECT"}:
+    if snapshot["rejection_reason"] or supply.get("status") in {"APPROACHING", "OVERSUPPLY", "REJECT"}:
         lines.append("Naanu lecture cheyyatledu naanna. Facts cheppanu. Decision meeru cheyyandi.")
     else:
         lines.append("Ee crop possible, kani crowd pressure watch lo undi. Decision meeru cheyyandi.")
@@ -832,38 +834,35 @@ def _crop_pressure_reply(profile: StoredFarmerProfile, normalized_text: str) -> 
 
 
 def _fairness_reply(profile: StoredFarmerProfile, normalized_text: str) -> str | None:
+    farmer, result = _recommendation_bundle(profile)
+    fairness = build_fairness_summary(result)
+    accountability = build_accountability_trail(result)
     crops = _extract_multiple_supported_crops(normalized_text)
-    if not crops:
-        return None
-
-    your_crop = crops[-1]
-    other_crop = crops[0] if len(crops) > 1 else None
-    your_snapshot = _build_crop_snapshot(profile, your_crop)
-    other_snapshot = _build_crop_snapshot(profile, other_crop) if other_crop else None
 
     lines = ["Naanna, logic hide cheyyanu."]
-    if other_snapshot:
-        other_pct = other_snapshot["supply"].get("projected_pct_filled") or other_snapshot["supply"].get("pct_filled")
-        if other_pct is not None:
-            lines.append(
-                f"{CROPS[other_crop].get('telugu_name', other_crop)} meeru compare chesthunna crop time ki {other_pct}% cap daggara undi."
-            )
-    if your_snapshot:
-        if your_snapshot["profitability"]:
-            lines.append(
-                f"Mee profile ki {CROPS[your_crop].get('telugu_name', your_crop)} floor-safe profit {_money(your_snapshot['profitability']['net_floor'])} varaku undi."
-            )
-        if your_snapshot["rejection_reason"]:
-            lines.append(
-                f"{CROPS[your_crop].get('telugu_name', your_crop)} kuda reject ayithe reason: {your_snapshot['rejection_reason']}."
-            )
+    lines.append(fairness["summary"])
 
-    if other_snapshot and other_snapshot["profitability"]:
-        lines.append(
-            f"Compare chesthe {CROPS[other_crop].get('telugu_name', other_crop)} floor-safe profit {_money(other_snapshot['profitability']['net_floor'])}."
-        )
+    if crops:
+        for crop_slug in crops[:2]:
+            snapshot = _build_crop_snapshot(profile, crop_slug)
+            if not snapshot:
+                continue
+            crop_name = CROPS[crop_slug].get("telugu_name", crop_slug)
+            pct = snapshot["supply"].get("projected_pct_filled") or snapshot["supply"].get("pct_filled")
+            if snapshot["profitability"]:
+                lines.append(
+                    f"{crop_name}: floor-safe {_money(snapshot['profitability']['net_floor'])}, district fill {pct}%."
+                )
+            elif snapshot["rejection_reason"]:
+                lines.append(f"{crop_name}: {snapshot['rejection_reason']}.")
+    else:
+        for item in fairness.get("evidence", [])[:3]:
+            lines.append(f"{item['label']}: {item['value']}.")
 
-    lines.append("Mee profit-safe logic batti suggestion vachhindi. Naanu guarantee ivvaleddu, kani reason idi.")
+    lines.append(
+        f"Decision version {accountability['decisionVersion']} lo {accountability['recommendation']} recommend chesanu."
+    )
+    lines.append("Mee profile marithe answer kuda marchachu, kani logic same untundi.")
     return " ".join(lines)
 
 
@@ -880,18 +879,38 @@ def _best_market_reply(profile: StoredFarmerProfile, normalized_text: str) -> st
         )
 
     top = options[0]
-    lines = [
-        f"Naanna, {CROPS[crop_slug].get('telugu_name', crop_slug)} ki reachable mandis net price chusanu.",
-    ]
-    for option in options[:3]:
+    if top.get("trade_mode") == "live_regional_market":
+        lines = [
+            f"Naanna, {CROPS[crop_slug].get('telugu_name', crop_slug)} ki live market signal chusanu.",
+        ]
+        for option in options[:3]:
+            lines.append(
+                f"{option['mandi_name']} ({option.get('state') or option.get('scope_label')}) : "
+                f"modal {_money(option['modal_price'])}/qtl."
+            )
         lines.append(
-            f"{option['mandi_name']}: modal {_money(option['modal_price'])}/qtl, "
-            f"transport approx {_money(option['transport_total'])} total, "
-            f"net {_money(option['net_per_qtl'])}/qtl."
+            "Ivi current live mandi rows. Local reachable-net calculation kaadu ani clear ga cheptunna, "
+            "because local live board row ippudu dorakaledu."
         )
-    lines.append(
-        f"Best reachable mandi ippatiki {top['mandi_name']}. Raw rate kaadu naanna - transport mariyu 2% commission teesesi net cheppanu."
-    )
+    else:
+        lines = [
+            f"Naanna, {CROPS[crop_slug].get('telugu_name', crop_slug)} ki reachable mandis net price chusanu.",
+        ]
+        for option in options[:3]:
+            lines.append(
+                f"{option['mandi_name']}: modal {_money(option['modal_price'])}/qtl, "
+                f"transport approx {_money(option['transport_total'])} total, "
+                f"net {_money(option['net_per_qtl'])}/qtl."
+            )
+        lines.append(
+            f"Best reachable mandi ippatiki {top['mandi_name']}. Raw rate kaadu naanna - transport mariyu 2% commission teesesi net cheppanu."
+        )
+    if top.get("source") == "data_gov_in_live_market":
+        lines.append("Current crop prices Government of India live mandi rows nundi vachchayi.")
+    elif top.get("source") == "data_gov_in":
+        lines.append("Current crop prices Government of India mandi dataset nundi vachchayi.")
+    elif top.get("source") == "historical_fallback":
+        lines.append("Live mandi row dorakaledu kabatti historical fallback use chesanu ani clear ga cheptunna.")
     return " ".join(lines)
 
 
@@ -906,6 +925,18 @@ def _trader_offer_reply(profile: StoredFarmerProfile, normalized_text: str) -> s
         return None
 
     top = options[0]
+    if top.get("trade_mode") == "live_regional_market":
+        diff = top["net_per_qtl"] - offer
+        if diff <= 0:
+            return (
+                f"Naanna, trader offer {_money(offer)}/qtl live regional benchmark kanna thakkuva kaadu. "
+                f"Current live signal {top['mandi_name']} side {_money(top['net_per_qtl'])}/qtl."
+            )
+        return (
+            f"Naanna, trader offer {_money(offer)}/qtl. "
+            f"Current live regional benchmark {top['mandi_name']} side {_money(top['net_per_qtl'])}/qtl. "
+            f"Difference {_money(diff)}/qtl. Local net exact ga kaadu, kani market side lower offer ani clear ga telusthondi."
+        )
     diff = top["net_per_qtl"] - offer
     if diff <= 0:
         return (
@@ -913,11 +944,14 @@ def _trader_offer_reply(profile: StoredFarmerProfile, normalized_text: str) -> s
             f"Best reachable mandi net {_money(top['net_per_qtl'])}/qtl. Immediate cash avasaram unte consider cheyyavachu."
         )
 
-    return (
+    reply = (
         f"Naanna, trader offer {_money(offer)}/qtl. "
         f"Best reachable mandi {top['mandi_name']} net {_money(top['net_per_qtl'])}/qtl. "
         f"Difference {_money(diff)}/qtl loss. Immediate avasaram lekapothe trader ki ivvakunda mandi option chudandi."
     )
+    if top.get("source") == "data_gov_in":
+        reply += " Ee mandi benchmark Government of India current mandi row meeda based."
+    return reply
 
 
 def _high_interest_reply(profile: StoredFarmerProfile, normalized_text: str) -> str:
@@ -1339,12 +1373,27 @@ def _seed_variety_reply(profile: StoredFarmerProfile) -> str:
     farmer, result = _recommendation_bundle(profile)
     top = result.get("top_pick")
     crop_slug = top["crop"] if top else None
-    crop_name = CROPS[crop_slug].get("telugu_name", crop_slug) if crop_slug else "mee crop"
-    water = profile.water_source or "local water"
+    if not crop_slug:
+        return (
+            "Naanna, mundu crop shortlist clear avvali. Appude exact seed variety cheppadam honest ga untundi."
+        )
+
+    guidance = build_seed_guidance_for_crop(farmer, crop_slug)
+    if not guidance["varieties"]:
+        return (
+            f"Naanna, {guidance['teluguName']} ki certified packet matrame theeskondi. "
+            "Bill, lot number, germination label compulsory. Dealer packet photo pampithe cross-check chesthanu."
+        )
+
+    varieties = "; ".join(
+        f"{item['name']} ({item['fit']})"
+        for item in guidance["varieties"][:2]
+    )
+    checklist = guidance["purchaseChecklist"][0]
     return (
-        f"Naanna, {crop_name} kosam certified seed packet matrame theeskondi - local bill, batch number, mariyu sealed bag compulsory. "
-        f"Mee {water} situation batti short-duration lekapothe stress-tolerant variety adugandi. "
-        "Exact company peru cheppemundu dealer packet photo pampithe nenu cross-check chesthanu."
+        f"Naanna, {guidance['teluguName']} kosam nenu generic ga kaadu, packet-level ga chepthanu: {varieties}. "
+        f"{guidance['fitSummary']} certified seed packet, lot number, germination label compulsory. "
+        f"{checklist} Dealer packet photo pampithe nenu cross-check chesthanu."
     )
 
 

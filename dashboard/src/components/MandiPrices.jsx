@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function money(value) {
   return new Intl.NumberFormat("en-IN", {
@@ -12,23 +12,70 @@ function prettyLabel(value) {
   return value.replaceAll("_", " ");
 }
 
-export default function MandiPrices({ priceRows, weatherDaily }) {
-  const cropOptions = [...new Set(priceRows.map((row) => row.crop_slug))];
+function formatUtc(value) {
+  if (!value) return "—";
+  return new Date(value).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Kolkata",
+  });
+}
+
+export default function MandiPrices({ priceRows, weatherDaily, summary, liveContext }) {
+  const [marketContext, setMarketContext] = useState(null);
+  const liveSpotBoard = marketContext?.liveSpotBoard ?? liveContext?.liveSpotBoard ?? {};
+  const liveMarketBoard = marketContext?.liveMarketBoard ?? liveContext?.liveMarketBoard ?? {};
+  const cropOptions = [
+    ...new Set([...Object.keys(liveMarketBoard), ...Object.keys(liveSpotBoard)]),
+  ];
   const [selectedCrop, setSelectedCrop] = useState(
     cropOptions.includes("maize") ? "maize" : cropOptions[0],
   );
 
-  const visibleRows = priceRows
-    .filter((row) => row.crop_slug === selectedCrop)
-    .sort((left, right) => right.modal_price_rs_per_qtl - left.modal_price_rs_per_qtl);
+  useEffect(() => {
+    if (!cropOptions.length) {
+      return;
+    }
+    if (!selectedCrop || !cropOptions.includes(selectedCrop)) {
+      setSelectedCrop(cropOptions.includes("maize") ? "maize" : cropOptions[0]);
+    }
+  }, [cropOptions, selectedCrop]);
 
-  const topMarket = visibleRows[0];
-  const floorMarket = visibleRows[visibleRows.length - 1];
-  const averageModal =
-    visibleRows.reduce((sum, row) => sum + row.modal_price_rs_per_qtl, 0) /
-    Math.max(visibleRows.length, 1);
+  useEffect(() => {
+    let cancelled = false;
 
-  const forecastSlice = weatherDaily.slice(0, 5);
+    async function loadMarketsContext() {
+      try {
+        const response = await fetch("/api/markets/context");
+        if (!response.ok) {
+          throw new Error(`markets context failed: ${response.status}`);
+        }
+        const payload = await response.json();
+        if (!cancelled) {
+          setMarketContext(payload);
+        }
+      } catch (_error) {
+        if (!cancelled) {
+          setMarketContext(null);
+        }
+      }
+    }
+
+    loadMarketsContext();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const selectedSpot = liveSpotBoard[selectedCrop];
+  const selectedMarkets = liveMarketBoard[selectedCrop] ?? [];
+  const visibleRows = selectedMarkets.length
+    ? selectedMarkets
+    : (selectedSpot ? [selectedSpot] : []);
+  const primaryRow = selectedMarkets[0] ?? selectedSpot ?? null;
+
+  const weatherRows = marketContext?.weatherDaily ?? weatherDaily;
+  const forecastSlice = weatherRows.slice(0, 5);
   const peakRainDay = [...forecastSlice].sort(
     (left, right) =>
       right.precipitation_probability_max_pct - left.precipitation_probability_max_pct,
@@ -36,6 +83,9 @@ export default function MandiPrices({ priceRows, weatherDaily }) {
   const hottestDay = [...forecastSlice].sort(
     (left, right) => right.temperature_2m_max_c - left.temperature_2m_max_c,
   )[0];
+  const liveSpotMeta = marketContext?.liveSpot ?? liveContext?.liveSpot ?? {};
+  const liveMarketMeta = marketContext?.liveMarket ?? liveContext?.liveMarket ?? {};
+  const weatherMeta = marketContext?.weather ?? liveContext?.weather ?? {};
 
   return (
     <section className="section-shell">
@@ -44,11 +94,39 @@ export default function MandiPrices({ priceRows, weatherDaily }) {
           <span className="eyebrow eyebrow--soft">Market tape</span>
           <h2>Trade board and district weather stream</h2>
           <p>
-            The project treats missing live data as an honesty problem, not just
-            a technical problem. When live mandi feeds are unavailable, the
-            board falls back to historical rows instead of pretending certainty.
+            This page uses live mandi rows first. If Telangana has no current
+            row for a crop, it falls back to the nearest live state before
+            widening to India.
           </p>
         </div>
+      </div>
+
+      <div className="trade-source-strip">
+        <article className="trade-source-strip__card">
+          <span className="micro-label">Live mandi board</span>
+          <strong>{liveMarketMeta.mode ?? summary?.liveMarketMode ?? "—"}</strong>
+          <p>{liveMarketMeta.sourceLabel ?? "Live mandi board unavailable."}</p>
+          <small>
+            Freshness {formatUtc(liveMarketMeta.marketFreshnessUtc ?? summary?.liveMarketFreshnessUtc)} · {(liveMarketMeta.cropCount ?? summary?.liveMarketCropCount ?? 0)} crops
+          </small>
+        </article>
+        <article className="trade-source-strip__card">
+          <span className="micro-label">Fallback rule</span>
+          <strong>Telangana → nearby → India</strong>
+          <p>
+            The board stays live. It only widens scope when Telangana has no
+            current row for the crop.
+          </p>
+          <small>
+            Scope is shown crop by crop, instead of hiding the fallback.
+          </small>
+        </article>
+        <article className="trade-source-strip__card">
+          <span className="micro-label">Weather source</span>
+          <strong>{summary?.weatherMode ?? "—"}</strong>
+          <p>{weatherMeta.sourceLabel}</p>
+          <small>Freshness {formatUtc(summary?.weatherFreshnessUtc)}</small>
+        </article>
       </div>
 
       <div className="trade-ribbon">
@@ -82,44 +160,61 @@ export default function MandiPrices({ priceRows, weatherDaily }) {
             </div>
           </div>
 
-          <div className="market-callouts">
+          {!!visibleRows.length && <div className="market-callouts">
             <article className="market-callout market-callout--best">
-              <span className="micro-label">Best modal today</span>
-              <strong>{money(topMarket?.modal_price_rs_per_qtl ?? 0)}</strong>
-              <p>{topMarket?.mandi_name ?? "—"}</p>
+              <span className="micro-label">{selectedMarkets.length ? "Best live mandi row" : "Live crop spot"}</span>
+              <strong>{money(primaryRow?.modalPriceRsPerQtl ?? 0)}</strong>
+              <p>
+                {primaryRow
+                  ? `${primaryRow.marketName ?? primaryRow.representativeMarket} · ${primaryRow.scopeLabel}`
+                  : "Live spot unavailable"}
+              </p>
             </article>
             <article className="market-callout">
-              <span className="micro-label">District average</span>
-              <strong>{money(Math.round(averageModal || 0))}</strong>
-              <p>across {visibleRows.length} mandi rows</p>
+              <span className="micro-label">Representative district</span>
+              <strong>{primaryRow?.district ?? primaryRow?.representativeDistrict ?? "—"}</strong>
+              <p>{primaryRow?.state ?? primaryRow?.representativeState ?? "—"}</p>
             </article>
             <article className="market-callout">
-              <span className="micro-label">Lowest modal</span>
-              <strong>{money(floorMarket?.modal_price_rs_per_qtl ?? 0)}</strong>
-              <p>{floorMarket?.mandi_name ?? "—"}</p>
+              <span className="micro-label">Price band</span>
+              <strong>{money(primaryRow?.floorPriceRsPerQtl ?? 0)}</strong>
+              <p>to {money(primaryRow?.ceilingPriceRsPerQtl ?? 0)}</p>
             </article>
-          </div>
+            <article className="market-callout">
+              <span className="micro-label">Arrival date</span>
+              <strong>{primaryRow?.arrivalDate ?? "—"}</strong>
+              <p>{primaryRow?.commodityQuery ?? primaryRow?.source ?? "—"}</p>
+            </article>
+          </div>}
+
+          {!visibleRows.length && (
+            <div className="studio-placeholder">
+              No live mandi or crop spot row is available for this crop lane right now.
+            </div>
+          )}
 
           <div className="table-wrap">
             <table className="data-table">
               <thead>
                 <tr>
                   <th>Mandi</th>
+                  <th>District</th>
                   <th>Modal</th>
                   <th>Range</th>
-                  <th>Source</th>
+                  <th>Scope</th>
                 </tr>
               </thead>
               <tbody>
                 {visibleRows.map((row) => (
-                  <tr key={`${row.mandi_slug}-${row.crop_slug}`}>
-                    <td>{row.mandi_name}</td>
-                    <td>{money(row.modal_price_rs_per_qtl)}</td>
+                  <tr key={`${row.marketName ?? row.representativeMarket}-${row.arrivalDate}`}>
+                    <td>{row.marketName ?? row.representativeMarket}</td>
+                    <td>{row.district ?? row.representativeDistrict}</td>
+                    <td>{money(row.modalPriceRsPerQtl)}</td>
                     <td>
-                      {money(row.min_price_rs_per_qtl)} to {money(row.max_price_rs_per_qtl)}
+                      {money(row.floorPriceRsPerQtl)} to {money(row.ceilingPriceRsPerQtl)}
                     </td>
                     <td>
-                      {row.source === "historical_fallback" ? "historical fallback" : row.source}
+                      {row.scopeLabel}
                     </td>
                   </tr>
                 ))}

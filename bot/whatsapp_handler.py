@@ -32,13 +32,18 @@ from bot.telugu_voice import (
 )
 from disease.inference import diagnose_disease_image
 from data.nizamabad_district import CROPS, SCHEMES
-from engine.dashboard_payload import build_dashboard_analysis
+from engine.dashboard_payload import (
+    build_dashboard_analysis,
+    build_markets_context,
+    build_site_context,
+)
 from engine.district_cap import DistrictCapTracker
 from engine.crop_engine import (
     FarmerProfile as EngineFarmerProfile,
     generate_telugu_response,
     recommend,
 )
+from engine.soil_lookup import lookup_survey_context
 from engine.weather_pipeline import WeatherPipeline
 
 
@@ -78,6 +83,7 @@ class DashboardAnalyzeRequest(BaseModel):
     waterSource: str | None = None
     loanBurdenRs: int = Field(default=0, ge=0)
     lastCrops: list[str] = Field(default_factory=list)
+    surveyNumber: str | None = None
 
 if DASHBOARD_ASSETS_DIR.exists():
     app.mount(
@@ -116,6 +122,14 @@ async def dashboard_analyze(payload: DashboardAnalyzeRequest) -> dict:
         mandal = payload.mandal.strip().lower()
         soil_zone = payload.soilZone.strip().lower() if payload.soilZone else None
         water_source = payload.waterSource.strip().lower() if payload.waterSource else None
+        survey_context = lookup_survey_context(mandal, payload.surveyNumber)
+        default_soil = EngineFarmerProfile(mandal=mandal, acres=1).soil_zone
+        default_water = EngineFarmerProfile(mandal=mandal, acres=1).water_source
+        if survey_context:
+            if not soil_zone or soil_zone == default_soil:
+                soil_zone = survey_context.get("soilZone") or soil_zone
+            if not water_source or water_source == default_water:
+                water_source = survey_context.get("waterSource") or water_source
         last_crops = [
             item.strip().lower().replace(" ", "_")
             for item in payload.lastCrops
@@ -129,11 +143,26 @@ async def dashboard_analyze(payload: DashboardAnalyzeRequest) -> dict:
             loan_burden_rs=int(payload.loanBurdenRs),
             last_crops=last_crops,
             farmer_id="dashboard-live",
+            survey_number=payload.surveyNumber,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    return build_dashboard_analysis(farmer)
+    return build_dashboard_analysis(farmer, soil_context=survey_context)
+
+
+@app.get("/api/site/context")
+async def site_context() -> dict:
+    """Return live website payload with backend market/weather context."""
+
+    return build_site_context()
+
+
+@app.get("/api/markets/context")
+async def markets_context() -> dict:
+    """Return the heavy live market context only for the markets surface."""
+
+    return build_markets_context()
 
 
 @app.get("/dashboard")

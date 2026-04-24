@@ -5,12 +5,18 @@ Rythu Mitra — Crop Recommendation Engine
 
 import sys
 import os
+from functools import lru_cache
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data.nizamabad_district import (
     MANDALS, CROPS, DISTRICT_PLANTED_ACRES,
     BOT_RECOMMENDED_ACRES, CURRENT_SEASON
+)
+from engine.cap_logic import (
+    TELUGU_COMPETITION_LABELS,
+    derive_pressure_status,
+    get_effective_safe_cap,
 )
 from engine.district_cap import DistrictCapTracker
 from engine.weather_pipeline import WeatherPipeline
@@ -53,7 +59,8 @@ class FarmerProfile:
 
 # ── WEATHER STUB (replaced by Open-Meteo API in production) ───────────────────
 
-def get_weather_forecast(mandal: str) -> dict:
+@lru_cache(maxsize=1)
+def _district_weather_forecast() -> dict:
     """
     Returns season-aware rainfall and temperature guidance.
     Uses district seasonal expectations plus a live Open-Meteo short-term read
@@ -94,6 +101,13 @@ def get_weather_forecast(mandal: str) -> dict:
         }
     except Exception:
         return fallback
+
+
+def get_weather_forecast(mandal: str) -> dict:
+    """
+    Mandal arg stays for API compatibility, but the forecast is district-wide.
+    """
+    return dict(_district_weather_forecast())
 
 
 # ── FILTER 1: SOIL MATCH ───────────────────────────────────────────────────────
@@ -171,7 +185,7 @@ def filter_supply_cap(candidates: list, mandal: str,
 
     for crop in candidates:
         crop_data = CROPS[crop]
-        safe_cap = crop_data.get("safe_cap_acres")
+        safe_cap, cap_basis = get_effective_safe_cap(crop)
         planted = DISTRICT_PLANTED_ACRES.get(crop, 0)
         bot_rec = BOT_RECOMMENDED_ACRES.get(crop, 0) + season_bot_acres.get(crop, 0)
         total_acres = planted + bot_rec
@@ -194,22 +208,16 @@ def filter_supply_cap(candidates: list, mandal: str,
                 "safe_cap": None,
                 "pct_filled": None,
                 "projected_pct_filled": None,
-                "cap_basis": "legacy_baseline_only",
+                "cap_basis": cap_basis,
             }
             keep.append(crop)
             continue
 
-        pct_filled = (total_acres / safe_cap) * 100 if safe_cap > 0 else 100
-        projected_pct = (projected_total / safe_cap) * 100 if safe_cap > 0 else 100
-
-        if total_acres >= safe_cap or projected_total > safe_cap:
-            status = "REJECT"
-        elif projected_pct >= 70:
-            status = "OVERSUPPLY"   # still viable but warn farmer
-        elif projected_pct >= 45:
-            status = "MEDIUM"
-        else:
-            status = "LOW"          # best opportunity
+        status, pct_filled, projected_pct = derive_pressure_status(
+            total_acres,
+            projected_total,
+            safe_cap,
+        )
 
         supply_info[crop] = {
             "status": status,
@@ -218,8 +226,9 @@ def filter_supply_cap(candidates: list, mandal: str,
             "total_acres": total_acres,
             "projected_total_acres": projected_total,
             "safe_cap": safe_cap,
-            "pct_filled": round(pct_filled, 1),
-            "projected_pct_filled": round(projected_pct, 1),
+            "pct_filled": pct_filled,
+            "projected_pct_filled": projected_pct,
+            "cap_basis": cap_basis,
         }
 
         if status != "REJECT":
@@ -455,11 +464,7 @@ def generate_telugu_response(result: dict) -> str:
 
     crop_tel = CROPS[top["crop"]].get("telugu_name", top["crop"])
     sup = supply.get(top["crop"], {})
-    competition_label = {
-        "LOW": "takkuva mandhi vestunnaru — meeru ki advantage",
-        "MEDIUM": "moderate competition undi",
-        "OVERSUPPLY": "chala mandhi vestunnaru — risk ekkuva",
-    }.get(sup.get("status", "MEDIUM"), "")
+    competition_label = TELUGU_COMPETITION_LABELS.get(sup.get("status", "MEDIUM"), "")
 
     lines = [
         f"Naanna, naanu {f.acres} acres, {f.soil_zone} soil, "

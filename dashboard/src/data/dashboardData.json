@@ -1,17 +1,43 @@
 {
   "summary": {
-    "generatedAtUtc": "2026-04-20T02:37:09.450311+00:00",
+    "generatedAtUtc": "2026-04-24T01:40:49.845198+00:00",
     "currentSeason": "kharif_2025",
     "mandalCount": 36,
     "mandiCount": 6,
     "cropCount": 15,
     "activeRecommendationCrops": 14,
-    "oversuppliedCropCount": 3,
-    "openOpportunityCropCount": 8,
     "mandalTopPickCount": 36,
+    "oversuppliedCropCount": 8,
+    "openOpportunityCropCount": 3,
     "priceRowCount": 27,
-    "weatherDayCount": 7
+    "weatherDayCount": 7,
+    "priceSourceLabel": "Cached mandi board from the latest backend sync. Some rows may still use historical fallback if live mandi pairs were missing.",
+    "priceMode": "cached",
+    "priceFreshnessUtc": "2026-04-19T16:44:09.449843+00:00",
+    "liveMarketMode": "disabled",
+    "liveMarketFreshnessUtc": null,
+    "liveMarketCropCount": 0,
+    "liveSpotMode": "live",
+    "liveSpotFreshnessUtc": "2026-04-21",
+    "liveSpotCropCount": 12,
+    "weatherSourceLabel": "Live district weather stream from Open-Meteo for Nizamabad.",
+    "weatherMode": "live",
+    "weatherFreshnessUtc": "2026-04-24T01:40:48.572638+00:00"
   },
+  "proofCards": [
+    {
+      "title": "The shortlist is earned",
+      "body": "Every crop must survive season, soil, water, pressure, and floor-profit checks before it can appear."
+    },
+    {
+      "title": "Blocked crops still stay visible",
+      "body": "Crowded lanes like paddy or turmeric still show price and downside, so the market is visible even when the answer is no."
+    },
+    {
+      "title": "This is more than a market board",
+      "body": "Prices stay visible, but so do crowding, downside, and the exact reason one crop survives while another does not."
+    }
+  ],
   "cropCaps": [
     {
       "slug": "paddy",
@@ -26,8 +52,10 @@
       "botRecommendedAcres": 0,
       "totalAcres": 429000,
       "pctFilled": 107.2,
+      "projectedPctFilled": 107.2,
       "status": "REJECT",
-      "statusLabel": "already crowded"
+      "statusLabel": "already crowded",
+      "capBasis": "official_safe_cap"
     },
     {
       "slug": "turmeric",
@@ -42,8 +70,10 @@
       "botRecommendedAcres": 0,
       "totalAcres": 92000,
       "pctFilled": 153.3,
+      "projectedPctFilled": 153.3,
       "status": "REJECT",
-      "statusLabel": "already crowded"
+      "statusLabel": "already crowded",
+      "capBasis": "official_safe_cap"
     },
     {
       "slug": "maize",
@@ -56,11 +86,50 @@
       "active": true,
       "safeCapAcres": 250000,
       "plantedAcres": 180000,
-      "botRecommendedAcres": 0,
-      "totalAcres": 180000,
+      "botRecommendedAcres": 40,
+      "totalAcres": 180040,
       "pctFilled": 72.0,
+      "projectedPctFilled": 72.0,
       "status": "OVERSUPPLY",
-      "statusLabel": "high caution"
+      "statusLabel": "high caution",
+      "capBasis": "official_safe_cap"
+    },
+    {
+      "slug": "bengal_gram",
+      "name": "Bengal Gram",
+      "teluguName": "సెనగలు",
+      "season": [
+        "rabi"
+      ],
+      "active": true,
+      "safeCapAcres": 12064,
+      "plantedAcres": 6894,
+      "botRecommendedAcres": 0,
+      "totalAcres": 6894,
+      "pctFilled": 57.1,
+      "projectedPctFilled": 57.1,
+      "status": "APPROACHING",
+      "statusLabel": "approaching cap",
+      "capBasis": "adaptive_reference_cap"
+    },
+    {
+      "slug": "groundnut",
+      "name": "Groundnut",
+      "teluguName": "వేరుశెనగ",
+      "season": [
+        "kharif",
+        "rabi"
+      ],
+      "active": true,
+      "safeCapAcres": 2680,
+      "plantedAcres": 1544,
+      "botRecommendedAcres": 0,
+      "totalAcres": 1544,
+      "pctFilled": 57.6,
+      "projectedPctFilled": 57.6,
+      "status": "APPROACHING",
+      "statusLabel": "approaching cap",
+      "capBasis": "adaptive_reference_cap"
     },
     {
       "slug": "red_gram",
@@ -75,8 +144,10 @@
       "botRecommendedAcres": 0,
       "totalAcres": 45000,
       "pctFilled": 56.2,
-      "status": "MEDIUM",
-      "statusLabel": "watch closely"
+      "projectedPctFilled": 56.2,
+      "status": "APPROACHING",
+      "statusLabel": "approaching cap",
+      "capBasis": "official_safe_cap"
     },
     {
       "slug": "soybean",
@@ -88,11 +159,13 @@
       "active": true,
       "safeCapAcres": 150000,
       "plantedAcres": 95000,
-      "botRecommendedAcres": 0,
-      "totalAcres": 95000,
-      "pctFilled": 63.3,
-      "status": "MEDIUM",
-      "statusLabel": "watch closely"
+      "botRecommendedAcres": 68,
+      "totalAcres": 95068,
+      "pctFilled": 63.4,
+      "projectedPctFilled": 63.4,
+      "status": "APPROACHING",
+      "statusLabel": "approaching cap",
+      "capBasis": "official_safe_cap"
     },
     {
       "slug": "sugarcane",
@@ -107,24 +180,10 @@
       "botRecommendedAcres": 0,
       "totalAcres": 25000,
       "pctFilled": 62.5,
-      "status": "MEDIUM",
-      "statusLabel": "watch closely"
-    },
-    {
-      "slug": "bengal_gram",
-      "name": "Bengal Gram",
-      "teluguName": "సెనగలు",
-      "season": [
-        "rabi"
-      ],
-      "active": true,
-      "safeCapAcres": null,
-      "plantedAcres": 6894,
-      "botRecommendedAcres": 0,
-      "totalAcres": 6894,
-      "pctFilled": null,
-      "status": "LOW",
-      "statusLabel": "legacy baseline"
+      "projectedPctFilled": 62.5,
+      "status": "APPROACHING",
+      "statusLabel": "approaching cap",
+      "capBasis": "official_safe_cap"
     },
     {
       "slug": "black_gram",
@@ -135,13 +194,53 @@
         "rabi"
       ],
       "active": true,
-      "safeCapAcres": null,
+      "safeCapAcres": 4362,
       "plantedAcres": 2296,
       "botRecommendedAcres": 0,
       "totalAcres": 2296,
-      "pctFilled": null,
-      "status": "LOW",
-      "statusLabel": "legacy baseline"
+      "pctFilled": 52.6,
+      "projectedPctFilled": 52.6,
+      "status": "MEDIUM",
+      "statusLabel": "watch closely",
+      "capBasis": "adaptive_reference_cap"
+    },
+    {
+      "slug": "jowar",
+      "name": "Jowar",
+      "teluguName": "జొన్న",
+      "season": [
+        "kharif",
+        "rabi"
+      ],
+      "active": true,
+      "safeCapAcres": 3966,
+      "plantedAcres": 2167,
+      "botRecommendedAcres": 0,
+      "totalAcres": 2167,
+      "pctFilled": 54.6,
+      "projectedPctFilled": 54.6,
+      "status": "MEDIUM",
+      "statusLabel": "watch closely",
+      "capBasis": "adaptive_reference_cap"
+    },
+    {
+      "slug": "sesame",
+      "name": "Sesame",
+      "teluguName": "నువ్వులు",
+      "season": [
+        "kharif",
+        "zaid"
+      ],
+      "active": true,
+      "safeCapAcres": 9450,
+      "plantedAcres": 5164,
+      "botRecommendedAcres": 0,
+      "totalAcres": 5164,
+      "pctFilled": 54.6,
+      "projectedPctFilled": 54.6,
+      "status": "MEDIUM",
+      "statusLabel": "watch closely",
+      "capBasis": "adaptive_reference_cap"
     },
     {
       "slug": "cotton",
@@ -156,8 +255,10 @@
       "botRecommendedAcres": 0,
       "totalAcres": 18000,
       "pctFilled": 22.5,
+      "projectedPctFilled": 22.5,
       "status": "LOW",
-      "statusLabel": "opportunity"
+      "statusLabel": "open lane",
+      "capBasis": "official_safe_cap"
     },
     {
       "slug": "green_gram",
@@ -172,59 +273,10 @@
       "botRecommendedAcres": 0,
       "totalAcres": 12000,
       "pctFilled": 12.0,
+      "projectedPctFilled": 12.0,
       "status": "LOW",
-      "statusLabel": "opportunity"
-    },
-    {
-      "slug": "groundnut",
-      "name": "Groundnut",
-      "teluguName": "వేరుశెనగ",
-      "season": [
-        "kharif",
-        "rabi"
-      ],
-      "active": true,
-      "safeCapAcres": null,
-      "plantedAcres": 1544,
-      "botRecommendedAcres": 0,
-      "totalAcres": 1544,
-      "pctFilled": null,
-      "status": "LOW",
-      "statusLabel": "legacy baseline"
-    },
-    {
-      "slug": "jowar",
-      "name": "Jowar",
-      "teluguName": "జొన్న",
-      "season": [
-        "kharif",
-        "rabi"
-      ],
-      "active": true,
-      "safeCapAcres": null,
-      "plantedAcres": 2167,
-      "botRecommendedAcres": 0,
-      "totalAcres": 2167,
-      "pctFilled": null,
-      "status": "LOW",
-      "statusLabel": "legacy baseline"
-    },
-    {
-      "slug": "sesame",
-      "name": "Sesame",
-      "teluguName": "నువ్వులు",
-      "season": [
-        "kharif",
-        "zaid"
-      ],
-      "active": true,
-      "safeCapAcres": null,
-      "plantedAcres": 5164,
-      "botRecommendedAcres": 0,
-      "totalAcres": 5164,
-      "pctFilled": null,
-      "status": "LOW",
-      "statusLabel": "legacy baseline"
+      "statusLabel": "open lane",
+      "capBasis": "official_safe_cap"
     },
     {
       "slug": "sunflower",
@@ -239,8 +291,10 @@
       "botRecommendedAcres": 0,
       "totalAcres": 5000,
       "pctFilled": 8.3,
+      "projectedPctFilled": 8.3,
       "status": "LOW",
-      "statusLabel": "opportunity"
+      "statusLabel": "open lane",
+      "capBasis": "official_safe_cap"
     }
   ],
   "mandals": [
@@ -250,14 +304,17 @@
       "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 41,
+      "snapshotAcres": 10.0,
+      "signalSource": "cluster_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
         "Maize",
-        "Turmeric",
         "Soybean"
       ],
       "nearestMandi": "Armur",
       "nearestMandiDistanceKm": 4,
+      "bestMandi": "Armur",
+      "bestMandiNetPerQtlRs": 2331,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -277,11 +334,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Cluster twin built from 6 recent signals across similar Deep Calcareous / Mixed mandals like Nandipet."
     },
     {
       "slug": "balkonda",
@@ -289,6 +351,9 @@
       "soilZone": "black_cotton",
       "waterSource": "rainfed",
       "villages": 44,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Cotton",
         "Soybean",
@@ -297,6 +362,8 @@
       ],
       "nearestMandi": "Balkonda",
       "nearestMandiDistanceKm": 5,
+      "bestMandi": "Balkonda",
+      "bestMandiNetPerQtlRs": 6266,
       "topPick": {
         "slug": "cotton",
         "name": "Cotton",
@@ -315,11 +382,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 176456,
+      "topPickExpectedProfit": 213578,
       "topPickWorstProfit": 112560,
+      "topPickPriceCurrent": 7377,
+      "topPickCompetitionPctFilled": 22.5,
+      "topPickCompetitionStatusLabel": "open lane",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "LOW",
       "notes": "Black cotton soil well-suited for cotton. Low local competition.",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "banswada",
@@ -327,6 +399,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 55,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -334,89 +409,14 @@
       ],
       "nearestMandi": "Banswada",
       "nearestMandiDistanceKm": 4,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5356,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
         "season": [
           "kharif"
-        ],
-        "active": true
-      },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
-      "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
-    },
-    {
-      "slug": "bheemgal",
-      "name": "Bheemgal",
-      "soilZone": "red_clayey",
-      "waterSource": "rainfed",
-      "villages": 25,
-      "primaryCrops": [
-        "Maize",
-        "Red Gram",
-        "Sunflower"
-      ],
-      "nearestMandi": "Kamareddy",
-      "nearestMandiDistanceKm": 30,
-      "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
-        "slug": "soybean",
-        "name": "Soybean",
-        "teluguName": "సోయాబీన్",
-        "season": [
-          "kharif"
-        ],
-        "active": true
-      },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
-      "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
-    },
-    {
-      "slug": "bhiknoor",
-      "name": "Bhiknoor",
-      "soilZone": "mixed",
-      "waterSource": "mixed",
-      "villages": 31,
-      "primaryCrops": [
-        "Maize",
-        "Soybean",
-        "Paddy"
-      ],
-      "nearestMandi": "Kamareddy",
-      "nearestMandiDistanceKm": 16,
-      "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
         ],
         "active": true
       },
@@ -429,11 +429,110 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
+      "notes": "",
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
+    },
+    {
+      "slug": "bheemgal",
+      "name": "Bheemgal",
+      "soilZone": "red_clayey",
+      "waterSource": "rainfed",
+      "villages": 25,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
+      "primaryCrops": [
+        "Maize",
+        "Red Gram",
+        "Sunflower"
+      ],
+      "nearestMandi": "Kamareddy",
+      "nearestMandiDistanceKm": 30,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5347,
+      "topPick": {
+        "slug": "soybean",
+        "name": "Soybean",
+        "teluguName": "సోయాబీన్",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
+      "notes": "",
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
+    },
+    {
+      "slug": "bhiknoor",
+      "name": "Bhiknoor",
+      "soilZone": "deep_calcareous",
+      "waterSource": "mixed",
+      "villages": 31,
+      "snapshotAcres": 10.0,
+      "signalSource": "water_twin",
+      "signalSampleSize": 6,
+      "primaryCrops": [
+        "Maize",
+        "Soybean"
+      ],
+      "nearestMandi": "Kamareddy",
+      "nearestMandiDistanceKm": 16,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 2330,
+      "topPick": {
+        "slug": "maize",
+        "name": "Maize",
+        "teluguName": "మొక్కజొన్న",
+        "season": [
+          "kharif",
+          "rabi"
+        ],
+        "active": true
+      },
+      "secondPick": {
+        "slug": "cotton",
+        "name": "Cotton",
+        "teluguName": "పత్తి",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Water twin built from 6 recent signals across Mixed mandals like Nandipet."
     },
     {
       "slug": "bichkunda",
@@ -441,6 +540,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 34,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Red Gram",
         "Maize",
@@ -448,17 +550,9 @@
       ],
       "nearestMandi": "Banswada",
       "nearestMandiDistanceKm": 28,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5338,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -467,11 +561,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "Dryland pulse and oilseed belt toward Karnataka/Maharashtra side.",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "birkoor",
@@ -479,6 +587,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 29,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -486,17 +597,9 @@
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 20,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5355,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -505,11 +608,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "bodhan",
@@ -517,6 +634,9 @@
       "soilZone": "black_cotton",
       "waterSource": "canal",
       "villages": 52,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Sugarcane",
         "Paddy",
@@ -525,6 +645,8 @@
       ],
       "nearestMandi": "Bodhan",
       "nearestMandiDistanceKm": 5,
+      "bestMandi": "Bodhan",
+      "bestMandiNetPerQtlRs": 362,
       "topPick": {
         "slug": "sugarcane",
         "name": "Sugarcane",
@@ -545,9 +667,14 @@
       },
       "topPickExpectedProfit": 381160,
       "topPickWorstProfit": 381160,
-      "competitionStatus": "MEDIUM",
+      "topPickPriceCurrent": 370,
+      "topPickCompetitionPctFilled": 62.5,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
+      "competitionStatus": "APPROACHING",
       "notes": "Sugar mill present. Only mandal where sugarcane is viable.",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "chandur",
@@ -555,6 +682,9 @@
       "soilZone": "black_cotton",
       "waterSource": "rainfed",
       "villages": 24,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Cotton",
         "Soybean",
@@ -562,6 +692,8 @@
       ],
       "nearestMandi": "Bodhan",
       "nearestMandiDistanceKm": 20,
+      "bestMandi": "Bodhan",
+      "bestMandiNetPerQtlRs": 6254,
       "topPick": {
         "slug": "cotton",
         "name": "Cotton",
@@ -580,31 +712,41 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 176456,
+      "topPickExpectedProfit": 213578,
       "topPickWorstProfit": 112560,
+      "topPickPriceCurrent": 7377,
+      "topPickCompetitionPctFilled": 22.5,
+      "topPickCompetitionStatusLabel": "open lane",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "LOW",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "dichpally",
       "name": "Dichpally",
       "soilZone": "deep_calcareous",
-      "waterSource": "canal",
+      "waterSource": "mixed",
       "villages": 40,
+      "snapshotAcres": 10.0,
+      "signalSource": "soil_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
-        "Turmeric",
-        "Maize"
+        "Maize",
+        "Soybean"
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 20,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 2329,
       "topPick": {
-        "slug": "sugarcane",
-        "name": "Sugarcane",
-        "teluguName": "చెరకు",
+        "slug": "maize",
+        "name": "Maize",
+        "teluguName": "మొక్కజొన్న",
         "season": [
-          "kharif"
+          "kharif",
+          "rabi"
         ],
         "active": true
       },
@@ -617,11 +759,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 381160,
-      "topPickWorstProfit": 381160,
-      "competitionStatus": "MEDIUM",
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
+      "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Soil twin built from 6 recent signals across Deep Calcareous mandals like Nandipet."
     },
     {
       "slug": "domakonda",
@@ -629,6 +776,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 30,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -636,17 +786,9 @@
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 18,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5356,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -655,11 +797,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "gandhari",
@@ -667,6 +823,9 @@
       "soilZone": "black_cotton",
       "waterSource": "rainfed",
       "villages": 39,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Cotton",
         "Soybean",
@@ -674,6 +833,8 @@
       ],
       "nearestMandi": "Banswada",
       "nearestMandiDistanceKm": 24,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 6240,
       "topPick": {
         "slug": "cotton",
         "name": "Cotton",
@@ -692,11 +853,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 176456,
+      "topPickExpectedProfit": 213578,
       "topPickWorstProfit": 112560,
+      "topPickPriceCurrent": 7377,
+      "topPickCompetitionPctFilled": 22.5,
+      "topPickCompetitionStatusLabel": "open lane",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "LOW",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "indalwai",
@@ -704,6 +870,9 @@
       "soilZone": "mixed",
       "waterSource": "rainfed",
       "villages": 29,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -711,17 +880,9 @@
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 35,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 7603,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "red_gram",
         "name": "Red Gram",
         "teluguName": "కందులు",
@@ -730,11 +891,26 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "groundnut",
+        "name": "Groundnut",
+        "teluguName": "వేరుశెనగ",
+        "season": [
+          "kharif",
+          "rabi"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 201338,
+      "topPickWorstProfit": 96850,
+      "topPickPriceCurrent": 8054,
+      "topPickCompetitionPctFilled": 56.3,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 57.8,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "jakranpally",
@@ -742,13 +918,17 @@
       "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 36,
+      "snapshotAcres": 10.0,
+      "signalSource": "cluster_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
-        "Turmeric",
-        "Maize"
+        "Maize",
+        "Soybean"
       ],
       "nearestMandi": "Armur",
       "nearestMandiDistanceKm": 25,
+      "bestMandi": "Armur",
+      "bestMandiNetPerQtlRs": 2329,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -768,11 +948,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Cluster twin built from 6 recent signals across similar Deep Calcareous / Mixed mandals like Nandipet."
     },
     {
       "slug": "jukkal",
@@ -780,6 +965,9 @@
       "soilZone": "black_cotton",
       "waterSource": "rainfed",
       "villages": 35,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Cotton",
         "Red Gram",
@@ -787,6 +975,8 @@
       ],
       "nearestMandi": "Banswada",
       "nearestMandiDistanceKm": 34,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 6230,
       "topPick": {
         "slug": "cotton",
         "name": "Cotton",
@@ -805,11 +995,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 176456,
+      "topPickExpectedProfit": 213578,
       "topPickWorstProfit": 112560,
+      "topPickPriceCurrent": 7377,
+      "topPickCompetitionPctFilled": 22.5,
+      "topPickCompetitionStatusLabel": "open lane",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "LOW",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "kamareddy",
@@ -817,6 +1012,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 60,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -825,17 +1023,9 @@
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 3,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5365,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -844,11 +1034,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "kotagiri",
@@ -856,13 +1060,17 @@
       "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 35,
+      "snapshotAcres": 10.0,
+      "signalSource": "cluster_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Turmeric",
-        "Paddy",
-        "Maize"
+        "Maize",
+        "Soybean"
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 25,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 2329,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -882,11 +1090,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Cluster twin built from 6 recent signals across similar Deep Calcareous / Mixed mandals like Nandipet."
     },
     {
       "slug": "kubeer",
@@ -894,12 +1107,17 @@
       "soilZone": "black_cotton",
       "waterSource": "rainfed",
       "villages": 20,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Cotton",
         "Soybean"
       ],
       "nearestMandi": "Balkonda",
       "nearestMandiDistanceKm": 15,
+      "bestMandi": "Balkonda",
+      "bestMandiNetPerQtlRs": 6259,
       "topPick": {
         "slug": "cotton",
         "name": "Cotton",
@@ -918,11 +1136,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 176456,
+      "topPickExpectedProfit": 213578,
       "topPickWorstProfit": 112560,
+      "topPickPriceCurrent": 7377,
+      "topPickCompetitionPctFilled": 22.5,
+      "topPickCompetitionStatusLabel": "open lane",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "LOW",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "lingampet",
@@ -930,6 +1153,9 @@
       "soilZone": "mixed",
       "waterSource": "rainfed",
       "villages": 27,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Red Gram",
@@ -937,17 +1163,9 @@
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 32,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 7607,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "red_gram",
         "name": "Red Gram",
         "teluguName": "కందులు",
@@ -956,11 +1174,26 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "groundnut",
+        "name": "Groundnut",
+        "teluguName": "వేరుశెనగ",
+        "season": [
+          "kharif",
+          "rabi"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 201338,
+      "topPickWorstProfit": 96850,
+      "topPickPriceCurrent": 8054,
+      "topPickCompetitionPctFilled": 56.3,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 57.8,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "machareddy",
@@ -968,6 +1201,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 33,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -975,17 +1211,9 @@
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 14,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5360,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -994,11 +1222,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "madnoor",
@@ -1006,6 +1248,9 @@
       "soilZone": "black_cotton",
       "waterSource": "rainfed",
       "villages": 35,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Cotton",
         "Soybean",
@@ -1013,6 +1258,8 @@
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 40,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 6237,
       "topPick": {
         "slug": "cotton",
         "name": "Cotton",
@@ -1031,11 +1278,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 176456,
+      "topPickExpectedProfit": 213578,
       "topPickWorstProfit": 112560,
+      "topPickPriceCurrent": 7377,
+      "topPickCompetitionPctFilled": 22.5,
+      "topPickCompetitionStatusLabel": "open lane",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "LOW",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "morthad",
@@ -1043,6 +1295,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 27,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -1050,17 +1305,9 @@
       ],
       "nearestMandi": "Banswada",
       "nearestMandiDistanceKm": 20,
+      "bestMandi": "Banswada",
+      "bestMandiNetPerQtlRs": null,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -1069,11 +1316,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "mosra",
@@ -1081,6 +1342,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 28,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -1088,17 +1352,9 @@
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 25,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5351,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -1107,11 +1363,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "nagareddipet",
@@ -1119,6 +1389,9 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 25,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean",
@@ -1126,17 +1399,9 @@
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 12,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5361,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -1145,11 +1410,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "nandipet",
@@ -1157,14 +1436,17 @@
       "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 47,
+      "snapshotAcres": 10.0,
+      "signalSource": "live_mandal_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
-        "Turmeric",
         "Maize",
         "Soybean"
       ],
       "nearestMandi": "Nandipet",
       "nearestMandiDistanceKm": 10,
+      "bestMandi": "Nandipet",
+      "bestMandiNetPerQtlRs": 2331,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -1184,11 +1466,16 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "OVERSUPPLY",
       "notes": "Annaram village is here. Godavari river border on east. Local deep calcareous tracts are not treated as cotton-suitable in this project.",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Live mandal twin built from 6 recent farmer recommendations. Median acreage 10.0 with dominant Deep Calcareous soil and Mixed water."
     },
     {
       "slug": "navipet",
@@ -1196,13 +1483,17 @@
       "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 33,
+      "snapshotAcres": 10.0,
+      "signalSource": "cluster_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
         "Maize",
         "Soybean"
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 30,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 2328,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -1222,26 +1513,34 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Cluster twin built from 6 recent signals across similar Deep Calcareous / Mixed mandals like Nandipet."
     },
     {
       "slug": "nizamabad_rural",
       "name": "Nizamabad Rural",
-      "soilZone": "mixed",
+      "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 38,
+      "snapshotAcres": 10.0,
+      "signalSource": "water_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
         "Maize",
-        "Turmeric",
-        "Vegetables"
+        "Soybean"
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 8,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 2331,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -1253,19 +1552,24 @@
         "active": true
       },
       "secondPick": {
-        "slug": "red_gram",
-        "name": "Red Gram",
-        "teluguName": "కందులు",
+        "slug": "cotton",
+        "name": "Cotton",
+        "teluguName": "పత్తి",
         "season": [
           "kharif"
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Water twin built from 6 recent signals across Mixed mandals like Nandipet."
     },
     {
       "slug": "nizamsagar",
@@ -1273,13 +1577,17 @@
       "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 29,
+      "snapshotAcres": 10.0,
+      "signalSource": "cluster_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
         "Maize",
         "Soybean"
       ],
       "nearestMandi": "Banswada",
       "nearestMandiDistanceKm": 22,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 2328,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -1299,35 +1607,35 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "Tank command influence gives some irrigation support.",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Cluster twin built from 6 recent signals across similar Deep Calcareous / Mixed mandals like Nandipet."
     },
     {
       "slug": "pitlam",
       "name": "Pitlam",
       "soilZone": "deep_calcareous",
-      "waterSource": "canal",
+      "waterSource": "mixed",
       "villages": 38,
+      "snapshotAcres": 10.0,
+      "signalSource": "soil_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
-        "Turmeric",
-        "Maize"
+        "Maize",
+        "Soybean"
       ],
       "nearestMandi": "Armur",
       "nearestMandiDistanceKm": 18,
+      "bestMandi": "Armur",
+      "bestMandiNetPerQtlRs": 2330,
       "topPick": {
-        "slug": "cotton",
-        "name": "Cotton",
-        "teluguName": "పత్తి",
-        "season": [
-          "kharif"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "maize",
         "name": "Maize",
         "teluguName": "మొక్కజొన్న",
@@ -1337,11 +1645,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 302184,
-      "topPickWorstProfit": 206340,
-      "competitionStatus": "LOW",
+      "secondPick": {
+        "slug": "cotton",
+        "name": "Cotton",
+        "teluguName": "పత్తి",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
+      "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Soil twin built from 6 recent signals across Deep Calcareous mandals like Nandipet."
     },
     {
       "slug": "renjal",
@@ -1349,12 +1671,17 @@
       "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 32,
+      "snapshotAcres": 10.0,
+      "signalSource": "cluster_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
-        "Turmeric"
+        "Maize",
+        "Soybean"
       ],
       "nearestMandi": "Armur",
       "nearestMandiDistanceKm": 15,
+      "bestMandi": "Armur",
+      "bestMandiNetPerQtlRs": 2330,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -1374,31 +1701,41 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Cluster twin built from 6 recent signals across similar Deep Calcareous / Mixed mandals like Nandipet."
     },
     {
       "slug": "rudrur",
       "name": "Rudrur",
       "soilZone": "deep_calcareous",
-      "waterSource": "canal",
+      "waterSource": "mixed",
       "villages": 40,
+      "snapshotAcres": 10.0,
+      "signalSource": "soil_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
-        "Turmeric",
-        "Sugarcane"
+        "Maize",
+        "Soybean"
       ],
       "nearestMandi": "Bodhan",
       "nearestMandiDistanceKm": 15,
+      "bestMandi": "Bodhan",
+      "bestMandiNetPerQtlRs": null,
       "topPick": {
-        "slug": "sugarcane",
-        "name": "Sugarcane",
-        "teluguName": "చెరకు",
+        "slug": "maize",
+        "name": "Maize",
+        "teluguName": "మొక్కజొన్న",
         "season": [
-          "kharif"
+          "kharif",
+          "rabi"
         ],
         "active": true
       },
@@ -1411,25 +1748,34 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 381160,
-      "topPickWorstProfit": 381160,
-      "competitionStatus": "MEDIUM",
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
+      "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Soil twin built from 6 recent signals across Deep Calcareous mandals like Nandipet."
     },
     {
       "slug": "sarangapur",
       "name": "Sarangapur",
-      "soilZone": "mixed",
+      "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 31,
+      "snapshotAcres": 10.0,
+      "signalSource": "water_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
         "Maize",
         "Soybean"
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 25,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 2329,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -1441,19 +1787,24 @@
         "active": true
       },
       "secondPick": {
-        "slug": "red_gram",
-        "name": "Red Gram",
-        "teluguName": "కందులు",
+        "slug": "cotton",
+        "name": "Cotton",
+        "teluguName": "పత్తి",
         "season": [
           "kharif"
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Water twin built from 6 recent signals across Mixed mandals like Nandipet."
     },
     {
       "slug": "sirkonda",
@@ -1461,23 +1812,18 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 18,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Red Gram"
       ],
       "nearestMandi": "Kamareddy",
       "nearestMandiDistanceKm": 20,
+      "bestMandi": "Kamareddy",
+      "bestMandiNetPerQtlRs": 5355,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -1486,11 +1832,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "tadwai",
@@ -1498,23 +1858,18 @@
       "soilZone": "red_clayey",
       "waterSource": "rainfed",
       "villages": 22,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Maize",
         "Soybean"
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 60,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 5324,
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
@@ -1523,11 +1878,25 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
-      "competitionStatus": "OVERSUPPLY",
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true
+      },
+      "topPickExpectedProfit": 183055,
+      "topPickWorstProfit": 108085,
+      "topPickPriceCurrent": 5300,
+      "topPickCompetitionPctFilled": 63.4,
+      "topPickCompetitionStatusLabel": "approaching cap",
+      "secondPickCompetitionPctFilled": 56.3,
+      "secondPickCompetitionStatusLabel": "approaching cap",
+      "competitionStatus": "APPROACHING",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "varni",
@@ -1535,6 +1904,9 @@
       "soilZone": "black_cotton",
       "waterSource": "rainfed",
       "villages": 30,
+      "snapshotAcres": 5,
+      "signalSource": "representative_fallback",
+      "signalSampleSize": 0,
       "primaryCrops": [
         "Cotton",
         "Soybean",
@@ -1542,6 +1914,8 @@
       ],
       "nearestMandi": "Nizamabad",
       "nearestMandiDistanceKm": 15,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 6259,
       "topPick": {
         "slug": "cotton",
         "name": "Cotton",
@@ -1560,25 +1934,34 @@
         ],
         "active": true
       },
-      "topPickExpectedProfit": 176456,
+      "topPickExpectedProfit": 213578,
       "topPickWorstProfit": 112560,
+      "topPickPriceCurrent": 7377,
+      "topPickCompetitionPctFilled": 22.5,
+      "topPickCompetitionStatusLabel": "open lane",
+      "secondPickCompetitionPctFilled": 63.4,
+      "secondPickCompetitionStatusLabel": "approaching cap",
       "competitionStatus": "LOW",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Representative 5-acre fallback using default mandal soil and water, live district pressure, and current mandi context with no loan burden."
     },
     {
       "slug": "yellareddy",
       "name": "Yellareddy",
-      "soilZone": "mixed",
+      "soilZone": "deep_calcareous",
       "waterSource": "mixed",
       "villages": 48,
+      "snapshotAcres": 10.0,
+      "signalSource": "water_twin",
+      "signalSampleSize": 6,
       "primaryCrops": [
-        "Paddy",
         "Maize",
-        "Turmeric"
+        "Soybean"
       ],
       "nearestMandi": "Yellareddy",
       "nearestMandiDistanceKm": 3,
+      "bestMandi": "Nizamabad",
+      "bestMandiNetPerQtlRs": 2325,
       "topPick": {
         "slug": "maize",
         "name": "Maize",
@@ -1590,19 +1973,24 @@
         "active": true
       },
       "secondPick": {
-        "slug": "red_gram",
-        "name": "Red Gram",
-        "teluguName": "కందులు",
+        "slug": "cotton",
+        "name": "Cotton",
+        "teluguName": "పత్తి",
         "season": [
           "kharif"
         ],
         "active": true
       },
-      "topPickExpectedProfit": 199154,
-      "topPickWorstProfit": 126360,
+      "topPickExpectedProfit": 376670,
+      "topPickWorstProfit": 252720,
+      "topPickPriceCurrent": 2127,
+      "topPickCompetitionPctFilled": 72.0,
+      "topPickCompetitionStatusLabel": "high caution",
+      "secondPickCompetitionPctFilled": 22.5,
+      "secondPickCompetitionStatusLabel": "open lane",
       "competitionStatus": "OVERSUPPLY",
       "notes": "",
-      "snapshotAssumption": "Representative 5-acre profile using default mandal soil and water with no loan burden."
+      "snapshotAssumption": "Water twin built from 6 recent signals across Mixed mandals like Nandipet."
     }
   ],
   "priceRows": [
@@ -2337,139 +2725,24 @@
     {
       "location_name": "Nizamabad",
       "location_slug": "nizamabad",
-      "forecast_date": "2026-04-19",
-      "latitude": 18.625,
-      "longitude": 78.125,
-      "timezone": "Asia/Kolkata",
-      "temperature_2m_max_c": 42.4,
-      "temperature_2m_min_c": 28.2,
-      "precipitation_probability_max_pct": 28,
-      "precipitation_sum_mm": 1.7,
-      "weather_code": 95,
-      "source": "open_meteo",
-      "fetched_at_utc": "2026-04-19T16:21:26.586234+00:00",
-      "raw_record": {
-        "date": "2026-04-19",
-        "temperature_2m_max": 42.4,
-        "temperature_2m_min": 28.2,
-        "precipitation_probability_max": 28,
-        "precipitation_sum": 1.7,
-        "weather_code": 95
-      }
-    },
-    {
-      "location_name": "Nizamabad",
-      "location_slug": "nizamabad",
-      "forecast_date": "2026-04-20",
-      "latitude": 18.625,
-      "longitude": 78.125,
-      "timezone": "Asia/Kolkata",
-      "temperature_2m_max_c": 38.3,
-      "temperature_2m_min_c": 27.0,
-      "precipitation_probability_max_pct": 23,
-      "precipitation_sum_mm": 0.1,
-      "weather_code": 3,
-      "source": "open_meteo",
-      "fetched_at_utc": "2026-04-19T16:21:26.586234+00:00",
-      "raw_record": {
-        "date": "2026-04-20",
-        "temperature_2m_max": 38.3,
-        "temperature_2m_min": 27.0,
-        "precipitation_probability_max": 23,
-        "precipitation_sum": 0.1,
-        "weather_code": 3
-      }
-    },
-    {
-      "location_name": "Nizamabad",
-      "location_slug": "nizamabad",
-      "forecast_date": "2026-04-21",
-      "latitude": 18.625,
-      "longitude": 78.125,
-      "timezone": "Asia/Kolkata",
-      "temperature_2m_max_c": 38.8,
-      "temperature_2m_min_c": 27.4,
-      "precipitation_probability_max_pct": 20,
-      "precipitation_sum_mm": 1.3,
-      "weather_code": 80,
-      "source": "open_meteo",
-      "fetched_at_utc": "2026-04-19T16:21:26.586234+00:00",
-      "raw_record": {
-        "date": "2026-04-21",
-        "temperature_2m_max": 38.8,
-        "temperature_2m_min": 27.4,
-        "precipitation_probability_max": 20,
-        "precipitation_sum": 1.3,
-        "weather_code": 80
-      }
-    },
-    {
-      "location_name": "Nizamabad",
-      "location_slug": "nizamabad",
-      "forecast_date": "2026-04-22",
-      "latitude": 18.625,
-      "longitude": 78.125,
-      "timezone": "Asia/Kolkata",
-      "temperature_2m_max_c": 39.6,
-      "temperature_2m_min_c": 25.6,
-      "precipitation_probability_max_pct": 8,
-      "precipitation_sum_mm": 0.0,
-      "weather_code": 3,
-      "source": "open_meteo",
-      "fetched_at_utc": "2026-04-19T16:21:26.586234+00:00",
-      "raw_record": {
-        "date": "2026-04-22",
-        "temperature_2m_max": 39.6,
-        "temperature_2m_min": 25.6,
-        "precipitation_probability_max": 8,
-        "precipitation_sum": 0.0,
-        "weather_code": 3
-      }
-    },
-    {
-      "location_name": "Nizamabad",
-      "location_slug": "nizamabad",
-      "forecast_date": "2026-04-23",
-      "latitude": 18.625,
-      "longitude": 78.125,
-      "timezone": "Asia/Kolkata",
-      "temperature_2m_max_c": 40.1,
-      "temperature_2m_min_c": 26.9,
-      "precipitation_probability_max_pct": 10,
-      "precipitation_sum_mm": 0.0,
-      "weather_code": 3,
-      "source": "open_meteo",
-      "fetched_at_utc": "2026-04-19T16:21:26.586234+00:00",
-      "raw_record": {
-        "date": "2026-04-23",
-        "temperature_2m_max": 40.1,
-        "temperature_2m_min": 26.9,
-        "precipitation_probability_max": 10,
-        "precipitation_sum": 0.0,
-        "weather_code": 3
-      }
-    },
-    {
-      "location_name": "Nizamabad",
-      "location_slug": "nizamabad",
       "forecast_date": "2026-04-24",
       "latitude": 18.625,
       "longitude": 78.125,
       "timezone": "Asia/Kolkata",
-      "temperature_2m_max_c": 39.9,
-      "temperature_2m_min_c": 26.0,
-      "precipitation_probability_max_pct": 8,
-      "precipitation_sum_mm": 0.0,
-      "weather_code": 3,
+      "temperature_2m_max_c": 40.3,
+      "temperature_2m_min_c": 26.8,
+      "precipitation_probability_max_pct": 10,
+      "precipitation_sum_mm": 0.5,
+      "weather_code": 80,
       "source": "open_meteo",
-      "fetched_at_utc": "2026-04-19T16:21:26.586234+00:00",
+      "fetched_at_utc": "2026-04-24T01:40:48.572638+00:00",
       "raw_record": {
         "date": "2026-04-24",
-        "temperature_2m_max": 39.9,
-        "temperature_2m_min": 26.0,
-        "precipitation_probability_max": 8,
-        "precipitation_sum": 0.0,
-        "weather_code": 3
+        "temperature_2m_max": 40.3,
+        "temperature_2m_min": 26.8,
+        "precipitation_probability_max": 10,
+        "precipitation_sum": 0.5,
+        "weather_code": 80
       }
     },
     {
@@ -2479,20 +2752,135 @@
       "latitude": 18.625,
       "longitude": 78.125,
       "timezone": "Asia/Kolkata",
-      "temperature_2m_max_c": 39.8,
-      "temperature_2m_min_c": 27.0,
+      "temperature_2m_max_c": 40.4,
+      "temperature_2m_min_c": 26.0,
       "precipitation_probability_max_pct": 3,
       "precipitation_sum_mm": 0.0,
       "weather_code": 3,
       "source": "open_meteo",
-      "fetched_at_utc": "2026-04-19T16:21:26.586234+00:00",
+      "fetched_at_utc": "2026-04-24T01:40:48.572638+00:00",
       "raw_record": {
         "date": "2026-04-25",
-        "temperature_2m_max": 39.8,
-        "temperature_2m_min": 27.0,
+        "temperature_2m_max": 40.4,
+        "temperature_2m_min": 26.0,
         "precipitation_probability_max": 3,
         "precipitation_sum": 0.0,
         "weather_code": 3
+      }
+    },
+    {
+      "location_name": "Nizamabad",
+      "location_slug": "nizamabad",
+      "forecast_date": "2026-04-26",
+      "latitude": 18.625,
+      "longitude": 78.125,
+      "timezone": "Asia/Kolkata",
+      "temperature_2m_max_c": 40.7,
+      "temperature_2m_min_c": 26.5,
+      "precipitation_probability_max_pct": 3,
+      "precipitation_sum_mm": 0.0,
+      "weather_code": 3,
+      "source": "open_meteo",
+      "fetched_at_utc": "2026-04-24T01:40:48.572638+00:00",
+      "raw_record": {
+        "date": "2026-04-26",
+        "temperature_2m_max": 40.7,
+        "temperature_2m_min": 26.5,
+        "precipitation_probability_max": 3,
+        "precipitation_sum": 0.0,
+        "weather_code": 3
+      }
+    },
+    {
+      "location_name": "Nizamabad",
+      "location_slug": "nizamabad",
+      "forecast_date": "2026-04-27",
+      "latitude": 18.625,
+      "longitude": 78.125,
+      "timezone": "Asia/Kolkata",
+      "temperature_2m_max_c": 40.8,
+      "temperature_2m_min_c": 28.6,
+      "precipitation_probability_max_pct": 5,
+      "precipitation_sum_mm": 0.0,
+      "weather_code": 3,
+      "source": "open_meteo",
+      "fetched_at_utc": "2026-04-24T01:40:48.572638+00:00",
+      "raw_record": {
+        "date": "2026-04-27",
+        "temperature_2m_max": 40.8,
+        "temperature_2m_min": 28.6,
+        "precipitation_probability_max": 5,
+        "precipitation_sum": 0.0,
+        "weather_code": 3
+      }
+    },
+    {
+      "location_name": "Nizamabad",
+      "location_slug": "nizamabad",
+      "forecast_date": "2026-04-28",
+      "latitude": 18.625,
+      "longitude": 78.125,
+      "timezone": "Asia/Kolkata",
+      "temperature_2m_max_c": 40.7,
+      "temperature_2m_min_c": 27.7,
+      "precipitation_probability_max_pct": 5,
+      "precipitation_sum_mm": 0.3,
+      "weather_code": 3,
+      "source": "open_meteo",
+      "fetched_at_utc": "2026-04-24T01:40:48.572638+00:00",
+      "raw_record": {
+        "date": "2026-04-28",
+        "temperature_2m_max": 40.7,
+        "temperature_2m_min": 27.7,
+        "precipitation_probability_max": 5,
+        "precipitation_sum": 0.3,
+        "weather_code": 3
+      }
+    },
+    {
+      "location_name": "Nizamabad",
+      "location_slug": "nizamabad",
+      "forecast_date": "2026-04-29",
+      "latitude": 18.625,
+      "longitude": 78.125,
+      "timezone": "Asia/Kolkata",
+      "temperature_2m_max_c": 41.0,
+      "temperature_2m_min_c": 28.5,
+      "precipitation_probability_max_pct": 1,
+      "precipitation_sum_mm": 0.0,
+      "weather_code": 2,
+      "source": "open_meteo",
+      "fetched_at_utc": "2026-04-24T01:40:48.572638+00:00",
+      "raw_record": {
+        "date": "2026-04-29",
+        "temperature_2m_max": 41.0,
+        "temperature_2m_min": 28.5,
+        "precipitation_probability_max": 1,
+        "precipitation_sum": 0.0,
+        "weather_code": 2
+      }
+    },
+    {
+      "location_name": "Nizamabad",
+      "location_slug": "nizamabad",
+      "forecast_date": "2026-04-30",
+      "latitude": 18.625,
+      "longitude": 78.125,
+      "timezone": "Asia/Kolkata",
+      "temperature_2m_max_c": 40.5,
+      "temperature_2m_min_c": 29.1,
+      "precipitation_probability_max_pct": 0,
+      "precipitation_sum_mm": 0.0,
+      "weather_code": 2,
+      "source": "open_meteo",
+      "fetched_at_utc": "2026-04-24T01:40:48.572638+00:00",
+      "raw_record": {
+        "date": "2026-04-30",
+        "temperature_2m_max": 40.5,
+        "temperature_2m_min": 29.1,
+        "precipitation_probability_max": 0,
+        "precipitation_sum": 0.0,
+        "weather_code": 2
       }
     }
   ],
@@ -2518,7 +2906,36 @@
           "kharif",
           "rabi"
         ],
-        "active": true
+        "active": true,
+        "expectedProfit": 376670,
+        "worstProfit": 252720,
+        "inputCostTotal": 120000,
+        "avgYieldQtlPerAcre": 24,
+        "priceCurrent": 2127,
+        "priceFloor": 1600,
+        "priceCeiling": 3000,
+        "competitionStatus": "OVERSUPPLY",
+        "competitionPctFilled": 72.0,
+        "capBasis": "official_safe_cap",
+        "capBasisLabel": "official district safe cap",
+        "cashFlowStatus": "stable",
+        "harvestModeledPrice": 2219,
+        "spotPrice": 2127,
+        "spotPriceFloor": 1351,
+        "spotPriceCeiling": 2400,
+        "spotPriceDate": "2026-04-21",
+        "spotMarket": "Choppadandi APMC",
+        "spotDistrict": "Karimnagar",
+        "spotScopeLabel": "Telangana mandi rows",
+        "harvestModeledProfit": 398309,
+        "bestMandi": "Nandipet",
+        "bestMandiPrice": 2380,
+        "bestMandiPriceDate": "2026-04-19",
+        "bestMandiPriceSource": "historical_fallback",
+        "bestMandiDistrict": null,
+        "bestMandiState": null,
+        "tradeSignalMode": "live_spot_only",
+        "tradeSignalLabel": "Only a representative live crop spot row is available right now."
       },
       "secondPick": {
         "slug": "soybean",
@@ -2527,8 +2944,99 @@
         "season": [
           "kharif"
         ],
-        "active": true
+        "active": true,
+        "expectedProfit": 366110,
+        "worstProfit": 216170,
+        "inputCostTotal": 100000,
+        "avgYieldQtlPerAcre": 9,
+        "priceCurrent": 5300,
+        "priceFloor": 3600,
+        "priceCeiling": 6200,
+        "competitionStatus": "APPROACHING",
+        "competitionPctFilled": 63.4,
+        "capBasis": "official_safe_cap",
+        "capBasisLabel": "official district safe cap",
+        "cashFlowStatus": "stable",
+        "harvestModeledPrice": 5032,
+        "spotPrice": 5300,
+        "spotPriceFloor": 4950,
+        "spotPriceCeiling": 5460,
+        "spotPriceDate": "2026-04-21",
+        "spotMarket": "Bailahongal APMC",
+        "spotDistrict": "Belgaum",
+        "spotScopeLabel": "Karnataka mandi rows",
+        "harvestModeledProfit": 342472,
+        "bestMandi": "Armur",
+        "bestMandiPrice": 5480,
+        "bestMandiPriceDate": "2026-04-19",
+        "bestMandiPriceSource": "historical_fallback",
+        "bestMandiDistrict": null,
+        "bestMandiState": null,
+        "tradeSignalMode": "live_spot_only",
+        "tradeSignalLabel": "Only a representative live crop spot row is available right now."
       },
+      "rejected": [
+        {
+          "crop": "paddy",
+          "name": "Paddy",
+          "teluguName": "వరి",
+          "reason": "Supply cap exceeded"
+        },
+        {
+          "crop": "turmeric",
+          "name": "Turmeric",
+          "teluguName": "పసుపు",
+          "reason": "Supply cap exceeded"
+        },
+        {
+          "crop": "cotton",
+          "name": "Cotton",
+          "teluguName": "పత్తి",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "sunflower",
+          "name": "Sunflower",
+          "teluguName": "పొద్దుతిరుగుడు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "green_gram",
+          "name": "Green Gram",
+          "teluguName": "పెసలు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "sugarcane",
+          "name": "Sugarcane",
+          "teluguName": "చెరకు",
+          "reason": "Water requirement not met"
+        },
+        {
+          "crop": "bengal_gram",
+          "name": "Bengal Gram",
+          "teluguName": "సెనగలు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "groundnut",
+          "name": "Groundnut",
+          "teluguName": "వేరుశెనగ",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "sesame",
+          "name": "Sesame",
+          "teluguName": "నువ్వులు",
+          "reason": "Loss or cash risk at floor price"
+        },
+        {
+          "crop": "jowar",
+          "name": "Jowar",
+          "teluguName": "జొన్న",
+          "reason": "Soil or local suitability mismatch"
+        }
+      ],
       "filterTrace": [
         {
           "id": "season",
@@ -2563,7 +3071,7 @@
           "title": "Water + weather filter",
           "kept": 7,
           "removed": 1,
-          "note": "Water source is Mixed. Drought and flood risk are checked here.",
+          "note": "Water source is Mixed. Rainfall, drought, and flood risk are checked here.",
           "highlights": [
             "Paddy",
             "Turmeric",
@@ -2592,34 +3100,9 @@
           "highlights": [
             "Maize",
             "Soybean",
-            "Red Gram"
+            "Red Gram",
+            "Black Gram"
           ]
-        }
-      ],
-      "rejected": [
-        {
-          "crop": "Paddy",
-          "reason": "Supply cap exceeded"
-        },
-        {
-          "crop": "Turmeric",
-          "reason": "Supply cap exceeded"
-        },
-        {
-          "crop": "Cotton",
-          "reason": "Soil or local suitability mismatch"
-        },
-        {
-          "crop": "Sunflower",
-          "reason": "Season mismatch (kharif)"
-        },
-        {
-          "crop": "Green Gram",
-          "reason": "Season mismatch (kharif)"
-        },
-        {
-          "crop": "Sugarcane",
-          "reason": "Water requirement not met"
         }
       ],
       "teluguReply": "Naanna, naanu 10 acres, deep_calcareous soil, mixed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 10 acres ki expected profit: ₹398,309\n  Worst case profit: ₹252,720\n  Appu pressure tharvatha migiledi: ₹222,720\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200\n  Expected profit: ₹342,472\n  Worst case: ₹216,170\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",
@@ -2660,7 +3143,113 @@
           "speaker": "bot",
           "text": "Naanna, naanu 10 acres, deep_calcareous soil, mixed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 10 acres ki expected profit: ₹398,309\n  Worst case profit: ₹252,720\n  Appu pressure tharvatha migiledi: ₹222,720\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200\n  Expected profit: ₹342,472\n  Worst case: ₹216,170\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi."
         }
-      ]
+      ],
+      "marketAdvice": {
+        "crop": "maize",
+        "cropName": "Maize",
+        "options": [
+          {
+            "mandiName": "Nandipet",
+            "distanceKm": 10.0,
+            "modalPriceRsPerQtl": 2380,
+            "transportTotalRs": 350,
+            "transportPerQtlRs": 1,
+            "commissionPerQtlRs": 48,
+            "netPerQtlRs": 2331,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback",
+            "tradeMode": "cached_local_board"
+          },
+          {
+            "mandiName": "Armur",
+            "distanceKm": 22.0,
+            "modalPriceRsPerQtl": 2380,
+            "transportTotalRs": 770,
+            "transportPerQtlRs": 3,
+            "commissionPerQtlRs": 48,
+            "netPerQtlRs": 2329,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback",
+            "tradeMode": "cached_local_board"
+          },
+          {
+            "mandiName": "Nizamabad",
+            "distanceKm": 42.0,
+            "modalPriceRsPerQtl": 2380,
+            "transportTotalRs": 1470,
+            "transportPerQtlRs": 6,
+            "commissionPerQtlRs": 48,
+            "netPerQtlRs": 2326,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback",
+            "tradeMode": "cached_local_board"
+          }
+        ],
+        "bestOption": {
+          "mandiName": "Nandipet",
+          "distanceKm": 10.0,
+          "modalPriceRsPerQtl": 2380,
+          "transportTotalRs": 350,
+          "transportPerQtlRs": 1,
+          "commissionPerQtlRs": 48,
+          "netPerQtlRs": 2331,
+          "priceDate": "2026-04-19",
+          "source": "historical_fallback",
+          "tradeMode": "cached_local_board"
+        },
+        "bestLocalOption": {
+          "mandiName": "Nandipet",
+          "distanceKm": 10.0,
+          "modalPriceRsPerQtl": 2380,
+          "transportTotalRs": 350,
+          "transportPerQtlRs": 1,
+          "commissionPerQtlRs": 48,
+          "netPerQtlRs": 2331,
+          "priceDate": "2026-04-19",
+          "source": "historical_fallback"
+        },
+        "localOptions": [
+          {
+            "mandiName": "Nandipet",
+            "distanceKm": 10.0,
+            "modalPriceRsPerQtl": 2380,
+            "transportTotalRs": 350,
+            "transportPerQtlRs": 1,
+            "commissionPerQtlRs": 48,
+            "netPerQtlRs": 2331,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback"
+          },
+          {
+            "mandiName": "Armur",
+            "distanceKm": 22.0,
+            "modalPriceRsPerQtl": 2380,
+            "transportTotalRs": 770,
+            "transportPerQtlRs": 3,
+            "commissionPerQtlRs": 48,
+            "netPerQtlRs": 2329,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback"
+          },
+          {
+            "mandiName": "Nizamabad",
+            "distanceKm": 42.0,
+            "modalPriceRsPerQtl": 2380,
+            "transportTotalRs": 1470,
+            "transportPerQtlRs": 6,
+            "commissionPerQtlRs": 48,
+            "netPerQtlRs": 2326,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback"
+          }
+        ],
+        "sourceLabel": "Current crop spot prices come from the Government of India mandi dataset on data.gov.in, generated through the AGMARKNET portal.",
+        "mode": "live_spot_only",
+        "headline": "Only a representative live crop spot row is available right now.",
+        "freshnessUtc": "2026-04-21",
+        "localBoardMode": "cached",
+        "localBoardFreshnessUtc": "2026-04-19T16:44:09.449843+00:00"
+      }
     },
     {
       "id": "bodhan-canal",
@@ -2682,7 +3271,36 @@
         "season": [
           "kharif"
         ],
-        "active": true
+        "active": true,
+        "expectedProfit": 381160,
+        "worstProfit": 381160,
+        "inputCostTotal": 175000,
+        "avgYieldQtlPerAcre": 320,
+        "priceCurrent": 370,
+        "priceFloor": 370,
+        "priceCeiling": 370,
+        "competitionStatus": "APPROACHING",
+        "competitionPctFilled": 62.5,
+        "capBasis": "official_safe_cap",
+        "capBasisLabel": "official district safe cap",
+        "cashFlowStatus": "stable",
+        "harvestModeledPrice": 370,
+        "spotPrice": null,
+        "spotPriceFloor": null,
+        "spotPriceCeiling": null,
+        "spotPriceDate": null,
+        "spotMarket": null,
+        "spotDistrict": null,
+        "spotScopeLabel": null,
+        "harvestModeledProfit": 381160,
+        "bestMandi": "Bodhan",
+        "bestMandiPrice": 370,
+        "bestMandiPriceDate": "2026-04-19",
+        "bestMandiPriceSource": "historical_fallback",
+        "bestMandiDistrict": null,
+        "bestMandiState": null,
+        "tradeSignalMode": "cached_local_board",
+        "tradeSignalLabel": "Live crop rows were unavailable, so this is using the cached local mandi board."
       },
       "secondPick": {
         "slug": "cotton",
@@ -2691,8 +3309,87 @@
         "season": [
           "kharif"
         ],
-        "active": true
+        "active": true,
+        "expectedProfit": 357868,
+        "worstProfit": 206340,
+        "inputCostTotal": 75000,
+        "avgYieldQtlPerAcre": 12,
+        "priceCurrent": 7377,
+        "priceFloor": 4800,
+        "priceCeiling": 9500,
+        "competitionStatus": "LOW",
+        "competitionPctFilled": 22.5,
+        "capBasis": "official_safe_cap",
+        "capBasisLabel": "official district safe cap",
+        "cashFlowStatus": "stable",
+        "harvestModeledPrice": 6430,
+        "spotPrice": 7377,
+        "spotPriceFloor": 6361,
+        "spotPriceCeiling": 8068,
+        "spotPriceDate": "2026-04-21",
+        "spotMarket": "Peddapalli APMC",
+        "spotDistrict": "Karimnagar",
+        "spotScopeLabel": "Telangana mandi rows",
+        "harvestModeledProfit": 302184,
+        "bestMandi": "Bodhan",
+        "bestMandiPrice": 6400,
+        "bestMandiPriceDate": "2026-04-19",
+        "bestMandiPriceSource": "historical_fallback",
+        "bestMandiDistrict": null,
+        "bestMandiState": null,
+        "tradeSignalMode": "live_spot_only",
+        "tradeSignalLabel": "Only a representative live crop spot row is available right now."
       },
+      "rejected": [
+        {
+          "crop": "paddy",
+          "name": "Paddy",
+          "teluguName": "వరి",
+          "reason": "Supply cap exceeded"
+        },
+        {
+          "crop": "turmeric",
+          "name": "Turmeric",
+          "teluguName": "పసుపు",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "maize",
+          "name": "Maize",
+          "teluguName": "మొక్కజొన్న",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "red_gram",
+          "name": "Red Gram",
+          "teluguName": "కందులు",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "sunflower",
+          "name": "Sunflower",
+          "teluguName": "పొద్దుతిరుగుడు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "green_gram",
+          "name": "Green Gram",
+          "teluguName": "పెసలు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "bengal_gram",
+          "name": "Bengal Gram",
+          "teluguName": "సెనగలు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "groundnut",
+          "name": "Groundnut",
+          "teluguName": "వేరుశెనగ",
+          "reason": "Soil or local suitability mismatch"
+        }
+      ],
       "filterTrace": [
         {
           "id": "season",
@@ -2727,7 +3424,7 @@
           "title": "Water + weather filter",
           "kept": 7,
           "removed": 0,
-          "note": "Water source is Canal. Drought and flood risk are checked here.",
+          "note": "Water source is Canal. Rainfall, drought, and flood risk are checked here.",
           "highlights": [
             "Paddy",
             "Soybean",
@@ -2755,37 +3452,12 @@
           "highlights": [
             "Sugarcane",
             "Cotton",
-            "Soybean"
+            "Soybean",
+            "Black Gram"
           ]
         }
       ],
-      "rejected": [
-        {
-          "crop": "Paddy",
-          "reason": "Supply cap exceeded"
-        },
-        {
-          "crop": "Turmeric",
-          "reason": "Soil or local suitability mismatch"
-        },
-        {
-          "crop": "Maize",
-          "reason": "Soil or local suitability mismatch"
-        },
-        {
-          "crop": "Red Gram",
-          "reason": "Soil or local suitability mismatch"
-        },
-        {
-          "crop": "Sunflower",
-          "reason": "Season mismatch (kharif)"
-        },
-        {
-          "crop": "Green Gram",
-          "reason": "Season mismatch (kharif)"
-        }
-      ],
-      "teluguReply": "Naanna, naanu 5 acres, black_cotton soil, canal water — anni crops analyse chesanu.\n\nBEST CHOICE — చెరకు (SUGARCANE):\n  Rate range: floor ₹370 / avg ₹370 / ceiling ₹370 per quintal\n  Meeru 5 acres ki expected profit: ₹381,160\n  Worst case profit: ₹381,160\n  Appu pressure tharvatha migiledi: ₹381,160\n  District lo: moderate competition undi\n\nSECOND OPTION — పత్తి (COTTON):\n  Rate range: floor ₹4,800 / avg ₹6,430 / ceiling ₹9,500\n  Expected profit: ₹302,184\n  Worst case: ₹206,340\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",
+      "teluguReply": "Naanna, naanu 5 acres, black_cotton soil, canal water — anni crops analyse chesanu.\n\nBEST CHOICE — చెరకు (SUGARCANE):\n  Rate range: floor ₹370 / avg ₹370 / ceiling ₹370 per quintal\n  Meeru 5 acres ki expected profit: ₹381,160\n  Worst case profit: ₹381,160\n  Appu pressure tharvatha migiledi: ₹381,160\n  District lo: cap daggara ki vachesthondi — careful ga decide cheyyali\n\nSECOND OPTION — పత్తి (COTTON):\n  Rate range: floor ₹4,800 / avg ₹6,430 / ceiling ₹9,500\n  Expected profit: ₹302,184\n  Worst case: ₹206,340\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",
       "conversation": [
         {
           "speaker": "bot",
@@ -2821,9 +3493,69 @@
         },
         {
           "speaker": "bot",
-          "text": "Naanna, naanu 5 acres, black_cotton soil, canal water — anni crops analyse chesanu.\n\nBEST CHOICE — చెరకు (SUGARCANE):\n  Rate range: floor ₹370 / avg ₹370 / ceiling ₹370 per quintal\n  Meeru 5 acres ki expected profit: ₹381,160\n  Worst case profit: ₹381,160\n  Appu pressure tharvatha migiledi: ₹381,160\n  District lo: moderate competition undi\n\nSECOND OPTION — పత్తి (COTTON):\n  Rate range: floor ₹4,800 / avg ₹6,430 / ceiling ₹9,500\n  Expected profit: ₹302,184\n  Worst case: ₹206,340\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi."
+          "text": "Naanna, naanu 5 acres, black_cotton soil, canal water — anni crops analyse chesanu.\n\nBEST CHOICE — చెరకు (SUGARCANE):\n  Rate range: floor ₹370 / avg ₹370 / ceiling ₹370 per quintal\n  Meeru 5 acres ki expected profit: ₹381,160\n  Worst case profit: ₹381,160\n  Appu pressure tharvatha migiledi: ₹381,160\n  District lo: cap daggara ki vachesthondi — careful ga decide cheyyali\n\nSECOND OPTION — పత్తి (COTTON):\n  Rate range: floor ₹4,800 / avg ₹6,430 / ceiling ₹9,500\n  Expected profit: ₹302,184\n  Worst case: ₹206,340\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi."
         }
-      ]
+      ],
+      "marketAdvice": {
+        "crop": "sugarcane",
+        "cropName": "Sugarcane",
+        "options": [
+          {
+            "mandiName": "Bodhan",
+            "distanceKm": 5.0,
+            "modalPriceRsPerQtl": 370,
+            "transportTotalRs": 250,
+            "transportPerQtlRs": 0,
+            "commissionPerQtlRs": 7,
+            "netPerQtlRs": 362,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback",
+            "tradeMode": "cached_local_board"
+          }
+        ],
+        "bestOption": {
+          "mandiName": "Bodhan",
+          "distanceKm": 5.0,
+          "modalPriceRsPerQtl": 370,
+          "transportTotalRs": 250,
+          "transportPerQtlRs": 0,
+          "commissionPerQtlRs": 7,
+          "netPerQtlRs": 362,
+          "priceDate": "2026-04-19",
+          "source": "historical_fallback",
+          "tradeMode": "cached_local_board"
+        },
+        "bestLocalOption": {
+          "mandiName": "Bodhan",
+          "distanceKm": 5.0,
+          "modalPriceRsPerQtl": 370,
+          "transportTotalRs": 250,
+          "transportPerQtlRs": 0,
+          "commissionPerQtlRs": 7,
+          "netPerQtlRs": 362,
+          "priceDate": "2026-04-19",
+          "source": "historical_fallback"
+        },
+        "localOptions": [
+          {
+            "mandiName": "Bodhan",
+            "distanceKm": 5.0,
+            "modalPriceRsPerQtl": 370,
+            "transportTotalRs": 250,
+            "transportPerQtlRs": 0,
+            "commissionPerQtlRs": 7,
+            "netPerQtlRs": 362,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback"
+          }
+        ],
+        "sourceLabel": "Cached mandi board from the latest backend sync. Some rows may still use historical fallback if live mandi pairs were missing.",
+        "mode": "cached_local_board",
+        "headline": "Live crop rows were unavailable, so this is using the cached local mandi board.",
+        "freshnessUtc": "2026-04-19T16:44:09.449843+00:00",
+        "localBoardMode": "cached",
+        "localBoardFreshnessUtc": "2026-04-19T16:44:09.449843+00:00"
+      }
     },
     {
       "id": "kamareddy-rainfed",
@@ -2840,24 +3572,131 @@
         ]
       },
       "topPick": {
-        "slug": "maize",
-        "name": "Maize",
-        "teluguName": "మొక్కజొన్న",
-        "season": [
-          "kharif",
-          "rabi"
-        ],
-        "active": true
-      },
-      "secondPick": {
         "slug": "soybean",
         "name": "Soybean",
         "teluguName": "సోయాబీన్",
         "season": [
           "kharif"
         ],
-        "active": true
+        "active": true,
+        "expectedProfit": 219666,
+        "worstProfit": 129702,
+        "inputCostTotal": 60000,
+        "avgYieldQtlPerAcre": 9,
+        "priceCurrent": 5300,
+        "priceFloor": 3600,
+        "priceCeiling": 6200,
+        "competitionStatus": "APPROACHING",
+        "competitionPctFilled": 63.4,
+        "capBasis": "official_safe_cap",
+        "capBasisLabel": "official district safe cap",
+        "cashFlowStatus": "stable",
+        "harvestModeledPrice": 5032,
+        "spotPrice": 5300,
+        "spotPriceFloor": 4950,
+        "spotPriceCeiling": 5460,
+        "spotPriceDate": "2026-04-21",
+        "spotMarket": "Bailahongal APMC",
+        "spotDistrict": "Belgaum",
+        "spotScopeLabel": "Karnataka mandi rows",
+        "harvestModeledProfit": 205483,
+        "bestMandi": "Kamareddy",
+        "bestMandiPrice": 5480,
+        "bestMandiPriceDate": "2026-04-19",
+        "bestMandiPriceSource": "historical_fallback",
+        "bestMandiDistrict": null,
+        "bestMandiState": null,
+        "tradeSignalMode": "live_spot_only",
+        "tradeSignalLabel": "Only a representative live crop spot row is available right now."
       },
+      "secondPick": {
+        "slug": "red_gram",
+        "name": "Red Gram",
+        "teluguName": "కందులు",
+        "season": [
+          "kharif"
+        ],
+        "active": true,
+        "expectedProfit": 241605,
+        "worstProfit": 116220,
+        "inputCostTotal": 42000,
+        "avgYieldQtlPerAcre": 6,
+        "priceCurrent": 8054,
+        "priceFloor": 4500,
+        "priceCeiling": 9000,
+        "competitionStatus": "APPROACHING",
+        "competitionPctFilled": 56.3,
+        "capBasis": "official_safe_cap",
+        "capBasisLabel": "official district safe cap",
+        "cashFlowStatus": "stable",
+        "harvestModeledPrice": 6990,
+        "spotPrice": 8054,
+        "spotPriceFloor": 6166,
+        "spotPriceCeiling": 11185,
+        "spotPriceDate": "2026-04-21",
+        "spotMarket": "Nagarkurnool APMC",
+        "spotDistrict": "Mahbubnagar",
+        "spotScopeLabel": "Telangana mandi rows",
+        "harvestModeledProfit": 204067,
+        "bestMandi": "Kamareddy",
+        "bestMandiPrice": 7800,
+        "bestMandiPriceDate": "2026-04-19",
+        "bestMandiPriceSource": "historical_fallback",
+        "bestMandiDistrict": null,
+        "bestMandiState": null,
+        "tradeSignalMode": "live_spot_only",
+        "tradeSignalLabel": "Only a representative live crop spot row is available right now."
+      },
+      "rejected": [
+        {
+          "crop": "paddy",
+          "name": "Paddy",
+          "teluguName": "వరి",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "turmeric",
+          "name": "Turmeric",
+          "teluguName": "పసుపు",
+          "reason": "Water requirement not met"
+        },
+        {
+          "crop": "maize",
+          "name": "Maize",
+          "teluguName": "మొక్కజొన్న",
+          "reason": "Water requirement not met"
+        },
+        {
+          "crop": "cotton",
+          "name": "Cotton",
+          "teluguName": "పత్తి",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "sunflower",
+          "name": "Sunflower",
+          "teluguName": "పొద్దుతిరుగుడు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "green_gram",
+          "name": "Green Gram",
+          "teluguName": "పెసలు",
+          "reason": "Season mismatch (kharif)"
+        },
+        {
+          "crop": "sugarcane",
+          "name": "Sugarcane",
+          "teluguName": "చెరకు",
+          "reason": "Soil or local suitability mismatch"
+        },
+        {
+          "crop": "bengal_gram",
+          "name": "Bengal Gram",
+          "teluguName": "సెనగలు",
+          "reason": "Season mismatch (kharif)"
+        }
+      ],
       "filterTrace": [
         {
           "id": "season",
@@ -2890,67 +3729,44 @@
         {
           "id": "water",
           "title": "Water + weather filter",
-          "kept": 8,
-          "removed": 0,
-          "note": "Water source is Rainfed. Drought and flood risk are checked here.",
+          "kept": 6,
+          "removed": 2,
+          "note": "Water source is Rainfed. Rainfall, drought, and flood risk are checked here.",
           "highlights": [
-            "Turmeric",
-            "Maize",
             "Soybean",
             "Red Gram",
-            "Black Gram"
+            "Black Gram",
+            "Groundnut",
+            "Sesame"
           ]
         },
         {
           "id": "supply",
           "title": "District cap filter",
-          "kept": 7,
-          "removed": 1,
+          "kept": 6,
+          "removed": 0,
           "note": "This is the anti-rat-race layer. The bot avoids recommending crops that are already crowding the district.",
           "highlights": [
-            "Turmeric"
+            "Soybean",
+            "Red Gram",
+            "Groundnut"
           ]
         },
         {
           "id": "profit",
           "title": "Floor-price survivability",
-          "kept": 7,
+          "kept": 6,
           "removed": 0,
           "note": "Only crops that stay profitable even at conservative floor prices make the final list.",
           "highlights": [
-            "Maize",
             "Soybean",
-            "Red Gram"
+            "Red Gram",
+            "Groundnut",
+            "Black Gram"
           ]
         }
       ],
-      "rejected": [
-        {
-          "crop": "Paddy",
-          "reason": "Soil or local suitability mismatch"
-        },
-        {
-          "crop": "Turmeric",
-          "reason": "Supply cap exceeded"
-        },
-        {
-          "crop": "Cotton",
-          "reason": "Soil or local suitability mismatch"
-        },
-        {
-          "crop": "Sunflower",
-          "reason": "Season mismatch (kharif)"
-        },
-        {
-          "crop": "Green Gram",
-          "reason": "Season mismatch (kharif)"
-        },
-        {
-          "crop": "Sugarcane",
-          "reason": "Soil or local suitability mismatch"
-        }
-      ],
-      "teluguReply": "Naanna, naanu 6 acres, red_clayey soil, rainfed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 6 acres ki expected profit: ₹238,985\n  Worst case profit: ₹151,632\n  Appu pressure tharvatha migiledi: ₹139,632\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200\n  Expected profit: ₹205,483\n  Worst case: ₹129,702\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",
+      "teluguReply": "Naanna, naanu 6 acres, red_clayey soil, rainfed water — anni crops analyse chesanu.\n\nBEST CHOICE — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200 per quintal\n  Meeru 6 acres ki expected profit: ₹205,483\n  Worst case profit: ₹129,702\n  Appu pressure tharvatha migiledi: ₹117,702\n  District lo: cap daggara ki vachesthondi — careful ga decide cheyyali\n\nSECOND OPTION — కందులు (RED_GRAM):\n  Rate range: floor ₹4,500 / avg ₹6,990 / ceiling ₹9,000\n  Expected profit: ₹204,067\n  Worst case: ₹116,220\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi.",
       "conversation": [
         {
           "speaker": "bot",
@@ -2986,9 +3802,325 @@
         },
         {
           "speaker": "bot",
-          "text": "Naanna, naanu 6 acres, red_clayey soil, rainfed water — anni crops analyse chesanu.\n\nBEST CHOICE — మొక్కజొన్న (MAIZE):\n  Rate range: floor ₹1,600 / avg ₹2,219 / ceiling ₹3,000 per quintal\n  Meeru 6 acres ki expected profit: ₹238,985\n  Worst case profit: ₹151,632\n  Appu pressure tharvatha migiledi: ₹139,632\n  District lo: chala mandhi vestunnaru — risk ekkuva\n\nSECOND OPTION — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200\n  Expected profit: ₹205,483\n  Worst case: ₹129,702\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi."
+          "text": "Naanna, naanu 6 acres, red_clayey soil, rainfed water — anni crops analyse chesanu.\n\nBEST CHOICE — సోయాబీన్ (SOYBEAN):\n  Rate range: floor ₹3,600 / avg ₹5,032 / ceiling ₹6,200 per quintal\n  Meeru 6 acres ki expected profit: ₹205,483\n  Worst case profit: ₹129,702\n  Appu pressure tharvatha migiledi: ₹117,702\n  District lo: cap daggara ki vachesthondi — careful ga decide cheyyali\n\nSECOND OPTION — కందులు (RED_GRAM):\n  Rate range: floor ₹4,500 / avg ₹6,990 / ceiling ₹9,000\n  Expected profit: ₹204,067\n  Worst case: ₹116,220\n\nNaanu guarantee ivvaleddu — market ela marustundo teliyadam ledu.\nEe numbers data cheptunnai. Last word meeru — meeru feel cheppandi.\nInka edaina doubt unte naaku cheppandi."
         }
-      ]
+      ],
+      "marketAdvice": {
+        "crop": "soybean",
+        "cropName": "Soybean",
+        "options": [
+          {
+            "mandiName": "Kamareddy",
+            "distanceKm": 3.0,
+            "modalPriceRsPerQtl": 5480,
+            "transportTotalRs": 250,
+            "transportPerQtlRs": 5,
+            "commissionPerQtlRs": 110,
+            "netPerQtlRs": 5366,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback",
+            "tradeMode": "cached_local_board"
+          },
+          {
+            "mandiName": "Nizamabad",
+            "distanceKm": 55.0,
+            "modalPriceRsPerQtl": 5480,
+            "transportTotalRs": 1925,
+            "transportPerQtlRs": 36,
+            "commissionPerQtlRs": 110,
+            "netPerQtlRs": 5335,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback",
+            "tradeMode": "cached_local_board"
+          }
+        ],
+        "bestOption": {
+          "mandiName": "Kamareddy",
+          "distanceKm": 3.0,
+          "modalPriceRsPerQtl": 5480,
+          "transportTotalRs": 250,
+          "transportPerQtlRs": 5,
+          "commissionPerQtlRs": 110,
+          "netPerQtlRs": 5366,
+          "priceDate": "2026-04-19",
+          "source": "historical_fallback",
+          "tradeMode": "cached_local_board"
+        },
+        "bestLocalOption": {
+          "mandiName": "Kamareddy",
+          "distanceKm": 3.0,
+          "modalPriceRsPerQtl": 5480,
+          "transportTotalRs": 250,
+          "transportPerQtlRs": 5,
+          "commissionPerQtlRs": 110,
+          "netPerQtlRs": 5366,
+          "priceDate": "2026-04-19",
+          "source": "historical_fallback"
+        },
+        "localOptions": [
+          {
+            "mandiName": "Kamareddy",
+            "distanceKm": 3.0,
+            "modalPriceRsPerQtl": 5480,
+            "transportTotalRs": 250,
+            "transportPerQtlRs": 5,
+            "commissionPerQtlRs": 110,
+            "netPerQtlRs": 5366,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback"
+          },
+          {
+            "mandiName": "Nizamabad",
+            "distanceKm": 55.0,
+            "modalPriceRsPerQtl": 5480,
+            "transportTotalRs": 1925,
+            "transportPerQtlRs": 36,
+            "commissionPerQtlRs": 110,
+            "netPerQtlRs": 5335,
+            "priceDate": "2026-04-19",
+            "source": "historical_fallback"
+          }
+        ],
+        "sourceLabel": "Current crop spot prices come from the Government of India mandi dataset on data.gov.in, generated through the AGMARKNET portal.",
+        "mode": "live_spot_only",
+        "headline": "Only a representative live crop spot row is available right now.",
+        "freshnessUtc": "2026-04-21",
+        "localBoardMode": "cached",
+        "localBoardFreshnessUtc": "2026-04-19T16:44:09.449843+00:00"
+      }
     }
-  ]
+  ],
+  "liveContext": {
+    "price": {
+      "mode": "cached",
+      "sourceLabel": "Cached mandi board from the latest backend sync. Some rows may still use historical fallback if live mandi pairs were missing.",
+      "resourceId": "9ef84268-d588-465a-a308-a864a43d0070",
+      "priceFreshnessUtc": "2026-04-19T16:44:09.449843+00:00",
+      "liveRowCount": 0,
+      "fallbackRowCount": 27,
+      "notes": [
+        "Using locally cached mandi rows."
+      ]
+    },
+    "liveMarket": {
+      "mode": "disabled",
+      "sourceLabel": "Live mandi board disabled for this request.",
+      "resourceId": "9ef84268-d588-465a-a308-a864a43d0070",
+      "marketFreshnessUtc": null,
+      "notes": [],
+      "cropCount": 0
+    },
+    "liveMarketBoard": {},
+    "liveSpot": {
+      "mode": "live",
+      "sourceLabel": "Current crop spot prices come from the Government of India mandi dataset on data.gov.in, generated through the AGMARKNET portal.",
+      "resourceId": "9ef84268-d588-465a-a308-a864a43d0070",
+      "spotFreshnessUtc": "2026-04-21",
+      "notes": [
+        "turmeric: no rows from Turmeric (Telangana); payload count=0.",
+        "turmeric: using latest Karnataka mandi snapshot because Telangana rows were unavailable.",
+        "soybean: no rows from Soyabean (Telangana); payload count=0.",
+        "soybean: using latest Karnataka mandi snapshot because Telangana rows were unavailable.",
+        "black_gram: no rows from Urad (Telangana); payload count=0.",
+        "black_gram: no rows from Urad (Karnataka); payload count=0.",
+        "black_gram: no rows from Urad (Maharashtra); payload count=0.",
+        "black_gram: no rows from Urad (Andhra Pradesh); payload count=0.",
+        "black_gram: no rows from Urad (India); payload count=0.",
+        "sesame: no rows from Sesamum/Sesame (Telangana); payload count=0.",
+        "sesame: no rows from Sesamum/Sesame (Karnataka); payload count=0.",
+        "sesame: no rows from Sesamum/Sesame (Maharashtra); payload count=0.",
+        "sesame: no rows from Sesamum/Sesame (Andhra Pradesh); payload count=0.",
+        "sesame: using latest India mandi snapshot because nearby-state rows were unavailable."
+      ],
+      "cropCount": 12
+    },
+    "liveSpotBoard": {
+      "maize": {
+        "cropSlug": "maize",
+        "commodityName": "Maize",
+        "modalPriceRsPerQtl": 2127,
+        "floorPriceRsPerQtl": 1351,
+        "ceilingPriceRsPerQtl": 2400,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Choppadandi APMC",
+        "representativeDistrict": "Karimnagar",
+        "representativeState": "Telangana",
+        "marketCount": 17,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Maize",
+        "source": "data_gov_in_live_spot"
+      },
+      "paddy": {
+        "cropSlug": "paddy",
+        "commodityName": "Paddy(Common)",
+        "modalPriceRsPerQtl": 2331,
+        "floorPriceRsPerQtl": 1500,
+        "ceilingPriceRsPerQtl": 4200,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Sathupally APMC",
+        "representativeDistrict": "Mahbubnagar",
+        "representativeState": "Telangana",
+        "marketCount": 20,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Paddy(Common)",
+        "source": "data_gov_in_live_spot"
+      },
+      "turmeric": {
+        "cropSlug": "turmeric",
+        "commodityName": "Turmeric",
+        "modalPriceRsPerQtl": 13600,
+        "floorPriceRsPerQtl": 11200,
+        "ceilingPriceRsPerQtl": 15000,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Gundlupet APMC",
+        "representativeDistrict": "Chamrajnagar",
+        "representativeState": "Karnataka",
+        "marketCount": 1,
+        "scopeLabel": "Karnataka mandi rows",
+        "commodityQuery": "Turmeric",
+        "source": "data_gov_in_live_spot"
+      },
+      "soybean": {
+        "cropSlug": "soybean",
+        "commodityName": "Soyabean",
+        "modalPriceRsPerQtl": 5300,
+        "floorPriceRsPerQtl": 4950,
+        "ceilingPriceRsPerQtl": 5460,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Bailahongal APMC",
+        "representativeDistrict": "Belgaum",
+        "representativeState": "Karnataka",
+        "marketCount": 1,
+        "scopeLabel": "Karnataka mandi rows",
+        "commodityQuery": "Soyabean",
+        "source": "data_gov_in_live_spot"
+      },
+      "cotton": {
+        "cropSlug": "cotton",
+        "commodityName": "Cotton",
+        "modalPriceRsPerQtl": 7377,
+        "floorPriceRsPerQtl": 6361,
+        "ceilingPriceRsPerQtl": 8068,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Peddapalli APMC",
+        "representativeDistrict": "Karimnagar",
+        "representativeState": "Telangana",
+        "marketCount": 3,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Cotton",
+        "source": "data_gov_in_live_spot"
+      },
+      "red_gram": {
+        "cropSlug": "red_gram",
+        "commodityName": "Black Gram Dal(Urd Dal)",
+        "modalPriceRsPerQtl": 8054,
+        "floorPriceRsPerQtl": 6166,
+        "ceilingPriceRsPerQtl": 11185,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Nagarkurnool APMC",
+        "representativeDistrict": "Mahbubnagar",
+        "representativeState": "Telangana",
+        "marketCount": 4,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Arhar(Tur/Red Gram)(Whole)",
+        "source": "data_gov_in_live_spot"
+      },
+      "sunflower": {
+        "cropSlug": "sunflower",
+        "commodityName": "Castor Seed",
+        "modalPriceRsPerQtl": 6164,
+        "floorPriceRsPerQtl": 5989,
+        "ceilingPriceRsPerQtl": 6375,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Badepalli APMC",
+        "representativeDistrict": "Mahbubnagar",
+        "representativeState": "Telangana",
+        "marketCount": 2,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Sunflower/Sunflower Seed",
+        "source": "data_gov_in_live_spot"
+      },
+      "green_gram": {
+        "cropSlug": "green_gram",
+        "commodityName": "Arhar(Tur/Red Gram)(Whole)",
+        "modalPriceRsPerQtl": 8228,
+        "floorPriceRsPerQtl": 6166,
+        "ceilingPriceRsPerQtl": 11185,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Choppadandi APMC",
+        "representativeDistrict": "Karimnagar",
+        "representativeState": "Telangana",
+        "marketCount": 3,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Moong(Whole)",
+        "source": "data_gov_in_live_spot"
+      },
+      "groundnut": {
+        "cropSlug": "groundnut",
+        "commodityName": "Groundnut",
+        "modalPriceRsPerQtl": 4807,
+        "floorPriceRsPerQtl": 2000,
+        "ceilingPriceRsPerQtl": 7119,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Jangaon APMC",
+        "representativeDistrict": "Warangal",
+        "representativeState": "Telangana",
+        "marketCount": 3,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Groundnut",
+        "source": "data_gov_in_live_spot"
+      },
+      "bengal_gram": {
+        "cropSlug": "bengal_gram",
+        "commodityName": "Black Gram Dal(Urd Dal)",
+        "modalPriceRsPerQtl": 8054,
+        "floorPriceRsPerQtl": 6166,
+        "ceilingPriceRsPerQtl": 11185,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Nagarkurnool APMC",
+        "representativeDistrict": "Mahbubnagar",
+        "representativeState": "Telangana",
+        "marketCount": 4,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Gram",
+        "source": "data_gov_in_live_spot"
+      },
+      "sesame": {
+        "cropSlug": "sesame",
+        "commodityName": "Sesamum(Sesame,Gingelly,Til)",
+        "modalPriceRsPerQtl": 11348,
+        "floorPriceRsPerQtl": 6500,
+        "ceilingPriceRsPerQtl": 18350,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Taleja APMC",
+        "representativeDistrict": "Bhavnagar",
+        "representativeState": "Gujarat",
+        "marketCount": 22,
+        "scopeLabel": "India mandi rows",
+        "commodityQuery": "Sesamum/Sesame",
+        "source": "data_gov_in_live_spot"
+      },
+      "jowar": {
+        "cropSlug": "jowar",
+        "commodityName": "Jowar(Sorghum)",
+        "modalPriceRsPerQtl": 5118,
+        "floorPriceRsPerQtl": 4339,
+        "ceilingPriceRsPerQtl": 5880,
+        "arrivalDate": "2026-04-21",
+        "representativeMarket": "Badepalli APMC",
+        "representativeDistrict": "Mahbubnagar",
+        "representativeState": "Telangana",
+        "marketCount": 2,
+        "scopeLabel": "Telangana mandi rows",
+        "commodityQuery": "Jowar(Sorghum)",
+        "source": "data_gov_in_live_spot"
+      }
+    },
+    "weather": {
+      "mode": "live",
+      "sourceLabel": "Live district weather stream from Open-Meteo for Nizamabad.",
+      "weatherFreshnessUtc": "2026-04-24T01:40:48.572638+00:00",
+      "notes": []
+    }
+  }
 }

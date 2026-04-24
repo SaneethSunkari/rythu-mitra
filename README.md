@@ -20,7 +20,7 @@ It is deployed as a WhatsApp + Telugu voice system for real-world use in Nizamab
 - **Delivery layer:** WhatsApp text or Telugu voice notes
 - **Region:** Nizamabad district, Telangana
 - **Interfaces:** Twilio WhatsApp, FastAPI, Sarvam STT/TTS, Supabase, Railway
-- **Current strength:** a working 5-filter recommendation engine, deployable WhatsApp voice flow, and a distinctive live dashboard served on Railway
+- **Current strength:** a working 5-filter recommendation engine, deployable WhatsApp voice flow, and a live public website served on Railway
 - **Key differentiator:** the bot tracks district planting pressure so it does not create a new oversupply rat race
 
 ## See It In 10 Seconds
@@ -69,15 +69,15 @@ Everything else, including the bot, voice layer, and dashboard, exists to make t
 - [Engine test](scripts/test_engine.py)
 - [System test sweep](scripts/test_system.py)
 - [WhatsApp webhook](bot/whatsapp_handler.py)
-- [Dashboard app](dashboard/src/App.jsx)
+- [Website app](dashboard/src/App.jsx)
 - [District data](data/nizamabad_district.py)
 - [Scenario spec PDF](docs/scenarios.pdf)
 - [Scenario coverage matrix](docs/scenario_coverage.md)
 
-## Dashboard Preview
+## Website Preview
 
 - https://web-production-d8869.up.railway.app/dashboard
-- The live UI is designed like a district field desk: a crop-pressure ledger, mandal spotlight, market tape, weather stream, and bot reasoning walkthrough in one place.
+- The live UI is a public product website with three working surfaces: personalized analysis, district state, and a live market/weather view.
 
 ![Rythu Mitra Dashboard](docs/dashboard-preview.svg)
 
@@ -215,18 +215,22 @@ That is the heart of this project.
 - **Weather pipeline**
   Live Open-Meteo forecast pull for Nizamabad with hourly and daily normalization
 - **Price pipeline**
-  Historical + fallback mandi price pipeline, with live `data.gov.in` support ready when an API key is available
+  Historical + fallback mandi price pipeline, live crop-spot rows from `data.gov.in`, and a dedicated live market context path for the website
 - **WhatsApp bot**
   FastAPI webhook, progressive farmer profiling, intent routing, Sarvam STT/TTS integration, Twilio-compatible responses
-- **Dashboard**
-  A live React field-desk interface for district opportunity, mandi prices, weather context, and bot walkthroughs, served through FastAPI at `/dashboard`
+- **Website**
+  A live React website with analysis, district, and markets surfaces, served through FastAPI at `/dashboard`
+- **District state layer**
+  Supabase-backed recommendation logging, district pressure rails, and mandal twin logic with live-mandal, cluster, soil, water, and representative fallback tiers
+- **Survey-linked soil lookup**
+  Optional survey-number lookup path that tries parcel-linked soil/water context before manual profile fallback
 - **Deployment path**
   Railway-ready runtime config and live webhook routes
 
 ### Scaffolded / partially built
 
 - Disease-model training weights and richer calibration
-- Automated production data refresh for the dashboard
+- Automated production refresh for website exports and live context caches
 
 ## Current Project Status
 
@@ -234,20 +238,22 @@ That is the heart of this project.
 
 - Crop engine works locally and passes the Nandipet smoke test
 - Weather pipeline is live and functional
-- Price pipeline works with historical and fallback data even without `data.gov.in`
+- Price pipeline works with historical and fallback data, and the website markets surface can pull live mandi rows from `data.gov.in`
 - WhatsApp text flow works
 - WhatsApp voice flow is implemented end-to-end in code
 - Season calendar, proactive disease checks, and drying alert evaluation work locally
-- Dashboard is served through FastAPI, builds successfully from exported backend data, and now includes the redesigned field-desk interface
+- Website is served through FastAPI, builds successfully, and now separates site context from heavier live markets context
+- District atlas now prefers live mandal twins and analog twins before falling back to a representative profile
+- Survey-number lookup can enrich soil and water context before manual fallback
 - Image diagnosis path is wired with photo-quality checks and confidence-threshold replies
 
 ### Still evolving
 
 - The scenario spec is now fully mapped in code; see [`docs/scenario_coverage.md`](docs/scenario_coverage.md) for the honest implemented-vs-partial breakdown
-- Live `data.gov.in` mandi pulls require an API key
+- True live local mandi coverage still depends on what `data.gov.in` / AGMARKNET exposes for Telangana markets on a given day
 - Strong disease accuracy still depends on shipping trained model weights
-- Dharani survey-number to soil lookup is not wired yet
-- Automated dashboard refresh is still export-driven rather than scheduled in production
+- Survey-number soil lookup is best-effort parcel context today, not a full Dharani integration
+- Website fallback exports are still regenerated manually rather than on a production schedule
 
 ## Example Recommendation
 
@@ -595,16 +601,16 @@ That is why the code emphasizes:
 
 ## Known Limitations
 
-- `data.gov.in` live mandi data still depends on obtaining an API key
+- Live regional mandi rows depend on `data.gov.in` / AGMARKNET coverage for the crop and state on that day
 - Twilio sandbox and account-level daily limits can interrupt live testing
 - Disease diagnosis stays intentionally conservative unless trained weights are available
-- Soil can be collected manually today, but Dharani survey-number lookup is not integrated yet
-- Dashboard data refresh is still export-driven rather than automated on a production schedule
+- Survey-number lookup is best-effort and not a full Dharani integration yet
+- Website fallback data refresh is still export-driven rather than automated on a production schedule
 
 ## Roadmap
 
 - Improve disease-model calibration and ship trained weights
-- Add automated production data refresh for the dashboard
+- Add automated production data refresh for the website fallback payloads and market caches
 - Replace all remaining legacy reference baselines with fresher season data where available
 
 ## Why This Belongs In A Portfolio
