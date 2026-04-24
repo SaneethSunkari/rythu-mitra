@@ -54,7 +54,7 @@ The intellectual center of this repo is the decision engine, not the WhatsApp wr
 - **Filter 4:** floor / average / ceiling price range
 - **Filter 5:** net profit and downside survivability
 
-Everything else, including the bot, voice layer, and dashboard, exists to make that logic usable in the real world.
+Everything else, including the bot, voice layer, and website, exists to make that logic usable in the real world.
 
 ## Why This Problem Is Hard
 
@@ -79,7 +79,7 @@ Everything else, including the bot, voice layer, and dashboard, exists to make t
 - https://web-production-d8869.up.railway.app/dashboard
 - The live UI is a public product website with three working surfaces: personalized analysis, district state, and a live market/weather view.
 
-![Rythu Mitra Dashboard](docs/dashboard-preview.svg)
+![Rythu Mitra Website Preview](docs/dashboard-preview.svg)
 
 ## Architecture Preview
 
@@ -118,7 +118,7 @@ This is the fastest path to understanding the codebase.
 - **Run these first**
   `python3 scripts/test_engine.py` and `python3 scripts/test_whatsapp_voice.py`
 - **Know the current boundaries**
-  Crop recommendations, weather ingest, progressive farmer profiling, season calendars, scheduled alert evaluation, WhatsApp routing, and the dashboard are real. Disease image diagnosis is wired conservatively and gets strongest only when trained weights are available.
+  Crop recommendations, weather ingest, progressive farmer profiling, season calendars, scheduled alert evaluation, WhatsApp routing, and the website surfaces are real. Disease image diagnosis is wired conservatively and gets strongest only when trained weights are available.
 - **Know the external dependencies**
   Supabase, Twilio, and Sarvam are required for the full live flow. `data.gov.in` is optional today because the project already supports historical and fallback price paths.
 - **Know where the bot starts**
@@ -159,7 +159,7 @@ Rejected: paddy, turmeric, cotton
 Reason: district supply pressure plus local suitability
 ```
 
-## Run The Dashboard
+## Run The Website
 
 ```bash
 python3 scripts/export_dashboard_data.py
@@ -347,7 +347,7 @@ rythu-mitra/
 │   ├── specialty_crops.py     # Dragon fruit + specialty crop monitoring baselines
 │   └── recommendation_log.json# Per-season recommendation history
 ├── dashboard/
-│   ├── package.json           # Vite React dashboard app
+│   ├── package.json           # Vite React website app
 │   ├── index.html
 │   ├── src/App.jsx
 │   ├── src/data/dashboardData.json
@@ -376,7 +376,7 @@ rythu-mitra/
 │   ├── create_farmer_profiles_table.sql
 │   ├── create_mandi_prices_table.sql
 │   ├── create_weather_forecast_tables.sql
-│   ├── export_dashboard_data.py
+│   ├── export_dashboard_data.py  # Website fallback data export
 │   ├── run_scheduled_alerts.py
 │   ├── seed_supabase.py
 │   ├── test_agronomy_services.py
@@ -502,7 +502,7 @@ python3 scripts/test_whatsapp_voice.py
 
 The voice smoke test exercises the WhatsApp flow end-to-end inside the app using generated audio and requires a working Sarvam key in `.env`.
 
-### Run the dashboard locally
+### Run the website locally
 
 ```bash
 python3 scripts/export_dashboard_data.py
@@ -580,7 +580,7 @@ This repo separates deployment dependencies from ML training dependencies on pur
 
 That split is important because free-tier Railway builds can fail if PyTorch is included in the web image.
 
-The dashboard is built with Vite, committed as static assets, and served through the FastAPI deployment at `/dashboard`.
+The website is built with Vite, committed as static assets, and served through the FastAPI deployment at `/dashboard`.
 
 ## Safety, Trust, and Product Principles
 

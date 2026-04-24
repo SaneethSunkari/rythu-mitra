@@ -38,9 +38,9 @@ const faqItems = [
       "Yes. The analysis tool calls the same engine that powers the WhatsApp assistant. There is no separate demo mode — every scenario runs through the real constraint pipeline.",
   },
   {
-    question: "What makes this different from a normal agriculture dashboard?",
+    question: "What makes this different from a normal agriculture website?",
     answer:
-      "Most dashboards show market data. Rythu Mitra adds a constraint engine that combines soil fit, water reality, district supply pressure, price ranges, and downside risk before it recommends anything.",
+      "Most agriculture websites show market data or advisory content. Rythu Mitra adds a constraint engine that combines soil fit, water reality, district supply pressure, price ranges, and downside risk before it recommends anything.",
   },
   {
     question: "Why does the engine sometimes return no safe crop?",
@@ -194,7 +194,7 @@ export default function LandingPage({ data, onOpenApp, onOpenBot }) {
                 <li>Telugu voice-first interaction</li>
                 <li>3–4 message profile collection</li>
                 <li>Warm, conversational reply style</li>
-                <li>No app, no dashboard, no friction</li>
+                <li>No app install, no forms, no friction</li>
               </ul>
             </article>
 
