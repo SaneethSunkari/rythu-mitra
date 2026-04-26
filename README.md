@@ -76,8 +76,9 @@ Everything else, including the bot, voice layer, and website, exists to make tha
 
 ## Website Preview
 
-- https://web-production-d8869.up.railway.app/dashboard
+- https://web-production-d8869.up.railway.app/
 - The live UI is a public product website with three working surfaces: personalized analysis, district state, and a live market/weather view.
+- `/dashboard` still works as a backward-compatible alias, but the root URL is now the canonical website entrypoint.
 
 ![Rythu Mitra Website Preview](docs/dashboard-preview.svg)
 
@@ -177,7 +178,7 @@ http://localhost:4173
 After Railway redeploys, the same UI will be served from:
 
 ```text
-https://<your-railway-domain>/dashboard
+https://<your-railway-domain>/
 ```
 
 ## Why This Project Is Different
@@ -219,7 +220,7 @@ That is the heart of this project.
 - **WhatsApp bot**
   FastAPI webhook, progressive farmer profiling, intent routing, Sarvam STT/TTS integration, Twilio-compatible responses
 - **Website**
-  A live React website with analysis, district, and markets surfaces, served through FastAPI at `/dashboard`
+  A live React website with analysis, district, and markets surfaces, served through FastAPI at `/` with `/dashboard` kept as an alias
 - **District state layer**
   Supabase-backed recommendation logging, district pressure rails, and mandal twin logic with live-mandal, cluster, soil, water, and representative fallback tiers
 - **Survey-linked soil lookup**
@@ -580,7 +581,25 @@ This repo separates deployment dependencies from ML training dependencies on pur
 
 That split is important because free-tier Railway builds can fail if PyTorch is included in the web image.
 
-The website is built with Vite, committed as static assets, and served through the FastAPI deployment at `/dashboard`.
+The website is built with Vite, committed as static assets, and served through the FastAPI deployment at `/`, with `/dashboard` preserved as an alias.
+
+## Google Indexing
+
+To make the website discoverable in Google Search:
+
+1. Deploy the site on a stable public domain.
+2. Add that domain in Google Search Console as a URL-prefix or domain property.
+3. Verify ownership through DNS or the HTML verification method.
+4. Submit `https://<your-domain>/sitemap.xml`.
+5. Keep `robots.txt`, canonical tags, and metadata live on the root website URL.
+
+This repo now includes:
+
+- `robots.txt`
+- `sitemap.xml`
+- canonical tags
+- Open Graph / Twitter metadata
+- basic `WebSite` structured data
 
 ## Safety, Trust, and Product Principles
 

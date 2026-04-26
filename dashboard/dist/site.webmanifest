@@ -1,0 +1,9 @@
+{
+  "name": "Rythu Mitra",
+  "short_name": "Rythu Mitra",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f0e7",
+  "theme_color": "#0f2316",
+  "description": "Risk-aware crop decision website for Nizamabad farmers."
+}

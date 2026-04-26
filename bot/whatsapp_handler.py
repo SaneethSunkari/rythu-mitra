@@ -74,6 +74,12 @@ ROOT = Path(__file__).resolve().parent.parent
 DASHBOARD_DIST_DIR = ROOT / "dashboard" / "dist"
 DASHBOARD_INDEX = DASHBOARD_DIST_DIR / "index.html"
 DASHBOARD_ASSETS_DIR = DASHBOARD_DIST_DIR / "assets"
+DASHBOARD_ROOT_PUBLIC_FILES = {
+    "robots.txt": "text/plain",
+    "sitemap.xml": "application/xml",
+    "site.webmanifest": "application/manifest+json",
+    "website-preview.svg": "image/svg+xml",
+}
 
 
 class DashboardAnalyzeRequest(BaseModel):
@@ -87,6 +93,11 @@ class DashboardAnalyzeRequest(BaseModel):
 
 if DASHBOARD_ASSETS_DIR.exists():
     app.mount(
+        "/assets",
+        StaticFiles(directory=str(DASHBOARD_ASSETS_DIR)),
+        name="assets",
+    )
+    app.mount(
         "/dashboard/assets",
         StaticFiles(directory=str(DASHBOARD_ASSETS_DIR)),
         name="dashboard-assets",
@@ -94,17 +105,47 @@ if DASHBOARD_ASSETS_DIR.exists():
 
 
 @app.get("/")
-async def root() -> dict:
-    """Friendly root route for browser checks on Railway."""
+async def root() -> FileResponse | dict:
+    """Serve the public website from the root URL when the frontend build exists."""
+
+    if DASHBOARD_INDEX.exists():
+        return FileResponse(DASHBOARD_INDEX, media_type="text/html")
 
     return {
         "status": "ok",
         "service": "rythu-mitra",
-        "message": "Rythu Mitra webhook is live.",
+        "message": "Rythu Mitra website build not found yet.",
         "health_url": "/health",
         "whatsapp_webhook": "/whatsapp",
-        "dashboard_url": "/dashboard",
+        "website_url": "/dashboard",
     }
+
+
+@app.get("/status")
+async def status() -> dict:
+    """JSON status route for browser or deployment checks."""
+
+    return {
+        "status": "ok",
+        "service": "rythu-mitra",
+        "health_url": "/health",
+        "whatsapp_webhook": "/whatsapp",
+        "website_url": "/",
+        "dashboard_alias": "/dashboard",
+    }
+
+
+for public_filename, media_type in DASHBOARD_ROOT_PUBLIC_FILES.items():
+    async def _serve_dashboard_public_file(
+        filename: str = public_filename,
+        resolved_media_type: str = media_type,
+    ) -> FileResponse:
+        path = DASHBOARD_DIST_DIR / filename
+        if not path.exists():
+            raise HTTPException(status_code=404, detail=f"{filename} not found.")
+        return FileResponse(path, media_type=resolved_media_type, filename=filename)
+
+    app.add_api_route(f"/{public_filename}", _serve_dashboard_public_file, methods=["GET"])
 
 
 @app.get("/health")

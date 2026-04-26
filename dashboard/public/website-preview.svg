@@ -1,0 +1,27 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="24" fill="#0E1712"/>
+  <rect x="40" y="40" width="1120" height="550" rx="28" fill="#111E18" stroke="#264334"/>
+  <rect x="78" y="82" width="1044" height="162" rx="28" fill="url(#paint0_linear)"/>
+  <text x="122" y="146" fill="#F3F0E7" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700">Risk-aware crop decision website</text>
+  <text x="122" y="210" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700">Rythu Mitra</text>
+  <text x="122" y="246" fill="#E0EADB" font-family="Arial, Helvetica, sans-serif" font-size="24">District pressure, live mandi signals, weather context, and WhatsApp guidance.</text>
+  <rect x="96" y="302" width="304" height="198" rx="24" fill="#16251D" stroke="#2E4B39"/>
+  <rect x="448" y="302" width="304" height="198" rx="24" fill="#16251D" stroke="#48523A"/>
+  <rect x="800" y="302" width="304" height="198" rx="24" fill="#16251D" stroke="#354A59"/>
+  <text x="124" y="344" fill="#92AA9C" font-family="Arial, Helvetica, sans-serif" font-size="16">District state</text>
+  <text x="124" y="388" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Open lanes + pressure rails</text>
+  <text x="124" y="438" fill="#D6DFD2" font-family="Arial, Helvetica, sans-serif" font-size="19">See where the engine is still willing to move.</text>
+  <text x="476" y="344" fill="#B2B79B" font-family="Arial, Helvetica, sans-serif" font-size="16">Analysis</text>
+  <text x="476" y="388" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Personalized crop decision</text>
+  <text x="476" y="438" fill="#D6DFD2" font-family="Arial, Helvetica, sans-serif" font-size="19">Soil, water, price range, and downside before any recommendation.</text>
+  <text x="828" y="344" fill="#A2B7C8" font-family="Arial, Helvetica, sans-serif" font-size="16">Markets + weather</text>
+  <text x="828" y="388" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Live trade context</text>
+  <text x="828" y="438" fill="#D6DFD2" font-family="Arial, Helvetica, sans-serif" font-size="19">Regional mandi rows, crop spot signals, and weather stream.</text>
+  <defs>
+    <linearGradient id="paint0_linear" x1="78" y1="82" x2="1122" y2="244" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#224C38"/>
+      <stop offset="0.52" stop-color="#324A3A"/>
+      <stop offset="1" stop-color="#38516A"/>
+    </linearGradient>
+  </defs>
+</svg>
