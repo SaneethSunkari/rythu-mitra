@@ -75,6 +75,7 @@ DASHBOARD_DIST_DIR = ROOT / "dashboard" / "dist"
 DASHBOARD_INDEX = DASHBOARD_DIST_DIR / "index.html"
 DASHBOARD_ASSETS_DIR = DASHBOARD_DIST_DIR / "assets"
 DASHBOARD_ROOT_PUBLIC_FILES = {
+    "googlec7fc4384607f1c4e.html": "text/html",
     "robots.txt": "text/plain",
     "sitemap.xml": "application/xml",
     "site.webmanifest": "application/manifest+json",
