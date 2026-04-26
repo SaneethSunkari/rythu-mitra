@@ -13,7 +13,7 @@ from xml.sax.saxutils import escape
 
 import requests
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from twilio.rest import Client
@@ -105,21 +105,23 @@ if DASHBOARD_ASSETS_DIR.exists():
     )
 
 
-@app.get("/")
-async def root() -> FileResponse | dict:
+@app.get("/", response_model=None)
+async def root() -> Response:
     """Serve the public website from the root URL when the frontend build exists."""
 
     if DASHBOARD_INDEX.exists():
         return FileResponse(DASHBOARD_INDEX, media_type="text/html")
 
-    return {
+    return JSONResponse(
+        {
         "status": "ok",
         "service": "rythu-mitra",
         "message": "Rythu Mitra website build not found yet.",
         "health_url": "/health",
         "whatsapp_webhook": "/whatsapp",
         "website_url": "/dashboard",
-    }
+        }
+    )
 
 
 @app.get("/status")
