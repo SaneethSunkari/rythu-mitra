@@ -1,83 +1,93 @@
 <svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="760" rx="24" fill="#0D1217"/>
-  <rect x="32" y="32" width="1136" height="696" rx="24" fill="#131B22" stroke="#263442"/>
+  <rect width="1200" height="760" rx="28" fill="#EEF6EE"/>
+  <rect x="28" y="28" width="1144" height="704" rx="30" fill="#F7FBF7" stroke="#D8E8D8"/>
 
-  <rect x="58" y="58" width="1084" height="144" rx="24" fill="url(#paint0_linear)"/>
-  <text x="94" y="118" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">Nizamabad district command view</text>
-  <text x="94" y="164" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700">Rythu Mitra Website</text>
-  <text x="94" y="194" fill="#E9F0EA" font-family="Arial, Helvetica, sans-serif" font-size="18">District crop pressure, mandi pricing, weather context, and WhatsApp bot walkthrough.</text>
+  <rect x="58" y="52" width="1084" height="56" rx="18" fill="rgba(247,251,247,0.92)" stroke="#DFEBDD"/>
+  <text x="88" y="86" fill="#0A1A0A" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">Rythu <tspan fill="#16A34A">Mitra</tspan></text>
+  <text x="778" y="86" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="16">How it works</text>
+  <text x="896" y="86" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="16">WhatsApp</text>
+  <text x="999" y="86" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="16">FAQ</text>
+  <rect x="1050" y="66" width="70" height="28" rx="14" fill="#16A34A"/>
+  <text x="1085" y="85" text-anchor="middle" fill="#F7FFF7" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">Open</text>
 
-  <rect x="68" y="230" width="250" height="108" rx="18" fill="#182129" stroke="#2C3F34"/>
-  <rect x="338" y="230" width="250" height="108" rx="18" fill="#182129" stroke="#2B3B4B"/>
-  <rect x="608" y="230" width="250" height="108" rx="18" fill="#182129" stroke="#523B23"/>
-  <rect x="878" y="230" width="250" height="108" rx="18" fill="#182129" stroke="#3D314A"/>
+  <rect x="58" y="132" width="1084" height="228" rx="28" fill="url(#heroGradient)"/>
+  <rect x="92" y="168" width="118" height="32" rx="16" fill="rgba(74,222,128,0.12)" stroke="rgba(74,222,128,0.28)"/>
+  <text x="151" y="188" text-anchor="middle" fill="#4ADE80" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">Rythu Mitra</text>
+  <rect x="222" y="168" width="174" height="32" rx="16" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)"/>
+  <text x="309" y="188" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">Nizamabad · Telangana</text>
 
-  <text x="92" y="270" fill="#97A6B4" font-family="Arial, Helvetica, sans-serif" font-size="15">Mandals</text>
-  <text x="92" y="314" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">36</text>
+  <text x="92" y="244" fill="#FFFFFF" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-weight="700">A crop advisor built for</text>
+  <text x="92" y="296" fill="#4ADE80" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-style="italic" font-weight="700">real uncertainty.</text>
+  <text x="92" y="330" fill="rgba(255,255,255,0.72)" font-family="Arial, Helvetica, sans-serif" font-size="19">
+    Small farmers send a Telugu voice note on WhatsApp and get a recommendation
+  </text>
+  <text x="92" y="355" fill="rgba(255,255,255,0.72)" font-family="Arial, Helvetica, sans-serif" font-size="19">
+    that accounts for soil, water, district supply crowding, price ranges, and downside risk.
+  </text>
 
-  <text x="362" y="270" fill="#97A6B4" font-family="Arial, Helvetica, sans-serif" font-size="15">Recommendation crops</text>
-  <text x="362" y="314" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">14</text>
+  <rect x="768" y="196" width="150" height="42" rx="21" fill="#16A34A"/>
+  <text x="843" y="223" text-anchor="middle" fill="#F7FFF7" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">Open analysis tool</text>
+  <rect x="932" y="196" width="136" height="42" rx="21" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)"/>
+  <text x="1000" y="223" text-anchor="middle" fill="#F4FFF4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700">See how it works</text>
 
-  <text x="632" y="270" fill="#97A6B4" font-family="Arial, Helvetica, sans-serif" font-size="15">Price rows</text>
-  <text x="632" y="314" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">27</text>
+  <rect x="92" y="378" width="140" height="32" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="244" y="378" width="162" height="32" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="418" y="378" width="174" height="32" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="604" y="378" width="148" height="32" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <rect x="764" y="378" width="172" height="32" rx="16" fill="rgba(255,255,255,0.08)"/>
+  <text x="162" y="399" text-anchor="middle" fill="#F2FFF2" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">36 mandals covered</text>
+  <text x="325" y="399" text-anchor="middle" fill="#F2FFF2" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">6 mandi price feeds</text>
+  <text x="505" y="399" text-anchor="middle" fill="#F2FFF2" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">5-filter constraint engine</text>
+  <text x="678" y="399" text-anchor="middle" fill="#F2FFF2" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">Telugu voice-first</text>
+  <text x="850" y="399" text-anchor="middle" fill="#F2FFF2" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">district supply tracking</text>
 
-  <text x="902" y="270" fill="#97A6B4" font-family="Arial, Helvetica, sans-serif" font-size="15">Demo scenarios</text>
-  <text x="902" y="314" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">3</text>
+  <text x="70" y="454" fill="#4A7A4A" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" letter-spacing="2.4">HOW IT WORKS</text>
+  <text x="70" y="490" fill="#0A1A0A" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700">Five filters. Every recommendation survives all five.</text>
 
-  <rect x="58" y="370" width="360" height="320" rx="24" fill="#161E26" stroke="#2A3542"/>
-  <text x="86" y="414" fill="#F4F5EF" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">District cap tracker</text>
-  <text x="86" y="442" fill="#96A7B5" font-family="Arial, Helvetica, sans-serif" font-size="16">The anti-rat-race layer.</text>
+  <rect x="70" y="514" width="196" height="118" rx="22" fill="#FFFFFF" stroke="#D8E8D8"/>
+  <rect x="282" y="514" width="196" height="118" rx="22" fill="#FFFFFF" stroke="#D8E8D8"/>
+  <rect x="494" y="514" width="196" height="118" rx="22" fill="#FFFFFF" stroke="#D8E8D8"/>
+  <rect x="706" y="514" width="196" height="118" rx="22" fill="#FFFFFF" stroke="#D8E8D8"/>
+  <rect x="918" y="514" width="196" height="118" rx="22" fill="#FFFFFF" stroke="#D8E8D8"/>
 
-  <rect x="86" y="474" width="304" height="54" rx="16" fill="#11171D"/>
-  <rect x="86" y="474" width="304" height="54" rx="16" fill="#11171D"/>
-  <rect x="104" y="496" width="220" height="10" rx="5" fill="#A65050"/>
-  <text x="104" y="490" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Paddy</text>
-  <text x="334" y="490" fill="#FFC6C6" font-family="Arial, Helvetica, sans-serif" font-size="14">crowded</text>
+  <circle cx="108" cy="552" r="14" fill="#16A34A"/>
+  <circle cx="320" cy="552" r="14" fill="#0891B2"/>
+  <circle cx="532" cy="552" r="14" fill="#D97706"/>
+  <circle cx="744" cy="552" r="14" fill="#7C3AED"/>
+  <circle cx="956" cy="552" r="14" fill="#DC2626"/>
 
-  <rect x="86" y="542" width="304" height="54" rx="16" fill="#11171D"/>
-  <rect x="104" y="564" width="182" height="10" rx="5" fill="#D58B39"/>
-  <text x="104" y="558" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Turmeric</text>
-  <text x="320" y="558" fill="#FFD79E" font-family="Arial, Helvetica, sans-serif" font-size="14">caution</text>
+  <text x="108" y="557" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">1</text>
+  <text x="320" y="557" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">2</text>
+  <text x="532" y="557" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">3</text>
+  <text x="744" y="557" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">4</text>
+  <text x="956" y="557" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700">5</text>
 
-  <rect x="86" y="610" width="304" height="54" rx="16" fill="#11171D"/>
-  <rect x="104" y="632" width="118" height="10" rx="5" fill="#4FA772"/>
-  <text x="104" y="626" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700">Cotton</text>
-  <text x="319" y="626" fill="#A4F0C0" font-family="Arial, Helvetica, sans-serif" font-size="14">open</text>
+  <text x="132" y="556" fill="#0A1A0A" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Soil fit</text>
+  <text x="344" y="556" fill="#0A1A0A" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Water + weather</text>
+  <text x="556" y="556" fill="#0A1A0A" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">District pressure</text>
+  <text x="768" y="556" fill="#0A1A0A" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Price range</text>
+  <text x="980" y="556" fill="#0A1A0A" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">Downside</text>
 
-  <rect x="442" y="370" width="360" height="320" rx="24" fill="#161E26" stroke="#2A3542"/>
-  <text x="470" y="414" fill="#F4F5EF" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Mandi board</text>
-  <text x="470" y="442" fill="#96A7B5" font-family="Arial, Helvetica, sans-serif" font-size="16">Prices + weather context.</text>
+  <text x="94" y="585" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">Rejects crops that</text>
+  <text x="94" y="605" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">do not match the mandal.</text>
 
-  <rect x="470" y="474" width="304" height="44" rx="14" fill="#11171D"/>
-  <text x="490" y="502" fill="#F1F3EE" font-family="Arial, Helvetica, sans-serif" font-size="15">Nizamabad</text>
-  <text x="725" y="502" fill="#F1F3EE" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="end">₹9,600</text>
+  <text x="306" y="585" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">Checks source risk</text>
+  <text x="306" y="605" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">and live weather context.</text>
 
-  <rect x="470" y="530" width="304" height="44" rx="14" fill="#11171D"/>
-  <text x="490" y="558" fill="#F1F3EE" font-family="Arial, Helvetica, sans-serif" font-size="15">Armur</text>
-  <text x="725" y="558" fill="#F1F3EE" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="end">₹9,600</text>
+  <text x="518" y="585" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">Blocks oversupplied</text>
+  <text x="518" y="605" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">district crop lanes.</text>
 
-  <rect x="470" y="586" width="304" height="44" rx="14" fill="#11171D"/>
-  <text x="490" y="614" fill="#F1F3EE" font-family="Arial, Helvetica, sans-serif" font-size="15">Bodhan</text>
-  <text x="725" y="614" fill="#F1F3EE" font-family="Arial, Helvetica, sans-serif" font-size="15" text-anchor="end">₹6,400</text>
+  <text x="730" y="585" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">Uses floor, average,</text>
+  <text x="730" y="605" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">and ceiling price bands.</text>
 
-  <rect x="826" y="370" width="316" height="320" rx="24" fill="#161E26" stroke="#2A3542"/>
-  <text x="854" y="414" fill="#F4F5EF" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700">Bot walkthrough</text>
-  <text x="854" y="442" fill="#96A7B5" font-family="Arial, Helvetica, sans-serif" font-size="16">Visible reasoning for one farmer.</text>
-
-  <rect x="854" y="474" width="230" height="54" rx="18" fill="#224536"/>
-  <text x="874" y="506" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="15">nandipet</text>
-
-  <rect x="878" y="544" width="236" height="70" rx="18" fill="#11171D"/>
-  <text x="898" y="580" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="15">Mee acres entha naanna?</text>
-
-  <rect x="854" y="630" width="260" height="40" rx="18" fill="#2A3951"/>
-  <text x="874" y="655" fill="#F7F7F2" font-family="Arial, Helvetica, sans-serif" font-size="15">Top pick: Maize</text>
+  <text x="942" y="585" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">Keeps only crops that</text>
+  <text x="942" y="605" fill="#567256" font-family="Arial, Helvetica, sans-serif" font-size="14">survive the downside.</text>
 
   <defs>
-    <linearGradient id="paint0_linear" x1="58" y1="58" x2="1142" y2="202" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#244B38"/>
-      <stop offset="0.55" stop-color="#17354D"/>
-      <stop offset="1" stop-color="#5C3A1D"/>
+    <linearGradient id="heroGradient" x1="58" y1="132" x2="1142" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#081408"/>
+      <stop offset="0.55" stop-color="#0C200D"/>
+      <stop offset="1" stop-color="#132515"/>
     </linearGradient>
   </defs>
 </svg>
