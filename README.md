@@ -73,6 +73,9 @@ Everything else, including the bot, voice layer, and website, exists to make tha
 - [District data](data/nizamabad_district.py)
 - [Scenario spec PDF](docs/scenarios.pdf)
 - [Scenario coverage matrix](docs/scenario_coverage.md)
+- [User and problem validation](docs/USER_RESEARCH.md)
+- [Changelog](CHANGELOG.md)
+- [Roadmap](ROADMAP.md)
 
 ## Website Preview
 
@@ -631,6 +634,8 @@ That is why the code emphasizes:
 - Improve disease-model calibration and ship trained weights
 - Add automated production data refresh for the website fallback payloads and market caches
 - Replace all remaining legacy reference baselines with fresher season data where available
+
+For the full field-readiness plan, see [ROADMAP.md](ROADMAP.md). For validation boundaries and next user-testing steps, see [docs/USER_RESEARCH.md](docs/USER_RESEARCH.md).
 
 ## Why This Belongs In A Portfolio
 
