@@ -29,7 +29,6 @@ from data.nizamabad_district import CROPS, MANDIS
 
 DATA_GOV_RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070"
 DATA_GOV_BASE_URL = "https://api.data.gov.in/resource"
-DEFAULT_DATA_GOV_API_KEY = "579b464db66ec23bdd000001d9143fc81ac74bce7ad727abc2705a8a"
 SUPABASE_TABLE = "mandi_prices"
 DEFAULT_HISTORY_CSV_PATH = "data/price_history.csv"
 LOCAL_PRICE_CACHE_PATH = "data/cache/mandi_prices_latest.json"
@@ -262,7 +261,7 @@ class PricePipeline:
     ) -> None:
         _load_local_env()
 
-        self.api_key = api_key or os.getenv("DATA_GOV_API_KEY", "") or DEFAULT_DATA_GOV_API_KEY
+        self.api_key = api_key or os.getenv("DATA_GOV_API_KEY", "")
         self.supabase_url = (supabase_url or os.getenv("SUPABASE_URL", "")).rstrip("/")
         self.supabase_key = _resolve_supabase_key(supabase_key)
         self.resource_id = resource_id
